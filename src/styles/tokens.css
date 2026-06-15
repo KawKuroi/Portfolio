@@ -1,0 +1,73 @@
+/*
+  Sistema de diseno — tokens base y temas.
+  Dos temas: Museo (claro, por defecto en escritorio) y Noche (oscuro).
+  El acento real por defecto en toda la Sala es el aguamarino #2aa198
+  (--clay y --teal apuntan a el; el panel de Tweaks puede reasignarlos en vivo).
+*/
+
+:root {
+  /* Superficies y tinta (valores base = tema Museo claro) */
+  --paper: #fbfaf7;
+  --wall: #f1efe8;
+  --ink: #14120d;
+  --soft: #6b6457;
+  --faint: #a39c8d;
+
+  /* Acentos. El aguamarino es el acento real por defecto. */
+  --clay: #2aa198;
+  --teal: #2aa198;
+  --amber: #c08a2e;
+  /* Acentos editoriales de respaldo (no usados por defecto): clay #b5503a, teal #3f8f87 */
+
+  /* Hairlines */
+  --line: rgba(20, 18, 13, .16);
+  --line2: rgba(20, 18, 13, .075);
+
+  /* Tipografias. Por defecto preset "Clasica" = todo Libre Baskerville. */
+  --serif: 'Libre Baskerville', Georgia, serif;
+  --sans: 'Libre Baskerville', Georgia, serif;
+  --mono: 'Libre Baskerville', Georgia, serif;
+
+  /* Movimiento y medidas */
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --bar: clamp(30px, 5vh, 52px); /* alto del plaque superior */
+}
+
+/* Tema Museo (claro) — explicito para el conmutador */
+:root[data-tema='Museo'] {
+  --paper: #fbfaf7;
+  --wall: #f1efe8;
+  --ink: #14120d;
+  --soft: #6b6457;
+  --faint: #a39c8d;
+  --line: rgba(20, 18, 13, .16);
+  --line2: rgba(20, 18, 13, .075);
+}
+
+/* Tema Noche (oscuro) */
+:root[data-tema='Noche'] {
+  --paper: #16130e;
+  --wall: #1d1812;
+  --ink: #ece4d4;
+  --soft: #a89c87;
+  --faint: #736b5b;
+  --line: rgba(236, 228, 212, .22);
+  --line2: rgba(236, 228, 212, .10);
+}
+
+/*
+  Respaldo por preferencia del sistema cuando aun no hay data-tema resuelto.
+  El script de tema (src/scripts/tema.ts) fija data-tema antes del primer pintado;
+  esto solo cubre el caso sin JS.
+*/
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema]) {
+    --paper: #16130e;
+    --wall: #1d1812;
+    --ink: #ece4d4;
+    --soft: #a89c87;
+    --faint: #736b5b;
+    --line: rgba(236, 228, 212, .22);
+    --line2: rgba(236, 228, 212, .10);
+  }
+}

@@ -1,0 +1,65 @@
+---
+/*
+  Layout base de la Sala. Define el documento (<html lang="es" data-trabajo="galeria">),
+  carga fuentes, resuelve el tema antes del primer pintado y monta el sprite de iconos
+  y el carrete con snap vertical.
+*/
+import '../styles/tokens.css';
+import '../styles/global.css';
+import IconSprite from '../components/IconSprite.astro';
+
+interface Props {
+  titulo?: string;
+}
+
+const { titulo = 'Kevin Axel Herazo Rolón — Sala' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" data-trabajo="galeria">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Portafolio de Kevin Axel Herazo Rolón — Ingeniería de Sistemas: backend, datos e inteligencia artificial."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{titulo}</title>
+
+    <!-- Resolutor de tema anti-parpadeo: corre antes del primer pintado -->
+    <script is:inline>
+      (function () {
+        try {
+          var guardado = localStorage.getItem('sala-theme');
+          var valido = guardado === 'Museo' || guardado === 'Noche';
+          var oscuro = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var tema = valido ? guardado : oscuro ? 'Noche' : 'Museo';
+          document.documentElement.setAttribute('data-tema', tema);
+          // Acento real por defecto: aguamarino.
+          document.documentElement.style.setProperty('--clay', '#2aa198');
+          document.documentElement.style.setProperty('--teal', '#2aa198');
+          window.__salaTheme = tema;
+        } catch (e) {
+          document.documentElement.setAttribute('data-tema', 'Museo');
+        }
+      })();
+    </script>
+
+    <!-- Tipografias (un solo link; los presets de Tweaks las intercambian) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Hanken+Grotesk:wght@400..700&family=Space+Mono:wght@400;700&family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,1,400&family=Space+Grotesk:wght@400..700&family=IBM+Plex+Serif:wght@400;500;600&family=IBM+Plex+Sans:wght@400..700&family=IBM+Plex+Mono:wght@400;500;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@400..700&display=swap"
+    />
+  </head>
+  <body>
+    <IconSprite />
+    <!-- Chrome global (fijo): plaque, riel, hint, panel de Tweaks. Fuera del carrete. -->
+    <slot name="chrome" />
+    <main class="reel">
+      <slot />
+    </main>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+---
+/*
+  Escena 2 — I · El trabajo. 3 disposiciones intercambiables (Lista / Galeria / Detalle)
+  segun data-trabajo en <html>. Datos en src/data/proyectos.ts.
+  STUB Fase 0 — render de las 3 disposiciones en Fase 3 del ROADMAP.
+*/
+import { PROYECTOS } from '../../data/proyectos';
+---
+
+<section class="scene scene-trabajo" data-slate="El trabajo" data-screen-label="El trabajo">
+  <div class="wrap">
+    <header class="sh">
+      <span class="acto">I</span>
+      <h2>El <em>trabajo</em></h2>
+      <span class="conteo">{PROYECTOS.length} proyectos</span>
+    </header>
+    <div id="twLista" class="tw-layout tw-lista"></div>
+    <div id="twGaleria" class="tw-layout tw-galeria"></div>
+    <div id="twDetalle" class="tw-layout tw-detalle"></div>
+  </div>
+</section>
+
+<!-- TODO(Fase 3): render de Lista, Galeria (default) y Detalle desde PROYECTOS. -->

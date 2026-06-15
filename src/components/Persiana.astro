@@ -1,0 +1,33 @@
+---
+/*
+  Persiana (acordeon de caratulas). Mount .persiana con data-speed.
+  En Fase 4 el script src/scripts/persiana.ts toma el control (acordeon + autoplay).
+  Aqui se renderiza un fallback estatico desde FAVORITOS para degradar con gracia sin JS.
+*/
+import { FAVORITOS } from '../data/favoritos';
+---
+
+<div class="persiana" data-speed="2600" data-open="0">
+  {
+    FAVORITOS.map((f, i) => (
+      <figure class="pslat" data-cat={f.c} data-open={i === 0 ? 'true' : undefined}>
+        <span class="pph" style={`background:${f.g}`} aria-hidden="true" />
+        <img
+          class="pimg"
+          src={f.img}
+          alt={`${f.t} — ${f.s}`}
+          loading="lazy"
+          referrerpolicy="no-referrer"
+          onerror="this.style.display='none'"
+        />
+        <figcaption class="pcap">
+          <span class="pcat" data-cat={f.c}>{f.c}</span>
+          <span class="pt">{f.t}</span>
+          <span class="ps">{f.s}</span>
+        </figcaption>
+      </figure>
+    ))
+  }
+</div>
+
+<!-- TODO(Fase 4): acordeon, lomo vertical, autoplay 2.6s y decoracion de iconos. -->

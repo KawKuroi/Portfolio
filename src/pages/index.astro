@@ -1,0 +1,29 @@
+---
+/*
+  Pagina principal: compone el chrome global y las 5 escenas dentro del carrete.
+  El panel de Tweaks es un island React diferido (client:idle).
+*/
+import Base from '../layouts/Base.astro';
+import Plaque from '../components/Plaque.astro';
+import Rail from '../components/Rail.astro';
+import Hint from '../components/Hint.astro';
+import Portada from '../components/scenes/Portada.astro';
+import Trabajo from '../components/scenes/Trabajo.astro';
+import Equipo from '../components/scenes/Equipo.astro';
+import Conoceme from '../components/scenes/Conoceme.astro';
+import Salida from '../components/scenes/Salida.astro';
+import SalaTweaks from '../components/SalaTweaks.tsx';
+---
+
+<Base>
+  <Plaque slot="chrome" />
+  <Rail slot="chrome" />
+  <Hint slot="chrome" />
+  <SalaTweaks slot="chrome" client:idle />
+
+  <Portada />
+  <Trabajo />
+  <Equipo />
+  <Conoceme />
+  <Salida />
+</Base>
