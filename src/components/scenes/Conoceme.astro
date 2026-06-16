@@ -20,3 +20,22 @@ import Persiana from '../Persiana.astro';
     </p>
   </div>
 </section>
+
+<style>
+  /* La escena crece con la persiana (evita recortar bajo el plaque). */
+  .scene.act-persiana {
+    height: auto;
+    min-height: 100vh;
+    justify-content: flex-start;
+  }
+
+  .note {
+    max-width: 70ch;
+    margin: clamp(18px, 4vh, 32px) 0 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .03em;
+    line-height: 1.6;
+    color: var(--faint);
+  }
+</style>

@@ -1,12 +1,12 @@
 # CURRENT — Estado del proyecto
 
 ## Fase activa
-- **Activo:** Fase 4 — Persiana / Conóceme (ver [ROADMAP.md](./ROADMAP.md)).
-- **Estado general:** Fases 0–3 completadas. Chrome global + cuatro de las cinco escenas
-  listas: Portada, Equipo, Salida (estáticas) y "El trabajo" (Galería renderizada en build
-  desde PROYECTOS, selección por clic y placa con meta). `astro check` y `astro build`
-  limpios, 0 JS de framework. Falta la última escena: la persiana (acordeón de 20 carátulas)
-  de "Conóceme".
+- **Activo:** Fase 5 — Pulido y despliegue en Vercel (ver [ROADMAP.md](./ROADMAP.md)).
+- **Estado general:** Fases 0–4 completadas. Las cinco escenas y el chrome global están
+  construidos y funcionales: Portada, "El trabajo" (Galería), Equipo, "Conóceme" (persiana
+  acordeón de 20 carátulas con autoplay) y Salida. `astro check` y `astro build` limpios,
+  0 JS de framework. Queda el pulido transversal (accesibilidad, reduced-motion, responsive,
+  optimización de imágenes/Lighthouse) y conectar/publicar en Vercel.
 
 ## Pendientes que aporta el usuario (no bloquean el desarrollo)
 - `public/assets/me/retrato.png` — autorretrato (relación 4/5).
@@ -18,6 +18,15 @@
 Mientras falten, el `onerror` muestra placeholders y la maqueta no se rompe.
 
 ## Historial
+- **2026-06-15** — Fase 4. "Conóceme": persiana (acordeón de 20 carátulas). Las franjas se
+  renderizan en build desde `FAVORITOS` (gradiente de respaldo `.pph`, carátula `.pimg` lazy +
+  no-referrer con `onerror`, lomo vertical `.pspine` y caption `.pcap` con chip de categoría +
+  icono, título italic y subtítulo mono). `persiana.ts` aporta el acordeón: hover/clic abre la
+  franja y oscurece el resto, con autoplay cada 2.6s que se pausa al hover, al ocultar la
+  pestaña, fuera del viewport y con `prefers-reduced-motion`. Iconos por categoría resueltos en
+  build; variables de color por categoría en el mount; móvil pasa columnas→filas con lomo
+  horizontal. Estilo de `.note` y crecimiento de la escena añadidos. Verificado con
+  `astro check` (0 errores) y `astro build`.
 - **2026-06-15** — Fase 3. "El trabajo" en disposición Galería (única). El render se genera
   en build desde `PROYECTOS` (4 obras): lista de botones `.twg-item` (num, título, tags, año)
   a la izquierda y escenario a la derecha con marco 3/2, obras superpuestas `.ph` (fade+scale)

@@ -1,16 +1,26 @@
 ---
 /*
-  Persiana (acordeon de caratulas). Mount .persiana con data-speed.
-  En Fase 4 el script src/scripts/persiana.ts toma el control (acordeon + autoplay).
-  Aqui se renderiza un fallback estatico desde FAVORITOS para degradar con gracia sin JS.
+  Persiana (acordeon de caratulas) de la escena Conoceme. Las 20 franjas se renderizan en
+  build desde FAVORITOS (fallback estatico que degrada con gracia sin JS); el script
+  src/scripts/persiana.ts aporta el acordeon y el autoplay. Cada franja: fondo gradiente
+  (.pph), caratula (.pimg, lazy + no-referrer), lomo vertical (.pspine) y caption (.pcap:
+  chip de categoria con icono, titulo .pt serif y subtitulo .ps mono). PRD 8.
 */
-import { FAVORITOS } from '../data/favoritos';
+import { FAVORITOS, type Categoria } from '../data/favoritos';
+
+// Decoracion de iconos por categoria (PRD 8.3), resuelta en build.
+const ICONO_CAT: Record<Categoria, string> = {
+  Cine: 'ic-film',
+  Juegos: 'ic-game',
+  Libros: 'ic-book',
+  Música: 'ic-music',
+};
 ---
 
 <div class="persiana" data-speed="2600" data-open="0">
   {
     FAVORITOS.map((f, i) => (
-      <figure class="pslat" data-cat={f.c} data-open={i === 0 ? 'true' : undefined}>
+      <figure class:list={['pslat', { open: i === 0, wide: f.wide }]} data-cat={f.c}>
         <span class="pph" style={`background:${f.g}`} aria-hidden="true" />
         <img
           class="pimg"
@@ -20,8 +30,12 @@ import { FAVORITOS } from '../data/favoritos';
           referrerpolicy="no-referrer"
           onerror="this.style.display='none'"
         />
+        <span class="pspine" aria-hidden="true">{f.t}</span>
         <figcaption class="pcap">
-          <span class="pcat" data-cat={f.c}>{f.c}</span>
+          <span class="pcat">
+            <svg class="ic" aria-hidden="true"><use href={`#${ICONO_CAT[f.c]}`} /></svg>
+            {f.c}
+          </span>
           <span class="pt">{f.t}</span>
           <span class="ps">{f.s}</span>
         </figcaption>
@@ -30,4 +44,181 @@ import { FAVORITOS } from '../data/favoritos';
   }
 </div>
 
-<!-- TODO(Fase 4): acordeon, lomo vertical, autoplay 2.6s y decoracion de iconos. -->
+<script>
+  import { iniciarPersianas } from '../scripts/persiana';
+  iniciarPersianas();
+</script>
+
+<style>
+  .persiana {
+    --p-cine: var(--clay);
+    --p-juegos: var(--amber);
+    --p-libros: var(--teal);
+    --p-musica: #4f6fc0;
+    --p-h: clamp(340px, 56vh, 460px);
+    display: flex;
+    gap: 4px;
+    height: var(--p-h);
+    margin: 8px 0 0;
+    overflow: hidden;
+    border: 1px solid var(--ink);
+  }
+
+  .pslat {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    cursor: pointer;
+    filter: brightness(.58);
+    transition: flex-grow .6s var(--ease), filter .6s var(--ease);
+  }
+
+  .pslat.wide {
+    flex-grow: 1.5;
+  }
+
+  .pslat[data-cat='Cine'] {
+    --cat: var(--p-cine);
+  }
+  .pslat[data-cat='Juegos'] {
+    --cat: var(--p-juegos);
+  }
+  .pslat[data-cat='Libros'] {
+    --cat: var(--p-libros);
+  }
+  .pslat[data-cat='Música'] {
+    --cat: var(--p-musica);
+  }
+
+  .pslat.open {
+    flex-grow: var(--p-grow, 8);
+    filter: brightness(1);
+  }
+
+  .pph {
+    position: absolute;
+    inset: 0;
+  }
+
+  .pimg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Lomo vertical: visible solo cuando la franja esta cerrada. */
+  .pspine {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 0;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 13px;
+    letter-spacing: .04em;
+    white-space: nowrap;
+    overflow: hidden;
+    color: var(--paper);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, .7);
+    background: linear-gradient(to top, rgba(0, 0, 0, .5), transparent);
+    transition: opacity .4s var(--ease);
+  }
+
+  .pslat.open .pspine {
+    opacity: 0;
+  }
+
+  /* Caption: visible solo cuando la franja esta abierta. */
+  .pcap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px;
+    color: var(--paper);
+    background: linear-gradient(to top, rgba(0, 0, 0, .82) 12%, transparent);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .4s var(--ease), transform .4s var(--ease);
+  }
+
+  .pslat.open .pcap {
+    opacity: 1;
+    transform: none;
+  }
+
+  .pcat {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    padding: 3px 9px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--cat);
+    border-radius: 999px;
+  }
+
+  .pcat .ic {
+    font-size: 13px;
+  }
+
+  .pt {
+    font-size: clamp(18px, 2vw, 24px);
+    font-style: italic;
+    line-height: 1.1;
+  }
+
+  .ps {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .04em;
+    color: rgba(255, 255, 255, .8);
+  }
+
+  /* Movil (<=820px): columnas -> filas; lomo horizontal. */
+  @media (max-width: 820px) {
+    .persiana {
+      flex-direction: column;
+      height: auto;
+    }
+
+    .pslat,
+    .pslat.wide {
+      flex: none;
+      height: 64px;
+      filter: brightness(1);
+    }
+
+    .pslat.open {
+      height: 280px;
+    }
+
+    .pspine {
+      writing-mode: horizontal-tb;
+      transform: none;
+      justify-content: flex-start;
+      padding: 0 16px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pslat,
+    .pcap,
+    .pspine {
+      transition: none;
+    }
+  }
+</style>

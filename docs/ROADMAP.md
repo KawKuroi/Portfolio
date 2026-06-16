@@ -5,14 +5,6 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 
 ## Fase activa
 
-### Fase 4 — Persiana / Conóceme
-- [ ] `persiana.ts`: construir franjas desde FAVORITOS (gradiente, img, lomo, caption).
-- [ ] Acordeón (hover abre, oscurece el resto) + autoplay 2.6s con pausas.
-- [ ] Decoración de iconos por categoría (cine/juegos/libros/música).
-- [ ] Comportamiento móvil (columnas → filas) y `prefers-reduced-motion`.
-
-## Próximas fases
-
 ### Fase 5 — Pulido y despliegue en Vercel
 - [ ] Accesibilidad (aria-label/aria-pressed/aria-hidden) y foco visible.
 - [ ] `prefers-reduced-motion` en todas las animaciones.
@@ -23,6 +15,15 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 - [ ] Confirmar dominio `*.vercel.app` (o dominio propio) y *preview deployments* por push.
 
 ## Histórico de fases completadas
+
+### Fase 4 — Persiana / Conóceme (2026-06-15)
+- [x] Franjas (20) renderizadas en build desde FAVORITOS (gradiente `.pph`, img lazy +
+      no-referrer, lomo vertical `.pspine`, caption `.pcap`); `persiana.ts` aporta el acordeón.
+- [x] Acordeón (hover/clic abre, oscurece el resto `brightness .58`) + autoplay 2.6s con
+      pausas (hover, pestaña oculta, fuera de viewport, `prefers-reduced-motion`).
+- [x] Decoración de iconos por categoría (cine/juegos/libros/música) resuelta en build.
+- [x] Comportamiento móvil (columnas → filas, lomo horizontal) y variables de color de
+      categoría (`--p-cine/--p-juegos/--p-libros/--p-musica`).
 
 ### Fase 3 — "El trabajo" (disposición Galería, fija) (2026-06-15)
 - [x] Disposición Galería (`#twGaleria`) renderizada en build desde PROYECTOS: botones a la
