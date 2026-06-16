@@ -1,16 +1,27 @@
-# ROADMAP — Portfolio "Sala"
+# ROADMAP — Portafolio
 
 Fases de construcción. Cada cambio marca su checkbox; al cerrar una fase completa, se mueve
 al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 ## Fase activa
 
-Ninguna — el roadmap está completo (incluida la Fase 6 de SEO). El sitio está construido,
-alineado 1:1 con el diseño original (Claude Design) y **publicado en Vercel**:
-<https://portfolio-topaz-nu-46.vercel.app/>. Mantenimiento pendiente (no bloquea): subir
-`me/retrato.png` y las 4 capturas de proyecto (mientras tanto, placeholders por `onerror`).
+Ninguna — el roadmap está completo (incluida la Fase 6 de SEO) más una ronda de ajustes de
+contenido/contacto. El sitio está construido y **publicado en Vercel**:
+<https://portfolio-topaz-nu-46.vercel.app/>. Las fotos reales ya están integradas. Pendiente del
+usuario (no bloquea): pegar la access key de Web3Forms en `Salida.astro` para activar el
+formulario de contacto (ver [CURRENT.md](./CURRENT.md)).
 
 ## Histórico de fases completadas
+
+### Ajustes de contenido y contacto (2026-06-16)
+- [x] Portada: retirado el caption del retrato y agrandada la imagen.
+- [x] El trabajo: quitada la línea "En sala · obra NN" sobre el título; indicador "en línea"
+      movido a "Ver en línea" (punto verde con pulso, solo proyectos con `demo`); fecha de Noti
+      → "May 2026".
+- [x] Conóceme: títulos de la persiana legibles en modo Noche (color claro fijo).
+- [x] Contacto (antes "Salida"): frase "Contáctame."; teléfono y correo copian al portapapeles;
+      formulario en `<dialog>` que envía vía Web3Forms (pendiente: access key del usuario).
+- [x] Retiradas las referencias visibles a la metáfora de "salas" (UI y `<title>`).
 
 ### Fase 6 — SEO y metadatos sociales (2026-06-16)
 - [x] Open Graph completo (`og:type/site_name/locale/url/title/description/image` +
@@ -88,5 +99,6 @@ alineado 1:1 con el diseño original (Claude Design) y **publicado en Vercel**:
       Clásica), solo el tema es variable. Tipografía reducida a Libre Baskerville.
 - [x] Decidido el hosting: **Vercel** (plan Hobby, gratuito), salida estática sin adaptador.
 
-**Pendiente del usuario (no bloquea):** `public/assets/me/retrato.png` y las 4 capturas en
-`public/assets/projects/`. Mientras tanto, los `onerror`/gradientes degradan con gracia.
+**Pendiente del usuario (no bloquea):** pegar la access key de Web3Forms en
+`src/components/scenes/Salida.astro` (marcador `PEGA-AQUI-TU-ACCESS-KEY`) para activar el envío
+del formulario de contacto. Las fotos reales ya están integradas.

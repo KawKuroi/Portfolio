@@ -58,12 +58,6 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
         </div>
 
         <div class="twg-plate" aria-live="polite">
-          <span class="pe">
-            <span data-plate-pe>En sala · obra {numero(0)}</span>
-            <span class="live" data-plate-live hidden={!inicial.demo}>
-              <span class="dot" aria-hidden="true"></span>en línea
-            </span>
-          </span>
           <div class="pt" data-plate-titulo>{inicial.titulo}</div>
           <p class="pd" data-plate-desc>{inicial.descripcion}</p>
           <div class="pm">
@@ -75,7 +69,8 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
               href={inicial.demo}
               target="_blank"
               rel="noopener"
-              hidden={!inicial.demo}>Ver en línea</a
+              hidden={!inicial.demo}
+              ><span class="dot" aria-hidden="true"></span>Ver en línea</a
             >
             <a class="go" data-plate-repo href={inicial.repo} target="_blank" rel="noopener">Repo</a>
           </div>
@@ -93,15 +88,12 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
     const items = Array.from(galeria.querySelectorAll<HTMLButtonElement>('.twg-item'));
     const slides = Array.from(galeria.querySelectorAll<HTMLElement>('.ph'));
     const plate = galeria.querySelector<HTMLElement>('.twg-plate');
-    const pe = galeria.querySelector('[data-plate-pe]');
     const titulo = galeria.querySelector('[data-plate-titulo]');
     const desc = galeria.querySelector('[data-plate-desc]');
     const anio = galeria.querySelector('[data-plate-anio]');
     const estado = galeria.querySelector('[data-plate-estado]');
     const repo = galeria.querySelector<HTMLAnchorElement>('[data-plate-repo]');
-    const live = galeria.querySelector<HTMLElement>('[data-plate-live]');
     const demo = galeria.querySelector<HTMLAnchorElement>('[data-plate-demo]');
-    const num = (i: number): string => String(i + 1).padStart(2, '0');
 
     // Seleccion fija por clic: marca el boton/obra activos y vuelca la placa.
     const seleccionar = (i: number): void => {
@@ -113,14 +105,12 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
         boton.setAttribute('aria-pressed', String(activo));
       });
       slides.forEach((slide, j) => slide.classList.toggle('on', j === i));
-      if (pe) pe.textContent = `En sala · obra ${num(i)}`;
       if (titulo) titulo.textContent = proyecto.titulo;
       if (desc) desc.textContent = proyecto.descripcion;
       if (anio) anio.textContent = proyecto.anio;
       if (estado) estado.textContent = proyecto.estado;
       if (repo) repo.href = proyecto.repo;
-      // Indicador "en línea" + enlace al demo: solo si el proyecto está publicado.
-      if (live) live.hidden = !proyecto.demo;
+      // Enlace al demo con indicador "en línea": solo si el proyecto está publicado.
       if (demo) {
         if (proyecto.demo) {
           demo.href = proyecto.demo;
@@ -336,16 +326,6 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
     margin-top: clamp(13px, 2vh, 20px);
   }
 
-  .twg-plate .pe {
-    font-family: var(--mono);
-    font-size: 9.5px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: var(--teal);
-    display: block;
-    margin-bottom: 8px;
-  }
-
   .twg-plate .pt {
     font-family: var(--serif);
     font-style: italic;
@@ -401,16 +381,9 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
     opacity: .6;
   }
 
-  /* Indicador "en línea" (proyectos publicados). */
-  .twg-plate .pe .live {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    margin-left: 10px;
-    color: #5b9c74;
-  }
-
-  .twg-plate .pe .live .dot {
+  /* Indicador "en línea": punto verde con pulso junto a "Ver en línea"
+     (solo en proyectos publicados). */
+  .twg-plate .pm .go.demo .dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;

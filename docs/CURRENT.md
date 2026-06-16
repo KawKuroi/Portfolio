@@ -1,25 +1,39 @@
 # CURRENT — Estado del proyecto
 
 ## Fase activa
-- **Activo:** Ninguna — roadmap completo (incluida la Fase 6 de SEO). Sitio **publicado y
-  verificado en Vercel**: <https://portfolio-topaz-nu-46.vercel.app/>.
+- **Activo:** Ninguna — roadmap completo (incluida la Fase 6 de SEO) más una ronda de ajustes
+  de contenido/contacto. Sitio **publicado en Vercel**: <https://portfolio-topaz-nu-46.vercel.app/>.
 - **Estado general:** Las 5 fases + SEO cerradas. Sitio construido en Astro (0 JS de framework),
-  alineado 1:1 con el diseño original de Claude Design y desplegado en Vercel (estático desde
-  CDN). Verificado: `astro check`/`build` limpios, 12/12 pruebas funcionales headless, visual
-  desktop+móvil, y **Lighthouse móvil en vivo Performance 99 · Accessibility 95 · Best
-  Practices 96 · SEO 100**. Mantenimiento pendiente (no bloquea): subir `me/retrato.png` y las
-  4 capturas de proyecto (al hacerlo, se resuelven los 404 que bajan Best Practices).
+  desplegado en Vercel (estático desde CDN). Fotos reales ya integradas (retrato + 4 capturas en
+  `.webp`, normalizadas). Verificado: `astro check`/`build` limpios. Última auditoría
+  **Lighthouse móvil: Performance 99 · Accessibility 95 · Best Practices 96 · SEO 100** (previa
+  a integrar las fotos; conviene re-auditar tras el próximo deploy).
 
-## Pendientes que aporta el usuario (no bloquean el desarrollo)
-- `public/assets/me/retrato.png` — autorretrato (relación 4/5).
-- `public/assets/projects/01-senas.png` — captura Traductor de Señas (3/2).
-- `public/assets/projects/02-football.png` — captura Football Notificator (3/2).
-- `public/assets/projects/03-noti.png` — captura Noti (3/2).
-- `public/assets/projects/04-turismo.png` — captura App de Turismo (3/2).
-
-Mientras falten, el `onerror` muestra placeholders y la maqueta no se rompe.
+## Pendiente del usuario (no bloquea el build)
+- **Access key de Web3Forms para el formulario de contacto.** El formulario de la sección
+  Contacto está completo pero inerte hasta pegar la clave: en
+  `src/components/scenes/Salida.astro`, reemplazar el marcador `PEGA-AQUI-TU-ACCESS-KEY` por la
+  access key gratuita de <https://web3forms.com> (es pública por diseño). Sin ella, el envío
+  muestra "No se pudo enviar"; `mailto:`/`tel:` siguen como respaldo.
+- (Opcional) Sustituir el retrato por un headshot editorial: la foto actual es una toma nocturna
+  casual y se nota más ahora que la imagen es más grande.
 
 ## Historial
+- **2026-06-16** — Ajustes de contenido, contacto y limpieza de la metáfora de "salas".
+  Portada: retirado el caption redundante del retrato y agrandada la imagen (`clamp(250–416px)`;
+  móvil 280px). El trabajo: eliminada la línea "En sala · obra NN" sobre el título; el indicador
+  "en línea" pasó a un punto verde con pulso junto a "Ver en línea" (solo proyectos con `demo`
+  → Noti); fecha de Noti corregida a "May 2026". Conóceme: corregido el color de los títulos de
+  la persiana en modo Noche (usaban `var(--paper)`, casi negro → invisibles; ahora claro fijo
+  `#fbfaf7` en ambos temas, lo correcto sobre el gradiente oscuro). Contacto (antes "Salida"):
+  nueva frase **"Contáctame."**, el teléfono copia al portapapeles con feedback "¡Copiado!" y el
+  correo abre un formulario (`<dialog>` con honeypot anti-spam) que envía vía **Web3Forms** (sin
+  backend; `mailto:`/`tel:` de respaldo sin JS). Retiradas las referencias visibles a "salas"
+  (hint, `aria-label` del riel, nota de Conóceme, placa de proyectos, `<title>` → "— Portafolio",
+  `data-slate` de la última sección → "Contacto"); se mantienen los identificadores internos del
+  codename (`sala-theme`, `setSalaTheme`, `salathemechange`) por no ser visibles y para no perder
+  el tema guardado de los visitantes. Añadido icono `ic-close` al sprite. Verificado:
+  `astro check`/`build` limpios (0 errores).
 - **2026-06-16** — Fase 6: SEO y metadatos sociales. `Base.astro` ahora emite el set completo
   de meta para social/buscadores: Open Graph, Twitter Card `summary_large_image`, `canonical`,
   `description` (todo parametrizado por props con la constante `SITIO` y URLs absolutas),

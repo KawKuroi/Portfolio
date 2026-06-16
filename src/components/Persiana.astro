@@ -125,7 +125,8 @@ const ICONO_CAT: Record<Categoria, string> = {
     letter-spacing: .04em;
     white-space: nowrap;
     overflow: hidden;
-    color: var(--paper);
+    /* Va siempre sobre la carátula/gradiente oscuro: texto claro fijo en ambos temas. */
+    color: #fbfaf7;
     text-shadow: 0 1px 6px rgba(0, 0, 0, .7);
     background: linear-gradient(to top, rgba(0, 0, 0, .5), transparent);
     transition: opacity .4s var(--ease);
@@ -145,7 +146,9 @@ const ICONO_CAT: Record<Categoria, string> = {
     flex-direction: column;
     gap: 6px;
     padding: 16px;
-    color: var(--paper);
+    /* La caption va sobre un gradiente oscuro: texto claro fijo en ambos temas
+       (en Noche, var(--paper) era casi negro y el título quedaba invisible). */
+    color: #fbfaf7;
     background: linear-gradient(to top, rgba(0, 0, 0, .82) 12%, transparent);
     opacity: 0;
     transform: translateY(8px);

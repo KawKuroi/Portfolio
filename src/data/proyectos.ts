@@ -33,7 +33,7 @@ export const PROYECTOS: Proyecto[] = [
     icono: 'ic-server',
     tags: 'TypeScript · PWA · TMDB · Push API',
     chips: ['TypeScript', 'PWA', 'TMDB', 'Push API'],
-    anio: '2025 — Actual',
+    anio: 'May 2026',
     estado: 'En progreso',
     repo: 'https://github.com/KawKuroi/Noti',
     demo: 'https://noti-seven-peach.vercel.app/',

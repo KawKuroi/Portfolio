@@ -1,21 +1,23 @@
 ---
 /*
-  Escena 5 — Salida / libro de visitas. Centrada: etiqueta, frase serif italic y enlaces mono
-  con icono (el primero, .solid, relleno ink). Copy y estilado 1:1 con el diseno original.
+  Escena 5 — Contacto. Centrada: frase serif italic y enlaces mono con icono.
+  - El correo abre un formulario (dialog) que envia el mensaje via Web3Forms (sin backend).
+  - El telefono (y el correo directo del formulario) copian al portapapeles con feedback.
+  Respaldo sin JS: el correo conserva mailto: y el telefono tel:.
 */
 ---
 
-<section class="scene fin" data-slate="Salida" data-screen-label="Salida">
+<section class="scene fin" data-slate="Contacto" data-screen-label="Contacto">
   <div class="wrap">
-    <div class="q">Hagamos el próximo.</div>
+    <div class="q">Contáctame.</div>
     <nav class="links" aria-label="Contacto">
-      <a class="solid" href="mailto:kevinaxelhr18@gmail.com">
+      <a class="solid" href="mailto:kevinaxelhr18@gmail.com" data-form-open>
         <svg class="ic" aria-hidden="true"><use href="#ic-mail" /></svg>
         kevinaxelhr18@gmail.com
       </a>
-      <a href="tel:+573001908759">
+      <a href="tel:+573001908759" data-copy="+57 3001908759">
         <svg class="ic" aria-hidden="true"><use href="#ic-phone" /></svg>
-        +57 3001908759
+        <span class="lbl">+57 3001908759</span>
       </a>
       <a href="https://github.com/KawKuroi" target="_blank" rel="noopener">
         <svg class="ic" aria-hidden="true"><use href="#ic-github" /></svg>
@@ -35,21 +37,142 @@
       </a>
     </nav>
   </div>
+
+  <!-- Formulario de contacto (se abre al hacer clic en el correo). -->
+  <dialog class="cform" data-form aria-label="Formulario de contacto">
+    <form class="cform-box" data-contact-form>
+      <button type="button" class="cform-x" data-form-close aria-label="Cerrar">
+        <svg class="ic" aria-hidden="true"><use href="#ic-close" /></svg>
+      </button>
+      <h3 class="cform-tt">Escríbeme</h3>
+      <p class="cform-sub">Cuéntame tu idea y te respondo al correo que dejes.</p>
+
+      <label class="cfield">
+        <span>Nombre</span>
+        <input type="text" name="name" required autocomplete="name" />
+      </label>
+      <label class="cfield">
+        <span>Correo</span>
+        <input type="email" name="email" required autocomplete="email" inputmode="email" />
+      </label>
+      <label class="cfield">
+        <span>Mensaje</span>
+        <textarea name="message" rows="4" required></textarea>
+      </label>
+
+      <!-- Honeypot anti-spam: oculto a humanos; si llega marcado, es un bot. -->
+      <input type="checkbox" name="botcheck" class="cform-hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+      <button type="submit" class="cform-send" data-form-send>Enviar</button>
+      <p class="cform-status" data-form-status role="status" aria-live="polite"></p>
+      <p class="cform-alt">
+        ¿Prefieres el correo directo?
+        <a class="cform-mail" href="mailto:kevinaxelhr18@gmail.com" data-copy="kevinaxelhr18@gmail.com">
+          <span class="lbl">kevinaxelhr18@gmail.com</span>
+        </a>
+      </p>
+    </form>
+  </dialog>
 </section>
+
+<script>
+  const fin = document.querySelector<HTMLElement>('.fin');
+  if (fin) {
+    const dlg = fin.querySelector<HTMLDialogElement>('dialog[data-form]');
+
+    // Abrir el formulario al hacer clic en el correo (respaldo mailto si no hay JS).
+    fin.querySelectorAll<HTMLAnchorElement>('[data-form-open]').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        dlg?.showModal();
+      });
+    });
+
+    // Cerrar: botón, clic en el backdrop y Escape (nativo del <dialog>).
+    dlg?.querySelector('[data-form-close]')?.addEventListener('click', () => dlg.close());
+    dlg?.addEventListener('click', (e) => {
+      if (e.target === dlg) dlg.close();
+    });
+
+    // Copiar al portapapeles (teléfono y correo directo) con feedback "¡Copiado!".
+    fin.querySelectorAll<HTMLAnchorElement>('[data-copy]').forEach((el) => {
+      el.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const texto = el.getAttribute('data-copy') ?? '';
+        const lbl = el.querySelector<HTMLElement>('.lbl');
+        try {
+          await navigator.clipboard.writeText(texto);
+          if (lbl) {
+            const previo = lbl.textContent;
+            lbl.textContent = '¡Copiado!';
+            el.classList.add('copied');
+            window.setTimeout(() => {
+              lbl.textContent = previo;
+              el.classList.remove('copied');
+            }, 1500);
+          }
+        } catch {
+          // Sin permiso de portapapeles: respaldo al enlace nativo.
+          const href = el.getAttribute('href');
+          if (href) window.location.href = href;
+        }
+      });
+    });
+
+    // Envío del formulario vía Web3Forms (sin backend; la access key es pública por diseño).
+    // 1) Crea tu clave gratis en https://web3forms.com (te llega por correo).
+    // 2) Pégala aquí en lugar del marcador:
+    const WEB3FORMS_KEY = 'PEGA-AQUI-TU-ACCESS-KEY';
+    const form = dlg?.querySelector<HTMLFormElement>('[data-contact-form]');
+    const estado = dlg?.querySelector<HTMLElement>('[data-form-status]');
+    const enviar = dlg?.querySelector<HTMLButtonElement>('[data-form-send]');
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!estado) return;
+      const datos = Object.fromEntries(new FormData(form)) as Record<string, string>;
+      if (datos.botcheck) return; // honeypot: es un bot
+
+      estado.className = 'cform-status';
+      estado.textContent = 'Enviando…';
+      if (enviar) enviar.disabled = true;
+
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_KEY,
+            subject: 'Nuevo mensaje desde el portafolio',
+            from_name: 'Portafolio · Kevin Herazo',
+            name: datos.name,
+            email: datos.email,
+            message: datos.message,
+          }),
+        });
+        const out = (await res.json()) as { success?: boolean; message?: string };
+        if (out.success) {
+          estado.classList.add('ok');
+          estado.textContent = '¡Mensaje enviado! Te respondo pronto.';
+          form.reset();
+        } else {
+          estado.classList.add('err');
+          estado.textContent = out.message || 'No se pudo enviar. Escríbeme directo al correo.';
+        }
+      } catch {
+        estado.classList.add('err');
+        estado.textContent = 'No se pudo enviar. Revisa tu conexión o escríbeme al correo.';
+      } finally {
+        if (enviar) enviar.disabled = false;
+      }
+    });
+  }
+</script>
 
 <style>
   .fin {
     text-align: center;
     align-items: center;
-  }
-
-  .end {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--teal);
-    margin-bottom: 26px;
   }
 
   .q {
@@ -79,6 +202,7 @@
     align-items: center;
     gap: 9px;
     color: var(--ink);
+    cursor: pointer;
   }
 
   .links a .ic {
@@ -106,5 +230,199 @@
   .links a:focus-visible {
     outline: 2px solid var(--teal);
     outline-offset: 3px;
+  }
+
+  .links a.copied {
+    background: var(--teal);
+    color: var(--paper);
+    border-color: var(--teal);
+  }
+
+  /* ── Formulario de contacto (dialog) ── */
+  .cform {
+    width: min(440px, 92vw);
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    padding: 0;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, .3);
+  }
+
+  .cform::backdrop {
+    background: rgba(0, 0, 0, .55);
+    backdrop-filter: blur(2px);
+  }
+
+  .cform-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: clamp(24px, 4vw, 36px);
+    text-align: left;
+  }
+
+  .cform-x {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    appearance: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--soft);
+    transition: color .2s;
+  }
+
+  .cform-x:hover {
+    color: var(--ink);
+  }
+
+  .cform-x .ic {
+    width: 18px;
+    height: 18px;
+  }
+
+  .cform-x:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .cform-tt {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-style: italic;
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1;
+  }
+
+  .cform-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .04em;
+    color: var(--soft);
+    margin-top: -6px;
+  }
+
+  .cfield {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .cfield > span {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .cfield input,
+  .cfield textarea {
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--wall);
+    border: 1px solid var(--line);
+    padding: 10px 12px;
+    width: 100%;
+    resize: vertical;
+  }
+
+  .cfield input:focus-visible,
+  .cfield textarea:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 1px;
+    border-color: var(--teal);
+  }
+
+  /* Honeypot: fuera de pantalla, no enfocable. */
+  .cform-hp {
+    position: absolute !important;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .cform-send {
+    appearance: none;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .06em;
+    cursor: pointer;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    padding: 13px 19px;
+    margin-top: 4px;
+    transition: background .25s, border-color .25s;
+  }
+
+  .cform-send:hover {
+    background: var(--teal);
+    border-color: var(--teal);
+  }
+
+  .cform-send:disabled {
+    opacity: .6;
+    cursor: progress;
+  }
+
+  .cform-send:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 3px;
+  }
+
+  .cform-status {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .03em;
+    min-height: 1em;
+    margin: 0;
+  }
+
+  .cform-status.ok {
+    color: #5b9c74;
+  }
+
+  .cform-status.err {
+    color: #c0594a;
+  }
+
+  .cform-alt {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .03em;
+    color: var(--faint);
+    margin: 0;
+  }
+
+  .cform-mail {
+    color: var(--soft);
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+  }
+
+  .cform-mail:hover {
+    color: var(--ink);
+  }
+
+  @media (max-width: 560px) {
+    .links {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .links a {
+      justify-content: center;
+    }
   }
 </style>

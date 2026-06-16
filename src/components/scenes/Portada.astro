@@ -27,7 +27,6 @@
           onerror="this.closest('.portrait').classList.add('empty')"
         />
         <span class="ept"><svg class="ic"><use href="#ic-portrait" /></svg><span>retrato</span></span>
-        <figcaption>Kevin A. Herazo R. · autorretrato</figcaption>
       </figure>
     </div>
   </div>
@@ -36,8 +35,8 @@
 <style>
   .title-grid {
     display: grid;
-    grid-template-columns: 1fr minmax(0, clamp(230px, 27vw, 344px));
-    gap: clamp(28px, 5vw, 76px);
+    grid-template-columns: 1fr minmax(0, clamp(250px, 32vw, 416px));
+    gap: clamp(28px, 5vw, 68px);
     align-items: center;
   }
 
@@ -121,21 +120,6 @@
     z-index: 1;
   }
 
-  .portrait figcaption {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 2;
-    padding: 11px 13px;
-    background: linear-gradient(0deg, color-mix(in srgb, var(--ink) 86%, transparent), transparent);
-    color: var(--paper);
-    font-family: var(--mono);
-    font-size: 9.5px;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-  }
-
   .portrait.empty img {
     display: none;
   }
@@ -175,7 +159,7 @@
     }
 
     .portrait {
-      max-width: 240px;
+      max-width: 280px;
       margin-top: 10px;
     }
   }
