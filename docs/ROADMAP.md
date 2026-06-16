@@ -5,18 +5,13 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 
 ## Fase activa
 
-### Fase 3 — "El trabajo" (disposición Galería, fija)
-- [ ] Disposición Galería (`#twGaleria`): botones a la izquierda + escenario a la derecha.
-- [ ] Selección por clic fija; empieza en el proyecto 0; placa con meta (año · estado · Repo).
-- [ ] Placeholder `onerror` "captura" para imágenes de proyecto faltantes.
-
-## Próximas fases
-
 ### Fase 4 — Persiana / Conóceme
 - [ ] `persiana.ts`: construir franjas desde FAVORITOS (gradiente, img, lomo, caption).
 - [ ] Acordeón (hover abre, oscurece el resto) + autoplay 2.6s con pausas.
 - [ ] Decoración de iconos por categoría (cine/juegos/libros/música).
 - [ ] Comportamiento móvil (columnas → filas) y `prefers-reduced-motion`.
+
+## Próximas fases
 
 ### Fase 5 — Pulido y despliegue en Vercel
 - [ ] Accesibilidad (aria-label/aria-pressed/aria-hidden) y foco visible.
@@ -28,6 +23,13 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 - [ ] Confirmar dominio `*.vercel.app` (o dominio propio) y *preview deployments* por push.
 
 ## Histórico de fases completadas
+
+### Fase 3 — "El trabajo" (disposición Galería, fija) (2026-06-15)
+- [x] Disposición Galería (`#twGaleria`) renderizada en build desde PROYECTOS: botones a la
+      izquierda + escenario a la derecha.
+- [x] Selección SOLO por clic (script mínimo), fija; empieza en el proyecto 0; placa con
+      título italic, descripción y meta (año · estado · Repo).
+- [x] Placeholder `onerror` rayado "captura" para imágenes de proyecto faltantes.
 
 ### Fase 2 — Escenas estáticas (Portada, Equipo, Salida) (2026-06-15)
 - [x] Portada: grid texto|retrato, actos con iconos (I/II/III), retrato 4/5 con `onerror`

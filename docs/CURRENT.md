@@ -1,13 +1,12 @@
 # CURRENT — Estado del proyecto
 
 ## Fase activa
-- **Activo:** Fase 3 — "El trabajo" (disposición Galería, fija) (ver [ROADMAP.md](./ROADMAP.md)).
-- **Estado general:** Fases 0, 1 y 2 completadas. Chrome global funcional + tres escenas
-  estáticas maquetadas con el copy exacto del PRD: Portada (texto|retrato con `onerror`),
-  Equipo (Stack + Formación) y Salida (frase + enlaces de contacto). Tipografía editorial
-  compartida en global.css; layout propio de cada escena en su `<style>` scoped. `astro check`
-  y `astro build` limpios, 0 JS de framework. Falta render dinámico de "El trabajo" (Galería)
-  y la persiana de "Conóceme".
+- **Activo:** Fase 4 — Persiana / Conóceme (ver [ROADMAP.md](./ROADMAP.md)).
+- **Estado general:** Fases 0–3 completadas. Chrome global + cuatro de las cinco escenas
+  listas: Portada, Equipo, Salida (estáticas) y "El trabajo" (Galería renderizada en build
+  desde PROYECTOS, selección por clic y placa con meta). `astro check` y `astro build`
+  limpios, 0 JS de framework. Falta la última escena: la persiana (acordeón de 20 carátulas)
+  de "Conóceme".
 
 ## Pendientes que aporta el usuario (no bloquean el desarrollo)
 - `public/assets/me/retrato.png` — autorretrato (relación 4/5).
@@ -19,6 +18,13 @@
 Mientras falten, el `onerror` muestra placeholders y la maqueta no se rompe.
 
 ## Historial
+- **2026-06-15** — Fase 3. "El trabajo" en disposición Galería (única). El render se genera
+  en build desde `PROYECTOS` (4 obras): lista de botones `.twg-item` (num, título, tags, año)
+  a la izquierda y escenario a la derecha con marco 3/2, obras superpuestas `.ph` (fade+scale)
+  y placa `.twg-plate` (obra NN, título italic, descripción, meta año · estado · Repo). Un
+  `<script>` mínimo (importa `PROYECTOS`) hace la selección por clic, fija, empezando en la
+  obra 0; cada imagen degrada con `onerror` a un placeholder rayado "captura". Verificado con
+  `astro check` (0 errores) y `astro build`.
 - **2026-06-15** — Fase 2. Maquetadas las tres escenas estáticas con el copy exacto del PRD
   §6. Portada: grid texto|retrato, actos con iconos (I — El trabajo, II — El equipo, III —
   Conóceme), retrato 4/5 con `onerror` a placeholder y caption. Equipo: grid Stack (5 filas
