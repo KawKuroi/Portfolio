@@ -1,4 +1,4 @@
-# ARCHITECTURE — Portfolio "Sala"
+# ARCHITECTURE — Portafolio
 
 Decisiones técnicas y mapa del proyecto. El "qué" del producto está en [PRD.md](./PRD.md);
 aquí va el "cómo".
@@ -127,8 +127,8 @@ scripts/
 - **Iconos:** `.ico` (PNG embebido 16/32/48) y PNG 16/32 para buscadores, SVG para
   navegadores modernos, `apple-touch-icon` 180 para iOS y `site.webmanifest` (iconos
   192/512 `any maskable`) para Android.
-- **Tarjeta social:** `og-image.png` 1200x630 (proporción 1.91:1) con la estética de la
-  Sala. Tanto la tarjeta como los iconos se generan con `scripts/gen-seo-assets.mjs`
+- **Tarjeta social:** `og-image.png` 1200x630 (proporción 1.91:1) con la estética del
+  portafolio. Tanto la tarjeta como los iconos se generan con `scripts/gen-seo-assets.mjs`
   (sharp) desde `favicon.svg`; los binarios se commitean y Vercel los sirve estáticos
   (no se ejecuta sharp en el despliegue).
 - **Indexación:** `robots.txt` (permite todo + apunta al sitemap) y `sitemap.xml`

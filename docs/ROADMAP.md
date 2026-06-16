@@ -21,7 +21,8 @@ formulario de contacto (ver [CURRENT.md](./CURRENT.md)).
 - [x] Conóceme: títulos de la persiana legibles en modo Noche (color claro fijo).
 - [x] Contacto (antes "Salida"): frase "Contáctame."; teléfono y correo copian al portapapeles;
       formulario en `<dialog>` que envía vía Web3Forms (pendiente: access key del usuario).
-- [x] Retiradas las referencias visibles a la metáfora de "salas" (UI y `<title>`).
+- [x] Retiradas las referencias visibles a la metáfora de "salas" (UI, `<title>` y la
+      tarjeta social `og-image` → eyebrow "PORTAFOLIO"; también `package.json` y docs).
 
 ### Fase 6 — SEO y metadatos sociales (2026-06-16)
 - [x] Open Graph completo (`og:type/site_name/locale/url/title/description/image` +

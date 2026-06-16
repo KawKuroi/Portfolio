@@ -19,6 +19,14 @@
   casual y se nota más ahora que la imagen es más grande.
 
 ## Historial
+- **2026-06-16** — Limpieza de "Sala" en el SEO. La tarjeta social `og-image.png` mostraba el
+  eyebrow "PORTAFOLIO · SALA" (lo que aparecía en la previsualización de OpenGraph); regenerada
+  a solo "PORTAFOLIO" con `scripts/gen-seo-assets.mjs` (`sharp` se instala bajo demanda con
+  `npm i sharp --no-save`, ya no está en `package.json`). Retirada "Sala" también de la
+  `description` de `package.json`, del comentario de cabecera de `Base.astro` y de los
+  encabezados/§9 de `ARCHITECTURE`. **Se mantienen** los identificadores internos del codename
+  (`sala-theme`/`setSalaTheme`/`salathemechange`), no visibles, para no resetear el tema
+  guardado de los visitantes. Verificado: `astro check`/`build` limpios (0 errores).
 - **2026-06-16** — Ajustes de contenido, contacto y limpieza de la metáfora de "salas".
   Portada: retirado el caption redundante del retrato y agrandada la imagen (`clamp(250–416px)`;
   móvil 280px). El trabajo: eliminada la línea "En sala · obra NN" sobre el título; el indicador

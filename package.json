@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.1.0",
   "private": true,
-  "description": "Portafolio interactivo Sala — Kevin Axel Herazo Rolon (Astro)",
+  "description": "Portafolio de Kevin Axel Herazo Rolon (Astro)",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

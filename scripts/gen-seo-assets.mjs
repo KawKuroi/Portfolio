@@ -4,7 +4,8 @@
   favicon-32x32.png, apple-touch-icon.png (180), icon-192.png, icon-512.png (manifest)
   y og-image.png (1200x630, tarjeta social de respaldo, autocontenida).
 
-  Requiere `sharp` (devDependency). Uso: `node scripts/gen-seo-assets.mjs`.
+  Herramienta puntual: `sharp` NO está en package.json (deps mínimas). Para regenerar:
+  `npm i sharp --no-save && node scripts/gen-seo-assets.mjs`.
   Los binarios resultantes se commitean en public/ y Vercel los sirve como estáticos;
   no se ejecuta sharp en el despliegue.
 */
@@ -52,14 +53,14 @@ function buildIco(images) {
   return Buffer.concat([header, dir, ...images.map((im) => im.buf)]);
 }
 
-// Tarjeta social 1200x630 (proporción 1.91:1). Estética de la Sala: fondo Noche,
+// Tarjeta social 1200x630 (proporción 1.91:1). Estética del portafolio: fondo oscuro,
 // acento aguamarino, tipografía serif. Texto convertido por librsvg con fuentes del sistema.
 function ogSvg() {
   return `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
   <rect width="1200" height="630" fill="#16130e"/>
   <rect x="44" y="44" width="1112" height="542" fill="none" stroke="#ece4d4" stroke-opacity="0.16" stroke-width="1.5"/>
   <text x="1118" y="538" font-family="Georgia, 'Times New Roman', serif" font-size="520" font-style="italic" fill="#2aa198" fill-opacity="0.10" text-anchor="end">K</text>
-  <text x="96" y="150" font-family="Georgia, 'Times New Roman', serif" font-size="26" letter-spacing="6" fill="#a89c87">PORTAFOLIO &#183; SALA</text>
+  <text x="96" y="150" font-family="Georgia, 'Times New Roman', serif" font-size="26" letter-spacing="6" fill="#a89c87">PORTAFOLIO</text>
   <text x="92" y="300" font-family="Georgia, 'Times New Roman', serif" font-size="92" fill="#ece4d4">Kevin Axel</text>
   <text x="92" y="392" font-family="Georgia, 'Times New Roman', serif" font-size="92" fill="#ece4d4">Herazo Rol&#243;n</text>
   <rect x="96" y="428" width="120" height="5" fill="#2aa198"/>
