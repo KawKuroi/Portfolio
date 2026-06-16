@@ -61,7 +61,7 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
           }
         </div>
 
-        <div class="twg-plate">
+        <div class="twg-plate" aria-live="polite">
           <p class="twg-sala">En sala · obra <span data-plate-num>{numero(0)}</span></p>
           <h3 data-plate-titulo>{inicial.titulo}</h3>
           <p class="twg-desc" data-plate-desc>{inicial.descripcion}</p>

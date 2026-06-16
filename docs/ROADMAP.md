@@ -6,13 +6,20 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 ## Fase activa
 
 ### Fase 5 — Pulido y despliegue en Vercel
-- [ ] Accesibilidad (aria-label/aria-pressed/aria-hidden) y foco visible.
-- [ ] `prefers-reduced-motion` en todas las animaciones.
-- [ ] Revisión responsive completa (≤820px y ≤640px).
-- [ ] Optimización de imágenes y auditoría Lighthouse (≥95 Performance).
-- [ ] Conectar el repositorio a **Vercel** (plan Hobby, gratuito) y publicar.
-- [ ] Verificar build en Vercel (`astro build` autodetectado, output `dist/`, sin adaptador).
-- [ ] Confirmar dominio `*.vercel.app` (o dominio propio) y *preview deployments* por push.
+- [x] Accesibilidad (aria-label/aria-pressed/aria-current/aria-hidden/aria-live) y foco visible.
+- [x] `prefers-reduced-motion` en todas las animaciones (regla global + guardas en JS de
+      navegación y persiana).
+- [x] Revisión responsive (≤820px sin snap/riel/persiana en filas, ≤760px Equipo 1 col,
+      ≤640px ajustes de plaque/padding).
+- [x] Optimización: `lazy` en galería/persiana, `fetchpriority=high` en el retrato (LCP),
+      contenedores con `aspect-ratio` (sin CLS), 0 JS de framework y un único CSS.
+- [ ] **(req. usuario)** Conectar el repo `github.com/KawKuroi/Portfolio` a **Vercel** (Hobby) y publicar.
+- [ ] **(req. usuario)** Verificar build en Vercel (`astro build` autodetectado, output `dist/`, sin adaptador).
+- [ ] **(req. usuario)** Confirmar dominio `*.vercel.app` y *preview deployments* por push; auditar Lighthouse (≥95).
+
+> El pulido de código está completo y verificado (`astro check`/`astro build` limpios). Los
+> tres pasos restantes requieren la cuenta de Vercel del usuario (conexión OAuth en el panel
+> de Vercel) y autorización para hacer `git push` a origin.
 
 ## Histórico de fases completadas
 

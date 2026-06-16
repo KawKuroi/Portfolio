@@ -323,6 +323,26 @@ img {
   }
 }
 
+/* Refinado para pantallas estrechas (telefono). El resto lo absorben los clamp(). */
+@media (max-width: 640px) {
+  .lb.top {
+    padding-inline: 14px;
+    letter-spacing: .12em;
+  }
+
+  .lb-right {
+    gap: 8px;
+  }
+
+  .scene {
+    padding-top: calc(var(--bar) + 3vh);
+  }
+
+  .wrap {
+    padding-inline: 18px;
+  }
+}
+
 /* Respeto a usuarios que prefieren menos movimiento */
 @media (prefers-reduced-motion: reduce) {
   * {

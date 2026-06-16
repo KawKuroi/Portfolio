@@ -2,11 +2,14 @@
 
 ## Fase activa
 - **Activo:** Fase 5 — Pulido y despliegue en Vercel (ver [ROADMAP.md](./ROADMAP.md)).
-- **Estado general:** Fases 0–4 completadas. Las cinco escenas y el chrome global están
-  construidos y funcionales: Portada, "El trabajo" (Galería), Equipo, "Conóceme" (persiana
-  acordeón de 20 carátulas con autoplay) y Salida. `astro check` y `astro build` limpios,
-  0 JS de framework. Queda el pulido transversal (accesibilidad, reduced-motion, responsive,
-  optimización de imágenes/Lighthouse) y conectar/publicar en Vercel.
+  **Pulido de código completado; despliegue pendiente de acción del usuario.**
+- **Estado general:** Fases 0–4 completas y el pulido transversal de la Fase 5 hecho
+  (accesibilidad con aria-live en la placa de Galería, foco visible, `prefers-reduced-motion`
+  global, responsive ≤820/≤760/≤640px, `lazy`/`fetchpriority`/`aspect-ratio` para LCP/CLS,
+  0 JS de framework, un único CSS). `astro check` y `astro build` limpios; `dist/` (index 44K)
+  listo para Vercel. **Sólo restan los pasos que requieren la cuenta de Vercel del usuario:
+  conectar `github.com/KawKuroi/Portfolio` en el panel de Vercel, publicar y auditar
+  Lighthouse contra el preview; y autorizar el `git push` a origin.**
 
 ## Pendientes que aporta el usuario (no bloquean el desarrollo)
 - `public/assets/me/retrato.png` — autorretrato (relación 4/5).
@@ -18,6 +21,13 @@
 Mientras falten, el `onerror` muestra placeholders y la maqueta no se rompe.
 
 ## Historial
+- **2026-06-15** — Fase 5 (pulido). Accesibilidad: `aria-live="polite"` en la placa de la
+  Galería para anunciar la obra seleccionada (el resto de aria ya estaba). Responsive: añadido
+  el breakpoint ≤640px (plaque y padding de escena). Rendimiento: `fetchpriority="high"` en el
+  retrato (LCP); galería y persiana ya en `lazy`; contenedores con `aspect-ratio` evitan CLS;
+  `prefers-reduced-motion` cubierto por regla global + guardas en navegación/persiana. Build
+  verificado: `dist/` estático, 0 archivos JS de framework, un único CSS. Pendiente: conectar
+  y publicar en Vercel (requiere la cuenta del usuario) y auditar Lighthouse en el preview.
 - **2026-06-15** — Fase 4. "Conóceme": persiana (acordeón de 20 carátulas). Las franjas se
   renderizan en build desde `FAVORITOS` (gradiente de respaldo `.pph`, carátula `.pimg` lazy +
   no-referrer con `onerror`, lomo vertical `.pspine` y caption `.pcap` con chip de categoría +
