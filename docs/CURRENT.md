@@ -1,15 +1,14 @@
 # CURRENT — Estado del proyecto
 
 ## Fase activa
-- **Activo:** Fase 5 — Pulido y despliegue en Vercel (ver [ROADMAP.md](./ROADMAP.md)).
-  **Pulido de código completado; despliegue pendiente de acción del usuario.**
-- **Estado general:** Fases 0–4 completas y el pulido transversal de la Fase 5 hecho
-  (accesibilidad con aria-live en la placa de Galería, foco visible, `prefers-reduced-motion`
-  global, responsive ≤820/≤760/≤640px, `lazy`/`fetchpriority`/`aspect-ratio` para LCP/CLS,
-  0 JS de framework, un único CSS). `astro check` y `astro build` limpios; `dist/` (index 44K)
-  listo para Vercel. **Sólo restan los pasos que requieren la cuenta de Vercel del usuario:
-  conectar `github.com/KawKuroi/Portfolio` en el panel de Vercel, publicar y auditar
-  Lighthouse contra el preview; y autorizar el `git push` a origin.**
+- **Activo:** Ninguna — roadmap completo. Sitio **publicado y verificado en Vercel**:
+  <https://portfolio-topaz-nu-46.vercel.app/>.
+- **Estado general:** Las 5 fases cerradas. Sitio construido en Astro (0 JS de framework),
+  alineado 1:1 con el diseño original de Claude Design y desplegado en Vercel (estático desde
+  CDN). Verificado: `astro check`/`build` limpios, 12/12 pruebas funcionales headless, visual
+  desktop+móvil, y **Lighthouse móvil en vivo Performance 99 · Accessibility 95 · Best
+  Practices 96 · SEO 100**. Mantenimiento pendiente (no bloquea): subir `me/retrato.png` y las
+  4 capturas de proyecto (al hacerlo, se resuelven los 404 que bajan Best Practices).
 
 ## Pendientes que aporta el usuario (no bloquean el desarrollo)
 - `public/assets/me/retrato.png` — autorretrato (relación 4/5).
@@ -21,6 +20,12 @@
 Mientras falten, el `onerror` muestra placeholders y la maqueta no se rompe.
 
 ## Historial
+- **2026-06-16** — Despliegue y auditoría. Publicado en Vercel (Hobby) en
+  `portfolio-topaz-nu-46.vercel.app`; build `astro build` autodetectado, output `dist/`, sin
+  adaptador. Verificado el sitio en vivo (sirve las 5 salas y los enlaces de contacto) y
+  auditado con Lighthouse móvil: Performance 99, Accessibility 95, Best Practices 96, SEO 100.
+  Hallazgos no bloqueantes: 404 de los 5 assets pendientes (bajan Best Practices) y contraste
+  del texto `--faint` heredado del diseño original (limita Accessibility). Cierra la Fase 5.
 - **2026-06-16** — Fidelidad de diseño. Comparado el código 1:1 con el HTML original de Claude
   Design (`Sala - Kevin Herazo.html`) y re-skinneadas las 5 escenas + el chrome para coincidir:
   encabezados de escena horizontales (`.sh` con acto · título · línea · conteo), Portada con

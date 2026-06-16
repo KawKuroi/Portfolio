@@ -5,23 +5,27 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 
 ## Fase activa
 
-### Fase 5 — Pulido y despliegue en Vercel
+Ninguna — el roadmap está completo. El sitio está construido, alineado 1:1 con el diseño
+original (Claude Design) y **publicado en Vercel**:
+<https://portfolio-topaz-nu-46.vercel.app/>. Mantenimiento pendiente (no bloquea): subir
+`me/retrato.png` y las 4 capturas de proyecto (mientras tanto, placeholders por `onerror`).
+
+## Histórico de fases completadas
+
+### Fase 5 — Pulido y despliegue en Vercel (2026-06-16)
 - [x] Accesibilidad (aria-label/aria-pressed/aria-current/aria-hidden/aria-live) y foco visible.
 - [x] `prefers-reduced-motion` en todas las animaciones (regla global + guardas en JS de
       navegación y persiana).
 - [x] Revisión responsive (≤820px sin snap/riel/persiana en filas, ≤760px Equipo 1 col,
-      ≤640px ajustes de plaque/padding).
+      ≤640px / ≤560px ajustes de plaque, galería y padding).
 - [x] Optimización: `lazy` en galería/persiana, `fetchpriority=high` en el retrato (LCP),
       contenedores con `aspect-ratio` (sin CLS), 0 JS de framework y un único CSS.
-- [ ] **(req. usuario)** Conectar el repo `github.com/KawKuroi/Portfolio` a **Vercel** (Hobby) y publicar.
-- [ ] **(req. usuario)** Verificar build en Vercel (`astro build` autodetectado, output `dist/`, sin adaptador).
-- [ ] **(req. usuario)** Confirmar dominio `*.vercel.app` y *preview deployments* por push; auditar Lighthouse (≥95).
-
-> El pulido de código está completo y verificado (`astro check`/`astro build` limpios). Los
-> tres pasos restantes requieren la cuenta de Vercel del usuario (conexión OAuth en el panel
-> de Vercel) y autorización para hacer `git push` a origin.
-
-## Histórico de fases completadas
+- [x] Publicado en **Vercel** (Hobby), build `astro build` autodetectado, output `dist/`, sin
+      adaptador; dominio `*.vercel.app` y *preview deployments* por push.
+- [x] Auditoría **Lighthouse (móvil)** contra la URL en vivo: Performance **99**, Accessibility
+      **95**, Best Practices **96**, SEO **100** (objetivo ≥95 cumplido). Pendientes menores no
+      bloqueantes: el 404 de los 5 assets faltantes baja Best Practices; el texto `--faint` del
+      diseño original limita el contraste en Accessibility.
 
 ### Fase 4 — Persiana / Conóceme (2026-06-15)
 - [x] Franjas (20) renderizadas en build desde FAVORITOS (gradiente `.pph`, img lazy +
