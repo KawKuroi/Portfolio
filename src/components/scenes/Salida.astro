@@ -48,8 +48,8 @@
       <p class="cform-sub">Cuéntame tu idea y te respondo al correo que dejes.</p>
 
       <label class="cfield">
-        <span>Nombre</span>
-        <input type="text" name="name" required autocomplete="name" />
+        <span>Nombre <small>(opcional)</small></span>
+        <input type="text" name="name" autocomplete="name" />
       </label>
       <label class="cfield">
         <span>Correo</span>
@@ -145,7 +145,7 @@
             access_key: WEB3FORMS_KEY,
             subject: 'Nuevo mensaje desde el portafolio',
             from_name: 'Portafolio · Kevin Herazo',
-            name: datos.name,
+            name: (datos.name ?? '').trim() || 'Anónimo',
             email: datos.email,
             message: datos.message,
           }),
@@ -329,6 +329,13 @@
     letter-spacing: .16em;
     text-transform: uppercase;
     color: var(--faint);
+  }
+
+  .cfield > span small {
+    font-size: inherit;
+    text-transform: none;
+    letter-spacing: .04em;
+    opacity: .8;
   }
 
   .cfield input,
