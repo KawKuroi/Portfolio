@@ -1,9 +1,9 @@
 # CURRENT — Estado del proyecto
 
 ## Fase activa
-- **Activo:** Ninguna — roadmap completo. Sitio **publicado y verificado en Vercel**:
-  <https://portfolio-topaz-nu-46.vercel.app/>.
-- **Estado general:** Las 5 fases cerradas. Sitio construido en Astro (0 JS de framework),
+- **Activo:** Ninguna — roadmap completo (incluida la Fase 6 de SEO). Sitio **publicado y
+  verificado en Vercel**: <https://portfolio-topaz-nu-46.vercel.app/>.
+- **Estado general:** Las 5 fases + SEO cerradas. Sitio construido en Astro (0 JS de framework),
   alineado 1:1 con el diseño original de Claude Design y desplegado en Vercel (estático desde
   CDN). Verificado: `astro check`/`build` limpios, 12/12 pruebas funcionales headless, visual
   desktop+móvil, y **Lighthouse móvil en vivo Performance 99 · Accessibility 95 · Best
@@ -20,6 +20,20 @@
 Mientras falten, el `onerror` muestra placeholders y la maqueta no se rompe.
 
 ## Historial
+- **2026-06-16** — Fase 6: SEO y metadatos sociales. `Base.astro` ahora emite el set completo
+  de meta para social/buscadores: Open Graph, Twitter Card `summary_large_image`, `canonical`,
+  `description` (todo parametrizado por props con la constante `SITIO` y URLs absolutas),
+  `theme-color` claro/oscuro y JSON-LD (`Person` + `WebSite`). Añadidos iconos para buscadores
+  e iOS/Android (`favicon.ico` con PNG 16/32/48 embebido, `favicon-16/32.png`,
+  `apple-touch-icon` 180, `site.webmanifest` con iconos 192/512 maskable), `robots.txt`,
+  `sitemap.xml` y la tarjeta social `og-image.png` 1200x630. Iconos y tarjeta generados con
+  `scripts/gen-seo-assets.mjs` (sharp) desde `favicon.svg`; los binarios se commitean y Vercel
+  los sirve estáticos. Responde al informe de OpenGraph (34/100): cubre todos los ERROR/WARNING
+  (og:image, og:url, twitter:card/image, canonical, apple-touch-icon, favicon .ico/.png) y los
+  TIP (og:site_name, og:locale, JSON-LD, theme-color, manifest); `twitter:site` se omite (sin
+  handle de X confirmado). Verificado: `astro check`/`build` limpios y `<head>` de `dist/` con
+  todas las URLs absolutas. **Pendiente de publicar:** push a `main` para que Vercel redespliegue
+  y re-auditar en opengraph.xyz.
 - **2026-06-16** — Despliegue y auditoría. Publicado en Vercel (Hobby) en
   `portfolio-topaz-nu-46.vercel.app`; build `astro build` autodetectado, output `dist/`, sin
   adaptador. Verificado el sitio en vivo (sirve las 5 salas y los enlaces de contacto) y

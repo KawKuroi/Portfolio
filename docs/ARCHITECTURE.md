@@ -19,7 +19,7 @@ aquí va el "cómo".
 
 ```
 src/
-├─ layouts/Base.astro          # documento, fuentes, tema anti-parpadeo, sprite, .reel + slots
+├─ layouts/Base.astro          # documento, SEO/meta (OG/Twitter/JSON-LD), fuentes, tema, .reel + slots
 ├─ pages/index.astro           # compone chrome (slot "chrome") + las 5 escenas
 ├─ components/
 │  ├─ IconSprite.astro         # sprite SVG con los <symbol> ic-*
@@ -40,8 +40,17 @@ src/
    └─ global.css               # reset, carrete .reel, escenas .scene, reduced-motion
 
 public/
-├─ favicon.svg
+├─ favicon.svg                 # marca "K" vectorial (navegadores modernos)
+├─ favicon.ico                 # 16/32/48 con PNG embebido (buscadores; Google ignora SVG)
+├─ favicon-16x16.png · favicon-32x32.png
+├─ apple-touch-icon.png        # 180x180 (iOS "añadir a inicio")
+├─ icon-192.png · icon-512.png # iconos del manifest (any maskable)
+├─ og-image.png                # tarjeta social 1200x630 (OG/Twitter)
+├─ site.webmanifest · robots.txt · sitemap.xml
 └─ assets/                     # único almacén de binarios -> URLs /assets/...
+
+scripts/
+└─ gen-seo-assets.mjs          # genera con sharp los iconos, el .ico y la tarjeta OG
 ```
 
 ## 3. Carga de JS
@@ -101,3 +110,28 @@ public/
   cabeceras de caché personalizadas para `/assets/*`, se añade más adelante.
 - **Flujo:** conectar el repositorio Git a Vercel; cada push a la rama principal publica a
   producción y cada rama/PR genera un preview. Detalle operativo en el ROADMAP (Fase 6).
+
+## 9. SEO y metadatos sociales
+
+- **Dónde:** todo en el `<head>` de `Base.astro`, parametrizado por props
+  (`titulo`, `descripcion`, `imagen`, `canonical`). La constante `SITIO` fija la URL
+  pública; si cambia el dominio se edita en un solo sitio. `new URL(ruta, SITIO)` deriva
+  las URLs **absolutas** que exigen Open Graph y los datos estructurados.
+- **Etiquetas:** `description` + `canonical`; **Open Graph** (`og:type/site_name/locale/url/
+  title/description/image` + `image:width/height/alt`); **Twitter Card**
+  (`summary_large_image` + `title/description/image/image:alt`); **theme-color** con dos
+  valores por `prefers-color-scheme` (claro `#fbfaf7` / oscuro `#16130e`).
+- **Datos estructurados:** JSON-LD `@graph` con `Person` (identidad, `sameAs` a GitHub y
+  LinkedIn) + `WebSite`, enlazados por `@id`. Se inyecta con `set:html` + `is:inline`
+  (datos estáticos y controlados → sin riesgo de inyección).
+- **Iconos:** `.ico` (PNG embebido 16/32/48) y PNG 16/32 para buscadores, SVG para
+  navegadores modernos, `apple-touch-icon` 180 para iOS y `site.webmanifest` (iconos
+  192/512 `any maskable`) para Android.
+- **Tarjeta social:** `og-image.png` 1200x630 (proporción 1.91:1) con la estética de la
+  Sala. Tanto la tarjeta como los iconos se generan con `scripts/gen-seo-assets.mjs`
+  (sharp) desde `favicon.svg`; los binarios se commitean y Vercel los sirve estáticos
+  (no se ejecuta sharp en el despliegue).
+- **Indexación:** `robots.txt` (permite todo + apunta al sitemap) y `sitemap.xml`
+  (la única URL del sitio).
+- **Notas:** `og:locale` = `es_ES` por máxima compatibilidad de plataformas;
+  `twitter:site/creator` se omite (no hay handle de X confirmado del usuario).

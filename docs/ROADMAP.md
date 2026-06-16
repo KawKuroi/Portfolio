@@ -5,12 +5,26 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 
 ## Fase activa
 
-Ninguna — el roadmap está completo. El sitio está construido, alineado 1:1 con el diseño
-original (Claude Design) y **publicado en Vercel**:
+Ninguna — el roadmap está completo (incluida la Fase 6 de SEO). El sitio está construido,
+alineado 1:1 con el diseño original (Claude Design) y **publicado en Vercel**:
 <https://portfolio-topaz-nu-46.vercel.app/>. Mantenimiento pendiente (no bloquea): subir
 `me/retrato.png` y las 4 capturas de proyecto (mientras tanto, placeholders por `onerror`).
 
 ## Histórico de fases completadas
+
+### Fase 6 — SEO y metadatos sociales (2026-06-16)
+- [x] Open Graph completo (`og:type/site_name/locale/url/title/description/image` +
+      `image:width/height/alt`) y Twitter Card `summary_large_image` en `Base.astro`.
+- [x] `canonical` + `description` parametrizados por props; constante `SITIO` y `new URL()`
+      para derivar URLs absolutas.
+- [x] Datos estructurados JSON-LD (`Person` + `WebSite` enlazados por `@id`) vía
+      `set:html` + `is:inline`.
+- [x] Iconos para buscadores y dispositivos: `favicon.ico` (PNG 16/32/48 embebido),
+      `favicon-16/32.png`, `apple-touch-icon` 180 y `site.webmanifest` (192/512 maskable).
+- [x] `theme-color` por `prefers-color-scheme` (claro/oscuro), `robots.txt` y `sitemap.xml`.
+- [x] Tarjeta `og-image.png` 1200x630 e iconos generados con `scripts/gen-seo-assets.mjs`
+      (sharp) desde `favicon.svg`. Verificado: `astro check`/`build` limpios y `<head>`
+      renderizado con URLs absolutas. Resuelve el informe de OpenGraph (era 34/100).
 
 ### Fase 5 — Pulido y despliegue en Vercel (2026-06-16)
 - [x] Accesibilidad (aria-label/aria-pressed/aria-current/aria-hidden/aria-live) y foco visible.

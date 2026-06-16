@@ -11,9 +11,58 @@ import IconSprite from '../components/IconSprite.astro';
 
 interface Props {
   titulo?: string;
+  descripcion?: string;
+  /** Ruta o URL de la imagen social (OG/Twitter). Por defecto la tarjeta del sitio. */
+  imagen?: string;
+  /** Ruta canónica de la página (relativa a la raíz). */
+  canonical?: string;
 }
 
-const { titulo = 'Kevin Axel Herazo Rolón — Sala' } = Astro.props;
+// URL pública del sitio (Vercel). Base para canonical, og:url y las URLs absolutas
+// que exigen Open Graph y los datos estructurados.
+const SITIO = 'https://portfolio-topaz-nu-46.vercel.app';
+
+const {
+  titulo = 'Kevin Axel Herazo Rolón — Sala',
+  descripcion = 'Portafolio de Kevin Axel Herazo Rolón — Ingeniería de Sistemas: backend, datos e inteligencia artificial.',
+  imagen = '/og-image.png',
+  canonical = '/',
+} = Astro.props;
+
+const urlCanonica = new URL(canonical, SITIO).href;
+const urlImagen = new URL(imagen, SITIO).href;
+const nombreSitio = 'Kevin Axel Herazo Rolón — Portafolio';
+
+// Datos estructurados (JSON-LD): identidad (Person) + sitio (WebSite) enlazados, para
+// que los buscadores entiendan de quién es el portafolio y habiliten resultados ricos.
+const datosEstructurados = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': `${SITIO}/#kevin`,
+      name: 'Kevin Axel Herazo Rolón',
+      url: `${SITIO}/`,
+      image: urlImagen,
+      jobTitle: 'Ingeniero de Sistemas',
+      description: descripcion,
+      knowsAbout: ['Backend', 'Ingeniería de datos', 'Inteligencia artificial'],
+      sameAs: [
+        'https://github.com/KawKuroi',
+        'https://www.linkedin.com/in/kevin-axel-herazo-rol%C3%B3n-15a517266/',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITIO}/#website`,
+      url: `${SITIO}/`,
+      name: titulo,
+      description: descripcion,
+      inLanguage: 'es',
+      publisher: { '@id': `${SITIO}/#kevin` },
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -21,12 +70,42 @@ const { titulo = 'Kevin Axel Herazo Rolón — Sala' } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="Portafolio de Kevin Axel Herazo Rolón — Ingeniería de Sistemas: backend, datos e inteligencia artificial."
-    />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={urlCanonica} />
+
+    <!-- Iconos: .ico/.png para buscadores (Google ignora el SVG), SVG para navegadores
+         modernos, apple-touch para iOS y manifest para "añadir a inicio" en Android. -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfaf7" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#16130e" />
+
+    <!-- Open Graph (Facebook, LinkedIn, WhatsApp, iMessage…) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={nombreSitio} />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:url" content={urlCanonica} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:image" content={urlImagen} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={nombreSitio} />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={titulo} />
+    <meta name="twitter:description" content={descripcion} />
+    <meta name="twitter:image" content={urlImagen} />
+    <meta name="twitter:image:alt" content={nombreSitio} />
+
+    <!-- Datos estructurados -->
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(datosEstructurados)} />
 
     <!-- Resolutor de tema anti-parpadeo: corre antes del primer pintado -->
     <script is:inline>
