@@ -45,7 +45,7 @@ public/
 ├─ favicon-16x16.png · favicon-32x32.png
 ├─ apple-touch-icon.png        # 180x180 (iOS "añadir a inicio")
 ├─ icon-192.png · icon-512.png # iconos del manifest (any maskable)
-├─ og-image.png                # tarjeta social 1200x630 (OG/Twitter)
+├─ og-image-v2.png             # tarjeta social 1200x630 (OG/Twitter; sufijo versionado)
 ├─ site.webmanifest · robots.txt · sitemap.xml
 └─ assets/                     # único almacén de binarios -> URLs /assets/...
 
@@ -127,8 +127,10 @@ scripts/
 - **Iconos:** `.ico` (PNG embebido 16/32/48) y PNG 16/32 para buscadores, SVG para
   navegadores modernos, `apple-touch-icon` 180 para iOS y `site.webmanifest` (iconos
   192/512 `any maskable`) para Android.
-- **Tarjeta social:** `og-image.png` 1200x630 (proporción 1.91:1) con la estética del
-  portafolio. Tanto la tarjeta como los iconos se generan con `scripts/gen-seo-assets.mjs`
+- **Tarjeta social:** `og-image-v2.png` 1200x630 (proporción 1.91:1) con la estética del
+  portafolio. El sufijo versionado (`-v2`) invalida la caché de los scrapers al cambiar la
+  tarjeta: súbelo (v3…) y actualiza `imagen` en `Base.astro`. Tanto la tarjeta como los
+  iconos se generan con `scripts/gen-seo-assets.mjs`
   (sharp) desde `favicon.svg`; los binarios se commitean y Vercel los sirve estáticos
   (no se ejecuta sharp en el despliegue).
 - **Indexación:** `robots.txt` (permite todo + apunta al sitemap) y `sitemap.xml`

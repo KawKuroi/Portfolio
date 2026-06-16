@@ -19,6 +19,10 @@
   casual y se nota más ahora que la imagen es más grande.
 
 ## Historial
+- **2026-06-16** — Cache-busting de la tarjeta social. Renombrada `og-image.png` →
+  `og-image-v2.png` y actualizada la referencia (`imagen` en `Base.astro` + generador + docs).
+  Las plataformas sociales cachean la imagen por URL; el sufijo versionado fuerza a que
+  re-lean la tarjeta nueva tras el deploy. Al volver a cambiarla, subir el sufijo (v3…).
 - **2026-06-16** — Limpieza de "Sala" en el SEO. La tarjeta social `og-image.png` mostraba el
   eyebrow "PORTAFOLIO · SALA" (lo que aparecía en la previsualización de OpenGraph); regenerada
   a solo "PORTAFOLIO" con `scripts/gen-seo-assets.mjs` (`sharp` se instala bajo demanda con
