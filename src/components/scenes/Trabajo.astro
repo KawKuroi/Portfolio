@@ -58,12 +58,25 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
         </div>
 
         <div class="twg-plate" aria-live="polite">
-          <span class="pe" data-plate-pe>En sala · obra {numero(0)}</span>
+          <span class="pe">
+            <span data-plate-pe>En sala · obra {numero(0)}</span>
+            <span class="live" data-plate-live hidden={!inicial.demo}>
+              <span class="dot" aria-hidden="true"></span>en línea
+            </span>
+          </span>
           <div class="pt" data-plate-titulo>{inicial.titulo}</div>
           <p class="pd" data-plate-desc>{inicial.descripcion}</p>
           <div class="pm">
             <span data-plate-anio>{inicial.anio}</span>
             <span class="st" data-plate-estado>{inicial.estado}</span>
+            <a
+              class="go demo"
+              data-plate-demo
+              href={inicial.demo}
+              target="_blank"
+              rel="noopener"
+              hidden={!inicial.demo}>Ver en línea</a
+            >
             <a class="go" data-plate-repo href={inicial.repo} target="_blank" rel="noopener">Repo</a>
           </div>
         </div>
@@ -86,6 +99,8 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
     const anio = galeria.querySelector('[data-plate-anio]');
     const estado = galeria.querySelector('[data-plate-estado]');
     const repo = galeria.querySelector<HTMLAnchorElement>('[data-plate-repo]');
+    const live = galeria.querySelector<HTMLElement>('[data-plate-live]');
+    const demo = galeria.querySelector<HTMLAnchorElement>('[data-plate-demo]');
     const num = (i: number): string => String(i + 1).padStart(2, '0');
 
     // Seleccion fija por clic: marca el boton/obra activos y vuelca la placa.
@@ -104,6 +119,17 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
       if (anio) anio.textContent = proyecto.anio;
       if (estado) estado.textContent = proyecto.estado;
       if (repo) repo.href = proyecto.repo;
+      // Indicador "en línea" + enlace al demo: solo si el proyecto está publicado.
+      if (live) live.hidden = !proyecto.demo;
+      if (demo) {
+        if (proyecto.demo) {
+          demo.href = proyecto.demo;
+          demo.hidden = false;
+        } else {
+          demo.removeAttribute('href');
+          demo.hidden = true;
+        }
+      }
       // Replay de la animacion de entrada de la placa.
       if (plate) {
         plate.classList.remove('fade');
@@ -373,6 +399,36 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
 
   .twg-plate .pm .go:hover {
     opacity: .6;
+  }
+
+  /* Indicador "en línea" (proyectos publicados). */
+  .twg-plate .pe .live {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 10px;
+    color: #5b9c74;
+  }
+
+  .twg-plate .pe .live .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #5b9c74;
+    box-shadow: 0 0 0 0 rgba(91, 156, 116, .5);
+    animation: livePulse 2.2s var(--ease) infinite;
+  }
+
+  @keyframes livePulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(91, 156, 116, .5);
+    }
+    70% {
+      box-shadow: 0 0 0 6px rgba(91, 156, 116, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(91, 156, 116, 0);
+    }
   }
 
   .twg-plate.fade {

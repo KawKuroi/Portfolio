@@ -169,8 +169,8 @@ export const FAVORITOS: Favorito[] = [
   },
   {
     c: 'Música',
-    t: 'Cementerio Club',
-    s: 'Spinetta · Artaud · 1973',
+    t: 'Artaud',
+    s: 'Spinetta · 1973',
     img: '/assets/music/artaud.jpg',
     g: 'linear-gradient(135deg, #201410 0%, #6e3a2a 55%, #c0682e 100%)',
   },
