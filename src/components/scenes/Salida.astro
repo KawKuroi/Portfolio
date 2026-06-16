@@ -122,7 +122,7 @@
     // Envío del formulario vía Web3Forms (sin backend; la access key es pública por diseño).
     // 1) Crea tu clave gratis en https://web3forms.com (te llega por correo).
     // 2) Pégala aquí en lugar del marcador:
-    const WEB3FORMS_KEY = 'PEGA-AQUI-TU-ACCESS-KEY';
+    const WEB3FORMS_KEY = 'ccca2a10-41a7-4b84-84bc-de4e45ac2a77';
     const form = dlg?.querySelector<HTMLFormElement>('[data-contact-form]');
     const estado = dlg?.querySelector<HTMLElement>('[data-form-status]');
     const enviar = dlg?.querySelector<HTMLButtonElement>('[data-form-send]');
@@ -241,6 +241,13 @@
   /* ── Formulario de contacto (dialog) ── */
   .cform {
     width: min(440px, 92vw);
+    /* El reset global `* { margin: 0 }` anula el `margin: auto` con el que el navegador
+       centra los <dialog> modales; sin esto el modal cae a la esquina superior izquierda. */
+    margin: auto;
+    /* En pantallas bajas, el formulario no debe desbordar: limita y deja hacer scroll. */
+    max-height: 90vh;
+    max-height: 90dvh;
+    overflow: auto;
     border: 1px solid var(--ink);
     background: var(--paper);
     color: var(--ink);
