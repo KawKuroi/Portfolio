@@ -1,10 +1,13 @@
 ---
 /*
-  Hint de scroll (.hint), fijo. Aparece a ~1.3s, se va al primer gesto o a ~6.2s.
-  Los temporizadores los gestiona navegacion.ts; oculto en movil. Estilos en global.css.
+  Hint de scroll (.hint), chip oscuro fijo arriba a la derecha. Aparece a ~1.3s y se va al
+  primer gesto o a ~6.2s. Los temporizadores los gestiona navegacion.ts; oculto en movil.
+  Estilos en global.css.
 */
 ---
 
 <aside class="hint" aria-hidden="true" data-hint>
-  Desliza o usa [↑][↓] para recorrer las salas
+  <span>Desliza o usa</span>
+  <span class="keys"><kbd>↑</kbd><kbd>↓</kbd></span>
+  <span>para recorrer las salas</span>
 </aside>

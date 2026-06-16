@@ -2,16 +2,17 @@
 /*
   Plaque superior fija (.lb.top), z-index 80. Estilos en global.css (chrome global).
   Izquierda: "K. Herazo · Portafolio". Derecha: "Kevin Herazo — 2026" + boton de tema.
-  El boton alterna Museo<->Noche via tema.ts y sincroniza el icono sol/luna.
+  El boton alterna Museo<->Noche via tema.ts; el icono refleja el tema vigente
+  (sol en claro, luna en Noche), igual que el diseno original.
 */
 ---
 
 <header class="lb top" data-plaque>
-  <span class="lb-left">K. Herazo · <strong>Portafolio</strong></span>
+  <span class="lb-left">K. Herazo · <b>Portafolio</b></span>
   <span class="lb-right">
     Kevin Herazo — 2026
     <button id="themeToggle" type="button" aria-label="Cambiar tema" aria-pressed="false">
-      <svg class="ic" aria-hidden="true"><use href="#ic-moon" /></svg>
+      <svg class="ic" aria-hidden="true"><use href="#ic-sun" /></svg>
     </button>
   </span>
 </header>
@@ -25,9 +26,9 @@
   const boton = document.getElementById('themeToggle');
   const uso = boton?.querySelector('use');
 
-  // Museo (claro): se ofrece pasar a Noche -> icono luna. Noche: icono sol.
+  // El icono muestra el tema vigente: sol en claro (Museo), luna en Noche.
   const sincronizarIcono = (tema: Tema): void => {
-    uso?.setAttribute('href', tema === 'Noche' ? '#ic-sun' : '#ic-moon');
+    uso?.setAttribute('href', tema === 'Noche' ? '#ic-moon' : '#ic-sun');
     boton?.setAttribute('aria-pressed', String(tema === 'Noche'));
   };
 

@@ -1,45 +1,32 @@
 ---
 /*
-  Escena 1 — Portada. Grid 2 columnas (texto | retrato), 1 col en <=820px.
-  Copy exacto del PRD 6 (Escena 1). El retrato degrada con onerror a un placeholder
-  (ic-portrait + "retrato") sin romper la maqueta si falta el asset.
+  Escena 1 — Portada. Grid texto | retrato (1 col en <=820px). Copy y estilado 1:1 con el
+  diseno original. El retrato degrada con onerror a un placeholder (.ept) sin romper la maqueta.
 */
 ---
 
-<section class="scene portada" data-slate="Portada" data-screen-label="Portada">
+<section class="scene title" data-slate="Portada" data-screen-label="Portada">
   <div class="wrap">
-    <div class="pcols">
-      <div class="ptexto">
-        <p class="kick">Ingeniería de Sistemas</p>
+    <div class="title-grid">
+      <div class="title-main">
+        <div class="kick">Ingeniería de Sistemas</div>
         <h1>Kevin Axel<br /><em>Herazo Rolón</em></h1>
-        <p class="rol">Backend · Datos · Inteligencia Artificial — Bogotá</p>
-        <ul class="actos">
-          <li>
-            <svg class="ic" aria-hidden="true"><use href="#ic-server" /></svg>
-            <strong>I</strong> — El trabajo
-          </li>
-          <li>
-            <svg class="ic" aria-hidden="true"><use href="#ic-code" /></svg>
-            <strong>II</strong> — El equipo
-          </li>
-          <li>
-            <svg class="ic" aria-hidden="true"><use href="#ic-film" /></svg>
-            <strong>III</strong> — Conóceme
-          </li>
-        </ul>
+        <div class="role">Backend · Datos · Inteligencia Artificial — Bogotá</div>
+        <div class="acts">
+          <span><svg class="ic" aria-hidden="true"><use href="#ic-server" /></svg><b>I</b> — El trabajo</span>
+          <span><svg class="ic" aria-hidden="true"><use href="#ic-code" /></svg><b>II</b> — El equipo</span>
+          <span><svg class="ic" aria-hidden="true"><use href="#ic-film" /></svg><b>III</b> — Conóceme</span>
+        </div>
       </div>
 
       <figure class="portrait">
         <img
           src="/assets/me/retrato.png"
-          alt="Kevin A. Herazo R., autorretrato"
+          alt="Kevin Axel Herazo Rolón"
           fetchpriority="high"
           onerror="this.closest('.portrait').classList.add('empty')"
         />
-        <span class="ph" aria-hidden="true">
-          <svg class="ic"><use href="#ic-portrait" /></svg>
-          retrato
-        </span>
+        <span class="ept"><svg class="ic"><use href="#ic-portrait" /></svg><span>retrato</span></span>
         <figcaption>Kevin A. Herazo R. · autorretrato</figcaption>
       </figure>
     </div>
@@ -47,101 +34,91 @@
 </section>
 
 <style>
-  .pcols {
+  .title-grid {
     display: grid;
-    grid-template-columns: 1.25fr .75fr;
-    gap: clamp(28px, 6vw, 72px);
+    grid-template-columns: 1fr minmax(0, clamp(230px, 27vw, 344px));
+    gap: clamp(28px, 5vw, 76px);
     align-items: center;
   }
 
   .kick {
-    margin: 0 0 18px;
     font-family: var(--mono);
-    font-size: clamp(11px, 1.6vw, 13px);
-    letter-spacing: .26em;
+    font-size: clamp(11px, 1.5vw, 13px);
+    letter-spacing: .22em;
     text-transform: uppercase;
     color: var(--teal);
+    margin-bottom: 24px;
   }
 
-  .rol {
-    margin: 22px 0 0;
-    font-family: var(--mono);
-    font-size: clamp(12px, 1.8vw, 15px);
-    letter-spacing: .08em;
-    color: var(--soft);
+  h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(40px, 7.2vw, 104px);
+    line-height: .96;
+    letter-spacing: -.02em;
+    white-space: nowrap;
   }
 
-  .actos {
-    list-style: none;
-    margin: clamp(26px, 5vh, 44px) 0 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .actos li {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: var(--mono);
-    font-size: clamp(12px, 1.6vw, 15px);
-    letter-spacing: .08em;
-    color: var(--soft);
-  }
-
-  .actos .ic {
-    font-size: 18px;
+  h1 em {
+    font-style: italic;
     color: var(--teal);
   }
 
-  .actos strong {
-    color: var(--ink);
-    font-weight: 700;
+  .role {
+    font-family: var(--mono);
+    font-size: clamp(11px, 1.5vw, 15px);
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--soft);
+    margin-top: 26px;
   }
 
-  /* Retrato 4/5 con marco; el placeholder aparece si la imagen no carga (.empty) */
+  .acts {
+    display: flex;
+    gap: 10px 22px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .acts span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .acts .ic {
+    width: 13px;
+    height: 13px;
+    color: var(--teal);
+  }
+
+  .acts b {
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  /* Retrato 4/5 con marco; el placeholder (.ept) aparece si la imagen no carga (.empty). */
   .portrait {
     position: relative;
-    margin: 0;
     aspect-ratio: 4 / 5;
-    overflow: hidden;
-    background: var(--wall);
     border: 1px solid var(--ink);
-    box-shadow: 0 24px 60px -28px rgba(0, 0, 0, .55);
+    background: var(--wall);
+    overflow: hidden;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .13);
   }
 
   .portrait img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-
-  .portrait .ph {
-    display: none;
-    position: absolute;
-    inset: 0;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    color: var(--faint);
-    font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-  }
-
-  .portrait .ph .ic {
-    font-size: 40px;
-  }
-
-  .portrait.empty img {
-    display: none;
-  }
-
-  .portrait.empty .ph {
-    display: flex;
+    z-index: 1;
   }
 
   .portrait figcaption {
@@ -149,21 +126,57 @@
     left: 0;
     right: 0;
     bottom: 0;
-    padding: 8px 12px;
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: .1em;
+    z-index: 2;
+    padding: 11px 13px;
+    background: linear-gradient(0deg, color-mix(in srgb, var(--ink) 86%, transparent), transparent);
     color: var(--paper);
-    background: color-mix(in srgb, var(--ink) 72%, transparent);
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .portrait.empty img {
+    display: none;
+  }
+
+  .portrait.empty .ept {
+    display: flex;
+  }
+
+  .ept {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+    color: var(--faint);
+  }
+
+  .ept .ic {
+    width: 34px;
+    height: 34px;
+    stroke-width: 1.2;
+  }
+
+  .ept span {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
   }
 
   @media (max-width: 820px) {
-    .pcols {
+    .title-grid {
       grid-template-columns: 1fr;
     }
 
     .portrait {
-      max-width: 320px;
+      max-width: 240px;
+      margin-top: 10px;
     }
   }
 </style>

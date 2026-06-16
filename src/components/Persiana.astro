@@ -55,11 +55,12 @@ const ICONO_CAT: Record<Categoria, string> = {
     --p-juegos: var(--amber);
     --p-libros: var(--teal);
     --p-musica: #4f6fc0;
-    --p-h: clamp(340px, 56vh, 460px);
+    --p-grow: 8;
+    flex: 1 1 auto;
+    min-height: 0;
     display: flex;
     gap: 4px;
-    height: var(--p-h);
-    margin: 8px 0 0;
+    margin: 0;
     overflow: hidden;
     border: 1px solid var(--ink);
   }
@@ -193,6 +194,7 @@ const ICONO_CAT: Record<Categoria, string> = {
     .persiana {
       flex-direction: column;
       height: auto;
+      margin: 18px 0;
     }
 
     .pslat,

@@ -21,6 +21,16 @@
 Mientras falten, el `onerror` muestra placeholders y la maqueta no se rompe.
 
 ## Historial
+- **2026-06-16** — Fidelidad de diseño. Comparado el código 1:1 con el HTML original de Claude
+  Design (`Sala - Kevin Herazo.html`) y re-skinneadas las 5 escenas + el chrome para coincidir:
+  encabezados de escena horizontales (`.sh` con acto · título · línea · conteo), Portada con
+  actos en fila y rol en mayúsculas (H1 weight 500), hint como chip oscuro arriba-derecha con
+  teclas `<kbd>`, toggle de tema con icono del tema vigente (sol claro / luna Noche) en acento,
+  Galería con número serif grande + barra de acento `::before` y placa con estado italic y
+  "Repo" subrayado, Equipo con claves en mayúsculas y separadores superiores, Salida con botones
+  cuadrados de hover relleno, y la persiana estirada para llenar el alto de la escena. Tokens,
+  temas (Museo/Noche) y acento `#2aa198` ya coincidían. Verificado visualmente con capturas
+  (Chrome headless) en desktop 1440 y móvil 390. `astro check`/`astro build` limpios.
 - **2026-06-15** — Fase 5 (pulido). Accesibilidad: `aria-live="polite"` en la placa de la
   Galería para anunciar la obra seleccionada (el resto de aria ya estaba). Responsive: añadido
   el breakpoint ≤640px (plaque y padding de escena). Rendimiento: `fetchpriority="high"` en el

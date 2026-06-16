@@ -22,3 +22,6 @@ pnpm-debug.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# verificacion visual (local)
+.captures/
