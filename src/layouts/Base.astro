@@ -1,8 +1,9 @@
 ---
 /*
-  Layout base de la Sala. Define el documento (<html lang="es" data-trabajo="galeria">),
-  carga fuentes, resuelve el tema antes del primer pintado y monta el sprite de iconos
-  y el carrete con snap vertical.
+  Layout base de la Sala. Define el documento, carga la tipografia fija (Libre Baskerville,
+  preset Clasica), resuelve el tema antes del primer pintado (unico ajuste variable: claro
+  Museo / oscuro Noche) y monta el sprite de iconos y el carrete con snap vertical.
+  Estructura rigida: disposicion Galeria, acento aguamarino y tipografia Clasica fijos.
 */
 import '../styles/tokens.css';
 import '../styles/global.css';
@@ -16,7 +17,7 @@ const { titulo = 'Kevin Axel Herazo Rolón — Sala' } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es" data-trabajo="galeria">
+<html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -46,17 +47,17 @@ const { titulo = 'Kevin Axel Herazo Rolón — Sala' } = Astro.props;
       })();
     </script>
 
-    <!-- Tipografias (un solo link; los presets de Tweaks las intercambian) -->
+    <!-- Tipografia fija (preset Clasica): solo Libre Baskerville. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Hanken+Grotesk:wght@400..700&family=Space+Mono:wght@400;700&family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,1,400&family=Space+Grotesk:wght@400..700&family=IBM+Plex+Serif:wght@400;500;600&family=IBM+Plex+Sans:wght@400..700&family=IBM+Plex+Mono:wght@400;500;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@400..700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
     />
   </head>
   <body>
     <IconSprite />
-    <!-- Chrome global (fijo): plaque, riel, hint, panel de Tweaks. Fuera del carrete. -->
+    <!-- Chrome global (fijo): plaque, riel, hint. Fuera del carrete. -->
     <slot name="chrome" />
     <main class="reel">
       <slot />

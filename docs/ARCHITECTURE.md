@@ -5,14 +5,15 @@ aquí va el "cómo".
 
 ## 1. Decisión de stack y rendimiento
 
-- **Astro** (compilación AOT). Todo el sitio es HTML + CSS estáticos; el JS se envía solo
-  donde hace falta. Reemplaza el enfoque original de React + Babel-standalone transpilando
+- **Astro** (compilación AOT). Todo el sitio es HTML + CSS estáticos; el JS de cliente es
+  vanilla y mínimo. Reemplaza el enfoque original de React + Babel-standalone transpilando
   en el navegador (lo más lento posible para el visitante).
 - **Vite va incluido en Astro.** No se instala ni configura Vite por separado; Astro lo usa
   para dev server (HMR), bundling y optimización de assets.
-- **React solo como island** (`@astrojs/react`, React 19) para el panel de Tweaks, hidratado
-  con `client:idle`. El resto del sitio no carga React.
-- **Objetivo:** Lighthouse Performance ≥95; First Load JS ~0 fuera del island de Tweaks.
+- **Sin React ni framework de UI.** La estructura es rígida (Galería · aguamarino · Clásica);
+  el único ajuste variable es el tema. No hay panel de Tweaks, así que no se envía JS de
+  framework.
+- **Objetivo:** Lighthouse Performance ≥95; 0 JS de framework (solo scripts vanilla puntuales).
 
 ## 2. Árbol del proyecto
 
@@ -26,9 +27,7 @@ src/
 │  ├─ Rail.astro               # riel lateral (poblado por navegacion.ts)
 │  ├─ Hint.astro               # hint de scroll
 │  ├─ Persiana.astro           # mount + fallback estatico desde FAVORITOS
-│  ├─ scenes/                  # Portada, Trabajo, Equipo, Conoceme, Salida
-│  ├─ TweaksPanel.tsx          # shell React del panel
-│  └─ SalaTweaks.tsx           # island React (client:idle)
+│  └─ scenes/                  # Portada, Trabajo, Equipo, Conoceme, Salida
 ├─ data/
 │  ├─ proyectos.ts             # PROYECTOS (tipado Proyecto)
 │  └─ favoritos.ts             # FAVORITOS (tipado Favorito, 20 piezas)
@@ -45,13 +44,12 @@ public/
 └─ assets/                     # único almacén de binarios -> URLs /assets/...
 ```
 
-## 3. Modelo de islands y carga de JS
+## 3. Carga de JS
 
 - **Estático por defecto:** layout, componentes `.astro` y escenas no envían JS.
-- **Scripts de cliente** (Astro `<script>`): navegación del carrete y persiana. Se importan
-  desde sus módulos en `src/scripts/` y Astro los empaqueta/optimiza.
-- **Island React:** `SalaTweaks` se monta con `client:idle` en el slot `chrome`; React solo
-  se descarga/hidrata cuando el navegador está ocioso.
+- **Scripts de cliente** (Astro `<script>`, vanilla): navegación del carrete y persiana. Se
+  importan desde sus módulos en `src/scripts/` y Astro los empaqueta/optimiza.
+- **Sin JS de framework:** no hay islands ni React (se quitó el panel de Tweaks).
 - **Script de tema:** inline `is:inline` en el `<head>` (Base.astro). No se bundlea ni se
   difiere — debe correr síncrono antes del primer pintado para evitar parpadeo.
 
@@ -62,8 +60,8 @@ public/
 2. `tokens.css` define los colores por `:root[data-tema='Museo'|'Noche']`.
 3. `tema.ts` (Fase 1) expone `setSalaTheme(name)`: persiste en localStorage y emite
    `salathemechange`.
-4. El botón del plaque y el island de Tweaks escuchan `salathemechange` para mantenerse en
-   sync.
+4. El botón del plaque (`#themeToggle`) escucha `salathemechange` para mantener el icono
+   sol/luna en sync.
 
 ## 5. Convención de assets
 
@@ -89,5 +87,17 @@ public/
 
 - `npm run dev` (Vite/Astro), `npm run build` → `dist/` estático, `npm run preview`.
 - `npm run check` (astro check) para tipos y diagnósticos.
-- Salida 100% estática: desplegable en cualquier hosting estático (Vercel, Netlify, GitHub
-  Pages). Se define el target concreto en la fase de despliegue del ROADMAP.
+
+### Hosting: Vercel (plan Hobby, gratuito)
+
+- **Por qué Vercel:** sitio estático servido desde su **CDN global** (carga instantánea),
+  HTTPS automático, dominio `*.vercel.app` gratis (o dominio propio sin coste) y *preview
+  deployments* en cada push. El plan Hobby cubre de sobra un sitio como este.
+- **Sin adaptador.** Al ser salida 100% estática no se usa `@astrojs/vercel` ni funciones
+  serverless: Vercel autodetecta Astro, ejecuta `astro build` y publica `dist/`. Así no se
+  consumen las cuotas de cómputo del free tier → se mantiene **totalmente gratis**.
+- **Configuración:** Build Command `astro build` (autodetectado), Output Directory `dist`,
+  Install Command `npm install`. No hace falta `vercel.json` para lo básico; si se quieren
+  cabeceras de caché personalizadas para `/assets/*`, se añade más adelante.
+- **Flujo:** conectar el repositorio Git a Vercel; cada push a la rama principal publica a
+  producción y cada rama/PR genera un preview. Detalle operativo en el ROADMAP (Fase 6).

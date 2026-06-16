@@ -14,15 +14,19 @@ La versión original era un único HTML que cargaba **React 18 + Babel-standalon
 transpilaba JSX **en el navegador** (`type="text/babel"`) — el enfoque más lento posible
 para el visitante. Esta versión migra a **Astro**:
 
-- Todo el sitio se compila de antemano (AOT): HTML + CSS estáticos, ~0 JS por defecto.
+- Todo el sitio se compila de antemano (AOT): HTML + CSS estáticos, **0 JS de framework**.
 - **Astro ya usa Vite** por debajo; no se añade ni configura Vite por separado.
-- **React solo como island diferido** (`client:idle`) para el panel de Tweaks, vía
-  `@astrojs/react` (React 19, empaquetado por npm).
+- **Sin React ni panel de Tweaks.** La estructura es rígida y no la cambia el visitante:
+  disposición **Galería**, acento **aguamarino `#2aa198`** y tipografía **Clásica** (Libre
+  Baskerville) son fijos. El único ajuste variable es el tema.
 - **Se elimina** el requisito de CDN con `integrity` pineado (era propio del enfoque
-  standalone). Astro empaqueta y versiona React.
-- **Dos temas**: Museo (claro) y Noche (oscuro). Se elimina el tema *Papel*.
+  standalone).
+- **Dos temas**: Museo (claro) y Noche (oscuro). Se elimina el tema *Papel*. El visitante
+  alterna claro/oscuro con el botón del plaque; por defecto sigue al sistema.
 - **Todos los assets son locales** bajo `public/assets/` y se sirven como `/assets/...`
   (cine, juegos, libros y música incluidos; ya no hay imágenes remotas).
+- **Despliegue en Vercel** (plan Hobby, gratuito): salida estática servida desde su CDN
+  global. Al ser 100% estático no requiere adaptador ni funciones serverless.
 
 ---
 
@@ -39,8 +43,8 @@ una "sala":
 5. **Salida** — datos de contacto / libro de visitas.
 
 Incluye: barra superior tipo *plaque* de galería, riel de navegación lateral con puntos,
-*hint* de scroll, conmutador de tema claro/oscuro, navegación por teclado, y un **panel de
-Tweaks** (esquina) para cambiar disposición del trabajo, tema, acento y tipografía en vivo.
+*hint* de scroll, conmutador de tema claro/oscuro y navegación por teclado. La estructura es
+fija (Galería · aguamarino · Clásica); no hay panel de personalización.
 
 **Idioma:** todo el copy en español (incluye acentos y "Música").
 **Tono:** editorial, sobrio, cálido. Sin emojis, sin gradientes chillones (los gradientes
@@ -69,37 +73,31 @@ portfolio/
 │  ├─ components/
 │  │  ├─ Plaque.astro Rail.astro Hint.astro IconSprite.astro
 │  │  ├─ Persiana.astro
-│  │  ├─ scenes/Portada.astro Trabajo.astro Equipo.astro Conoceme.astro Salida.astro
-│  │  ├─ TweaksPanel.tsx       # shell del panel (React)
-│  │  └─ SalaTweaks.tsx        # island de Tweaks de la Sala (React, client:idle)
+│  │  └─ scenes/Portada.astro Trabajo.astro Equipo.astro Conoceme.astro Salida.astro
 │  ├─ data/proyectos.ts        # PROYECTOS (datos de El trabajo)
 │  ├─ data/favoritos.ts        # FAVORITOS (20 piezas de la persiana)
 │  ├─ scripts/tema.ts navegacion.ts persiana.ts
 │  └─ styles/tokens.css global.css
-├─ astro.config.mjs            # integrations: [react()]
+├─ astro.config.mjs            # salida estatica, sin integraciones
 ├─ tsconfig.json  package.json
 ```
 
 **Carga de JS (Astro):**
 - Script inline en `<head>` (Base.astro) que **resuelve el tema antes del primer pintado**.
-- Scripts de cliente de Astro para navegación (riel, teclado, hint) y persiana.
-- `SalaTweaks` se hidrata como island con `client:idle` (React solo aquí).
+- Scripts de cliente de Astro (vanilla) para navegación (riel, teclado, hint) y persiana.
+- No se envía JS de framework (sin React).
 
 ---
 
-## 3. Tipografías (Google Fonts)
+## 3. Tipografía (Google Fonts)
 
-Se cargan todas estas familias (un solo `<link>`), porque los presets de tipografía las
-intercambian:
+La tipografía es **fija**: preset "Clásica" = todo **Libre Baskerville** (serifa). Se carga
+una sola familia con un único `<link>`:
 
-`Spectral` (ital 400/500/600), `Hanken Grotesk` (400–700), `Space Mono` (400/700),
-`Newsreader` (opsz, ital), `Space Grotesk` (400–700), `IBM Plex Serif` (400/500/600),
-`IBM Plex Sans` (400–700), `IBM Plex Mono` (400/500/700), `Libre Baskerville` (ital 400/700),
-`Work Sans` (400–700).
+`Libre Baskerville` (ital 400/700).
 
-Variables de fuente (`:root`): `--serif`, `--sans`, `--mono`. **Por defecto** las tres
-apuntan a `Libre Baskerville` (preset "Clásica" — todo serifa). El tweak "Tipografía → Juego"
-las reasigna (ver §8).
+Variables de fuente (`:root`): `--serif`, `--sans`, `--mono` — las tres apuntan a Libre
+Baskerville. No hay cambio de tipografía en runtime (cargar una sola familia mejora la carga).
 
 ---
 
@@ -114,9 +112,8 @@ las reasigna (ver §8).
 --serif / --sans / --mono = Libre Baskerville (ver §3)
 --ease = cubic-bezier(.22,1,.36,1);  --bar = clamp(30px,5vh,52px)  /* alto del plaque */
 ```
-> El acento real por defecto es el **aguamarino `#2aa198`** (`--clay` y `--teal` apuntan a
-> él). El panel de Tweaks puede reasignarlos en vivo. Los editoriales `#b5503a`/`#3f8f87`
-> quedan como respaldo no usado.
+> El acento es **fijo**: aguamarino `#2aa198` (`--clay` y `--teal` apuntan a él). Los
+> editoriales `#b5503a`/`#3f8f87` quedan como respaldo no usado.
 
 ### 4.2 Temas (atributo `data-tema` en `<html>`)
 Dos temas. Cada uno redefine paper/wall/ink/soft/faint/line/line2:
@@ -180,7 +177,7 @@ Aparece a ~1.3s, se va al primer scroll/tecla o a ~6.2s. Texto:
 ## 6. Contenido por escena
 
 Cada `<section class="scene">` lleva `data-slate="<etiqueta riel>"` y
-`data-screen-label="<idem>"`. `<html>` lleva `data-trabajo="galeria"` (disposición inicial).
+`data-screen-label="<idem>"`. "El trabajo" se muestra siempre en disposición Galería (fija).
 
 ### Escena 1 — Portada (`data-slate="Portada"`)
 Grid 2 columnas (texto | retrato), colapsa a 1 col en ≤820px.
@@ -195,9 +192,8 @@ Grid 2 columnas (texto | retrato), colapsa a 1 col en ≤820px.
 
 ### Escena 2 — I · El trabajo (`data-slate="El trabajo"`, `class="scene-trabajo"`)
 Encabezado (`.sh`): acto **I**, título **"El *trabajo*"** (trabajo en italic teal), conteo
-**"4 proyectos"**. Tres contenedores que rellena el render: `#twLista` (`.tw-lista`),
-`#twGaleria` (`.tw-galeria`), `#twDetalle` (`.tw-detalle`). Solo uno visible según
-`data-trabajo` (ver §7).
+**"4 proyectos"**. Un contenedor `#twGaleria` (`.tw-galeria`) que rellena el render con la
+disposición Galería (ver §7).
 
 ### Escena 3 — II · El equipo y los créditos (`data-slate="El equipo"`)
 Encabezado: acto **II**, **"El *equipo* y los *créditos*"** (em teal), subtítulo
@@ -251,12 +247,7 @@ Cada proyecto: `titulo, icono, tags, chips[], anio, estado, repo, img, descripci
 imágenes apuntan a `/assets/projects/0N-*.png`. Toda `img` lleva `onerror` que añade `empty`
 al contenedor → placeholder rayado con etiqueta "captura". Datos exactos en el archivo.
 
-### 7.2 Disposición **Lista** (`#twLista`, `.pj`)
-Fila por proyecto: `num` (01..) · miniatura `.shot` (92×60) · título + tags(icono) · derecha
-(`yr`, `status` en italic, enlace **"Repo →github"**). Hover desliza la fila y tiñe
-num/miniatura de acento. ≤640px: oculta miniatura, reordena.
-
-### 7.3 Disposición **Galería** (`#twGaleria`, `.tw-galeria`) — *default*
+### 7.2 Disposición **Galería** (`#twGaleria`, `.tw-galeria`) — disposición fija (única)
 Grid 2 col: botones a la izquierda + escenario a la derecha.
 - Izquierda: botones `.twg-item` (num, título, tags, año). El activo (`.on`) lleva barra
   acento. Pista: `// clic en una obra para verla en grande`.
@@ -264,22 +255,10 @@ Grid 2 col: botones a la izquierda + escenario a la derecha.
   visible (fade+scale). Debajo, placa `.twg-plate`: `En sala · obra NN`, título italic,
   descripción, meta (año · estado · Repo).
 - **Selección SOLO por clic**, fija hasta el siguiente clic. Empieza en el proyecto 0.
+- La escena crece (`height:auto; min-height:100vh`).
 
-### 7.4 Disposición **Detalle** (`#twDetalle`, `.tw-detalle`)
-Una `article.twd-item` por proyecto, grid 2 col (media | cuerpo); los impares invierten
-lados (`.rev`). Media aspect 3/2 con zoom al hover. Cuerpo: num+título, descripción, chips
-(`p.chips`), meta (año · estado · **"Ver repositorio →github"**).
-- Aparición al hacer scroll: `IntersectionObserver` (threshold .16) añade `.in` (fade-up).
-  Se re-evalúa al cambiar de tweak. Con `prefers-reduced-motion` se muestran sin animación.
-
-### 7.5 Selección de disposición (CSS)
-```
-.tw-layout{display:none}
-[data-trabajo="lista"]   #twLista  {display:block}
-[data-trabajo="galeria"] #twGaleria{display:grid}
-[data-trabajo="detalle"] #twDetalle{display:flex}
-```
-En Galería/Detalle la escena crece (`height:auto; min-height:100vh`). Detalle alinea arriba.
+> Las disposiciones Lista y Detalle se eliminaron junto con el panel de Tweaks; la Galería
+> es ahora la única.
 
 ---
 
@@ -325,51 +304,25 @@ categoría (`Cine→ic-film, Juegos→ic-game, Libros→ic-book, Música→ic-mu
 
 ---
 
-## 9. Tweaks (panel en vivo) — island React
+## 9. Conmutador de tema
 
-### 9.1 Shell (`TweaksPanel.tsx`)
-Componentes reutilizables del panel (`useTweaks, TweaksPanel, TweakSection, TweakRow,
-TweakSlider, TweakToggle, TweakRadio, TweakSelect, TweakText, TweakNumber, TweakColor,
-TweakButton`). Gestiona modo edición y persistencia. El panel vive en `#tweaks-root` (fixed,
-z-index 120) y se oculta cuando el modo Tweaks está apagado.
+Único ajuste variable del sitio. El botón redondo del plaque (`#themeToggle`) alterna
+**Noche ↔ Museo** vía `setSalaTheme`, cambia el icono sol/luna y persiste la elección en
+`localStorage['sala-theme']`. Sin elección manual, el tema sigue a `prefers-color-scheme`.
 
-### 9.2 Instancia de la Sala (`SalaTweaks.tsx`, island `client:idle`)
-Defaults: `{ tema:"Museo", tipo:"Clasica", acento:"#2aa198", trabajo:"Galeria" }`. El tema
-inicial real lo resuelve el `<head>`; `SalaTweaks` toma `window.__salaTheme` si existe.
-
-**Presets de tipografía** (asignan `--serif/--sans/--mono`):
-- **Sala:** Spectral / Hanken Grotesk / Space Mono
-- **Editorial:** Newsreader / Hanken Grotesk / Space Mono
-- **Moderno:** Space Grotesk / Space Grotesk / Space Mono
-- **Plex:** IBM Plex Serif / IBM Plex Sans / IBM Plex Mono
-- **Clásica:** Libre Baskerville (las tres)  *(default)*
-
-**Efectos:**
-- `tipo`/`acento` → aplica el preset y fija `--clay` **y** `--teal` al acento.
-- `trabajo` → `document.documentElement.setAttribute('data-trabajo', valor.toLowerCase())`.
-- `tema` → en el primer render no hace nada (ya aplicado por el `<head>`); luego llama
-  `window.setSalaTheme(tema)`.
-- Escucha `salathemechange` para reflejar el cambio hecho por el botón visible.
-
-**Controles del panel** (orden):
-1. "El trabajo" → **Disposición**: Lista · Galería · Detalle.
-2. "Color de sala" → **Tema**: Museo · Noche. + **Acento**: `#2aa198, #b5503a, #4f6fc0, #c08a2e`.
-3. "Tipografía" → **Juego**: Sala · Editorial · Moderno · Plex · Clásica.
-
-### 9.3 Botón de tema visible
-El botón redondo del plaque (`#themeToggle`) alterna **Noche ↔ Museo** vía `setSalaTheme`,
-cambia el icono sol/luna y se mantiene en sync con el panel (`salathemechange`).
+No hay panel de Tweaks: la disposición (Galería), el acento (aguamarino `#2aa198`) y la
+tipografía (Clásica) son fijos.
 
 ---
 
 ## 10. Detalles técnicos a respetar
 
-- `<html lang="es" data-trabajo="galeria">`. `<title>Kevin Axel Herazo Rolón — Sala</title>`.
+- `<html lang="es">`. `<title>Kevin Axel Herazo Rolón — Sala</title>`.
 - Imágenes con `onerror` → placeholder (nunca rota la maqueta si falta un asset).
 - Respeto a `prefers-reduced-motion` en persiana, detalle y hint.
 - Accesibilidad: `aria-label` en riel/botones, `aria-pressed` en items de galería,
   `aria-hidden` en sprite/hint.
-- Sin librerías extra salvo React (solo el island de Tweaks); todo lo demás es vanilla JS + CSS.
+- Sin librerías de UI: todo es Astro + vanilla JS + CSS (0 JS de framework).
 - Móvil: se desactiva snap y riel; secciones en flujo normal.
 
 ---
@@ -390,15 +343,16 @@ Todos los binarios viven en `public/assets/` (único almacén; no se buscan en o
 ## 12. Criterios de aceptación
 1. Cinco escenas con snap vertical; riel lateral sincronizado; teclado ↑/↓/Home/End.
 2. Portada, Equipo y Salida con el copy exacto de §6.
-3. "El trabajo" con los **4 proyectos** y texto exacto de §7, en las 3 disposiciones;
-   Galería por defecto, selección por clic fija.
+3. "El trabajo" con los **4 proyectos** y texto exacto de §7, en disposición **Galería**
+   (fija, única), con selección por clic.
 4. "Conóceme" con la persiana de **20 piezas** (orden y datos de §8), autoplay 2.6s, hover
    abre, iconos por categoría.
 5. Tema sigue al dispositivo, botón sol/luna alterna Museo↔Noche, persistencia en
    localStorage, sin parpadeo inicial.
-6. Panel de Tweaks con Disposición / Tema (Museo·Noche) / Acento / Tipografía operando en
-   vivo y sincronizado con el botón de tema.
-7. Acento aguamarino `#2aa198` por defecto; tokens y temas de §4 idénticos.
-8. Todo en español, sin emojis, degradación elegante de imágenes.
-9. **Rendimiento:** build estático de Astro; ~0 JS salvo el island de Tweaks; objetivo
-   Lighthouse ≥95 en Performance.
+6. Estructura rígida: disposición Galería, acento aguamarino `#2aa198` y tipografía Clásica
+   fijos; sin panel de personalización. Tokens y temas de §4 idénticos.
+7. Todo en español, sin emojis, degradación elegante de imágenes.
+8. **Rendimiento:** build estático de Astro; 0 JS de framework; objetivo Lighthouse ≥95 en
+   Performance.
+9. **Despliegue:** publicado en Vercel (plan Hobby, gratuito) como sitio estático servido
+   desde CDN, sin adaptador ni funciones serverless.

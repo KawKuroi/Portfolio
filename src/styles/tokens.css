@@ -1,8 +1,8 @@
 /*
   Sistema de diseno — tokens base y temas.
-  Dos temas: Museo (claro, por defecto en escritorio) y Noche (oscuro).
-  El acento real por defecto en toda la Sala es el aguamarino #2aa198
-  (--clay y --teal apuntan a el; el panel de Tweaks puede reasignarlos en vivo).
+  Configuracion rigida (sin panel de Tweaks): disposicion Galeria, acento aguamarino
+  #2aa198 y tipografia Clasica (Libre Baskerville). Lo unico variable es el tema:
+  Museo (claro, por defecto en escritorio) o Noche (oscuro).
 */
 
 :root {
@@ -23,7 +23,7 @@
   --line: rgba(20, 18, 13, .16);
   --line2: rgba(20, 18, 13, .075);
 
-  /* Tipografias. Por defecto preset "Clasica" = todo Libre Baskerville. */
+  /* Tipografia fija (preset "Clasica") = todo Libre Baskerville. */
   --serif: 'Libre Baskerville', Georgia, serif;
   --sans: 'Libre Baskerville', Georgia, serif;
   --mono: 'Libre Baskerville', Georgia, serif;

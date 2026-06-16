@@ -1,9 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import react from '@astrojs/react';
 
 // Configuracion de Astro. Vite va incluido en Astro (no se anade aparte).
-// React solo se usa como island diferido para el panel de Tweaks.
-export default defineConfig({
-  integrations: [react()],
-});
+// Salida 100% estatica: sin adaptador ni React. Se despliega en Vercel (Hobby, gratis),
+// que autodetecta Astro, ejecuta `astro build` y sirve dist/ desde su CDN global.
+export default defineConfig({});

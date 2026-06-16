@@ -1,9 +1,11 @@
 /*
   Gestion de tema (Museo claro / Noche oscuro).
 
+  Es el unico ajuste variable del sitio (la disposicion, el acento y la tipografia son fijos).
+
   IMPORTANTE: el resolutor anti-parpadeo corre INLINE en el <head> (ver Base.astro)
   para fijar data-tema antes del primer pintado. Este modulo expone la API publica
-  que usan el boton sol/luna del plaque y el panel de Tweaks.
+  que usa el boton sol/luna del plaque.
 
   Implementacion completa en Fase 1 del ROADMAP. Firma prevista:
 

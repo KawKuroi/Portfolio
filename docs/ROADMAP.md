@@ -22,11 +22,10 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 - [ ] Equipo: grid Stack (5 filas) + Formación (5 ítems) con el copy exacto de §6.
 - [ ] Salida: frase serif italic + enlaces mono con icono (mail/tel/github/CV).
 
-### Fase 3 — "El trabajo" (3 disposiciones)
-- [ ] Disposición Lista (`#twLista`).
-- [ ] Disposición Galería (`#twGaleria`, default, selección por clic fija).
-- [ ] Disposición Detalle (`#twDetalle`, fade-up por IntersectionObserver).
-- [ ] CSS de selección por `data-trabajo`.
+### Fase 3 — "El trabajo" (disposición Galería, fija)
+- [ ] Disposición Galería (`#twGaleria`): botones a la izquierda + escenario a la derecha.
+- [ ] Selección por clic fija; empieza en el proyecto 0; placa con meta (año · estado · Repo).
+- [ ] Placeholder `onerror` "captura" para imágenes de proyecto faltantes.
 
 ### Fase 4 — Persiana / Conóceme
 - [ ] `persiana.ts`: construir franjas desde FAVORITOS (gradiente, img, lomo, caption).
@@ -34,29 +33,28 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 - [ ] Decoración de iconos por categoría (cine/juegos/libros/música).
 - [ ] Comportamiento móvil (columnas → filas) y `prefers-reduced-motion`.
 
-### Fase 5 — Panel de Tweaks (island React)
-- [ ] Shell `TweaksPanel.tsx` (useTweaks + controles Radio/Select/Color/Section).
-- [ ] `SalaTweaks.tsx`: Disposición, Tema (Museo·Noche), Acento, Tipografía en vivo.
-- [ ] Presets de tipografía (Sala/Editorial/Moderno/Plex/Clásica).
-- [ ] Sincronización con el botón de tema (`salathemechange`).
-
-### Fase 6 — Pulido y despliegue
+### Fase 5 — Pulido y despliegue en Vercel
 - [ ] Accesibilidad (aria-label/aria-pressed/aria-hidden) y foco visible.
 - [ ] `prefers-reduced-motion` en todas las animaciones.
 - [ ] Revisión responsive completa (≤820px y ≤640px).
 - [ ] Optimización de imágenes y auditoría Lighthouse (≥95 Performance).
-- [ ] Definir hosting estático y desplegar.
+- [ ] Conectar el repositorio a **Vercel** (plan Hobby, gratuito) y publicar.
+- [ ] Verificar build en Vercel (`astro build` autodetectado, output `dist/`, sin adaptador).
+- [ ] Confirmar dominio `*.vercel.app` (o dominio propio) y *preview deployments* por push.
 
 ## Histórico de fases completadas
 
 ### Fase 0 — Scaffold, documentación y assets (2026-06-15)
-- [x] Proyecto Astro inicializado (Astro 6 + @astrojs/react + React 19, Vite incluido).
+- [x] Proyecto Astro inicializado (Astro 6, Vite incluido).
 - [x] Estructura `src/` (layout, index, componentes stub, scripts stub, estilos base).
 - [x] `tokens.css` con los 2 temas (Museo/Noche) y acento `#2aa198`.
 - [x] `data/proyectos.ts` (4 proyectos) y `data/favoritos.ts` (20 piezas) poblados del PRD.
 - [x] Assets consolidados en `public/assets/` (cine, libros, música, juegos) + CV copiado.
 - [x] Descargadas las 3 carátulas faltantes de juegos (Zelda TOTK, Elden Ring, RE2).
 - [x] Documentación base en `/docs` (PRD, ARCHITECTURE, ROADMAP, CURRENT, GLOBAL).
+- [x] Eliminado el panel de Tweaks y React: estructura rígida (Galería · aguamarino ·
+      Clásica), solo el tema es variable. Tipografía reducida a Libre Baskerville.
+- [x] Decidido el hosting: **Vercel** (plan Hobby, gratuito), salida estática sin adaptador.
 
 **Pendiente del usuario (no bloquea):** `public/assets/me/retrato.png` y las 4 capturas en
 `public/assets/projects/`. Mientras tanto, los `onerror`/gradientes degradan con gracia.
