@@ -1,13 +1,11 @@
 ---
 /*
   Riel lateral de navegacion (.rail), fijo a la derecha, centrado vertical, z-index 85.
-  Se genera por JS (un boton por escena). Oculto en <=820px.
-  STUB Fase 0 — generacion e IntersectionObserver en Fase 1 (src/scripts/navegacion.ts).
+  Los botones (uno por escena) y la escena activa los genera navegacion.ts; oculto en <=820px.
+  Estilos en global.css (chrome global), porque los botones se crean por JS.
 */
 ---
 
 <nav class="rail" aria-label="Navegación de salas" data-rail>
-  <!-- Los botones se generan en Fase 1 -->
+  <!-- Botones generados en runtime por src/scripts/navegacion.ts -->
 </nav>
-
-<!-- TODO(Fase 1): generar botones del riel + sincronizar escena activa. -->

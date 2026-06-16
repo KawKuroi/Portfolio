@@ -1,11 +1,12 @@
 # CURRENT — Estado del proyecto
 
 ## Fase activa
-- **Activo:** Fase 1 — Layout y chrome global (ver [ROADMAP.md](./ROADMAP.md)).
-- **Estado general:** Fase 0 completada. Scaffold de Astro funcionando (sin React: estructura
-  rígida Galería · aguamarino · Clásica, solo el tema es variable), datos y assets
-  consolidados, documentación base creada. Hosting decidido: Vercel (Hobby, gratis). Listo
-  para construir el chrome global.
+- **Activo:** Fase 2 — Escenas estáticas (Portada, Equipo, Salida) (ver [ROADMAP.md](./ROADMAP.md)).
+- **Estado general:** Fases 0 y 1 completadas. Chrome global funcional: plaque fija con botón
+  de tema (Museo↔Noche, sin parpadeo, persistencia y seguimiento del SO), riel lateral
+  generado por JS con escena activa (IntersectionObserver), navegación por teclado y hint de
+  scroll. Sprite de iconos afinado y clase `.ic` definida. `astro check` y `astro build`
+  limpios, 0 JS de framework. Listo para maquetar las escenas estáticas con el copy del PRD.
 
 ## Pendientes que aporta el usuario (no bloquean el desarrollo)
 - `public/assets/me/retrato.png` — autorretrato (relación 4/5).
@@ -17,6 +18,15 @@
 Mientras falten, el `onerror` muestra placeholders y la maqueta no se rompe.
 
 ## Historial
+- **2026-06-15** — Fase 1. Construido el chrome global. `tema.ts`: API de tema
+  (`temaActual`/`fijarTema`/`alternarTema`/`iniciarTema`), persistencia en `localStorage`,
+  evento `salathemechange`, `window.setSalaTheme`/`__salaTheme` y listener de
+  `prefers-color-scheme` (sigue al SO mientras no haya elección manual). `navegacion.ts`:
+  riel lateral generado por JS, escena activa con IntersectionObserver (threshold .55),
+  teclado (↑/↓/←/→/PageUp/PageDown/Home/End con guardas de foco) y hint de scroll
+  (1.3s/6.2s). Estilos del chrome (`.ic`, plaque, riel, hint) en `global.css`; botón del
+  plaque cablea el tema y sincroniza el icono sol/luna. Sprite afinado con esquinas
+  redondeadas. Verificado con `astro check` (0 errores) y `astro build`.
 - **2026-06-15** — Fase 0. Inicializado el proyecto con Astro 6 (Vite incluido). Creada la
   estructura `src/` (Base.astro, index.astro, componentes y scripts stub, `tokens.css`/
   `global.css` con los 2 temas Museo/Noche y acento `#2aa198`). Poblados `data/proyectos.ts`

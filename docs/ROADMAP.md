@@ -5,22 +5,12 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 
 ## Fase activa
 
-### Fase 1 — Layout y chrome global
-- [ ] Plaque superior fija con estilos (mono, tracking) y botón de tema funcional.
-- [ ] `tema.ts`: `setSalaTheme`, `alternarTema`, persistencia y evento `salathemechange`.
-- [ ] Botón `#themeToggle` alterna Museo↔Noche y cambia icono sol/luna en sync.
-- [ ] `navegacion.ts`: generar riel lateral (un botón por escena) y escena activa
-      (IntersectionObserver threshold .55).
-- [ ] Navegación por teclado (↑/↓/←/→/PageUp/PageDown/Home/End) con guardas de foco.
-- [ ] Hint de scroll (aparece ~1.3s, se va al primer scroll/tecla o ~6.2s; oculto en móvil).
-- [ ] Afinar geometrías del sprite de iconos (1:1 con el PRD).
-
-## Próximas fases
-
 ### Fase 2 — Escenas estáticas (Portada, Equipo, Salida)
 - [ ] Portada: grid texto|retrato, actos con iconos, retrato con `onerror` placeholder.
 - [ ] Equipo: grid Stack (5 filas) + Formación (5 ítems) con el copy exacto de §6.
 - [ ] Salida: frase serif italic + enlaces mono con icono (mail/tel/github/CV).
+
+## Próximas fases
 
 ### Fase 3 — "El trabajo" (disposición Galería, fija)
 - [ ] Disposición Galería (`#twGaleria`): botones a la izquierda + escenario a la derecha.
@@ -43,6 +33,18 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 - [ ] Confirmar dominio `*.vercel.app` (o dominio propio) y *preview deployments* por push.
 
 ## Histórico de fases completadas
+
+### Fase 1 — Layout y chrome global (2026-06-15)
+- [x] Plaque superior fija con estilos (mono, tracking) y botón de tema funcional.
+- [x] `tema.ts`: `fijarTema`/`alternarTema`/`temaActual`/`iniciarTema`, persistencia,
+      evento `salathemechange` y `window.setSalaTheme`/`__salaTheme` + listener del SO.
+- [x] Botón `#themeToggle` alterna Museo↔Noche y cambia icono sol/luna en sync (`aria-pressed`).
+- [x] `navegacion.ts`: riel lateral generado por JS (un botón por escena) y escena activa
+      (IntersectionObserver threshold .55, `aria-current`).
+- [x] Navegación por teclado (↑/↓/←/→/PageUp/PageDown/Home/End) con guardas de foco
+      (campos editables y meta/ctrl/alt).
+- [x] Hint de scroll (aparece ~1.3s, se va al primer gesto o ~6.2s; oculto en móvil).
+- [x] Sprite de iconos afinado (round caps/joins 1:1) y clase `.ic` definida en global.css.
 
 ### Fase 0 — Scaffold, documentación y assets (2026-06-15)
 - [x] Proyecto Astro inicializado (Astro 6, Vite incluido).
