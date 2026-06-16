@@ -1,22 +1,150 @@
 ---
 /*
-  Escena 3 — II · El equipo y los creditos. Grid 2 columnas (Stack | Formacion).
-  STUB Fase 0 — contenido exacto (5 filas de stack + 5 de formacion) en Fase 2.
+  Escena 3 — II · El equipo y los creditos. Grid 2 columnas (Stack | Formacion),
+  colapsa a 1 col en <=760px. Copy exacto del PRD 6 (Escena 3).
 */
 ---
 
-<section class="scene" data-slate="El equipo" data-screen-label="El equipo">
+<section class="scene equipo" data-slate="El equipo" data-screen-label="El equipo">
   <div class="wrap">
     <header class="sh">
       <span class="acto">II</span>
       <h2>El <em>equipo</em> y los <em>créditos</em></h2>
       <span class="conteo">stack · formación</span>
     </header>
+
     <div class="two">
-      <div class="col-stack"><h3 class="eh">Stack</h3></div>
-      <div class="col-formacion"><h3 class="eh">Formación</h3></div>
+      <div class="col">
+        <h3 class="eh">Stack</h3>
+        <dl class="stack">
+          <div class="grp">
+            <dt><svg class="ic" aria-hidden="true"><use href="#ic-code" /></svg> Lenguajes</dt>
+            <dd>Python · Java · SQL · MongoDB</dd>
+          </div>
+          <div class="grp">
+            <dt><svg class="ic" aria-hidden="true"><use href="#ic-server" /></svg> Backend</dt>
+            <dd>Spring Boot · Django · DRF · FastAPI</dd>
+          </div>
+          <div class="grp">
+            <dt><svg class="ic" aria-hidden="true"><use href="#ic-spark" /></svg> IA</dt>
+            <dd>LangChain · Hugging Face · LLMs</dd>
+          </div>
+          <div class="grp">
+            <dt><svg class="ic" aria-hidden="true"><use href="#ic-chart" /></svg> Datos / ML</dt>
+            <dd>TensorFlow · Pandas · NumPy · Power BI</dd>
+          </div>
+          <div class="grp">
+            <dt><svg class="ic" aria-hidden="true"><use href="#ic-cloud" /></svg> Cloud</dt>
+            <dd>Google Cloud · Apigee · Docker · Git</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="col">
+        <h3 class="eh">Formación</h3>
+        <div class="formacion">
+          <div class="ei">
+            <p class="t">U. Jorge Tadeo Lozano</p>
+            <p class="s"><span>Ingeniería de Sistemas</span><span>2022 — Actual</span></p>
+          </div>
+          <div class="ei">
+            <p class="t">Data Analytics</p>
+            <p class="s"><span>Google · Coursera</span><span>En curso</span></p>
+          </div>
+          <div class="ei">
+            <p class="t">API Design &amp; Fundamentals</p>
+            <p class="s"><span>Google Cloud · Apigee</span><span>✓</span></p>
+          </div>
+          <div class="ei">
+            <p class="t">API Development</p>
+            <p class="s"><span>Google Cloud · Apigee</span><span>✓</span></p>
+          </div>
+          <div class="ei">
+            <p class="t">API Security · OAuth / JWT</p>
+            <p class="s"><span>Google Cloud · Apigee</span><span>✓</span></p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- TODO(Fase 2): filas de Stack (lenguajes/backend/IA/datos/cloud) y Formacion. -->
+<style>
+  .two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 6vw, 80px);
+  }
+
+  .eh {
+    margin: 0 0 18px;
+    padding-bottom: 10px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--teal);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .stack {
+    margin: 0;
+  }
+
+  .grp {
+    display: grid;
+    grid-template-columns: minmax(120px, .42fr) 1fr;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line2);
+  }
+
+  .grp dt {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: .04em;
+    color: var(--soft);
+  }
+
+  .grp dt .ic {
+    font-size: 17px;
+    color: var(--teal);
+  }
+
+  .grp dd {
+    margin: 0;
+    font-size: clamp(14px, 1.8vw, 17px);
+    color: var(--ink);
+  }
+
+  .ei {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line2);
+  }
+
+  .ei .t {
+    margin: 0 0 4px;
+    font-size: clamp(15px, 1.9vw, 18px);
+    color: var(--ink);
+  }
+
+  .ei .s {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .04em;
+    color: var(--soft);
+  }
+
+  @media (max-width: 760px) {
+    .two {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

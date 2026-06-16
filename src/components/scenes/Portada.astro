@@ -1,16 +1,168 @@
 ---
 /*
   Escena 1 — Portada. Grid 2 columnas (texto | retrato), 1 col en <=820px.
-  STUB Fase 0 — maquetacion completa en Fase 2 del ROADMAP.
+  Copy exacto del PRD 6 (Escena 1). El retrato degrada con onerror a un placeholder
+  (ic-portrait + "retrato") sin romper la maqueta si falta el asset.
 */
 ---
 
-<section class="scene" data-slate="Portada" data-screen-label="Portada">
+<section class="scene portada" data-slate="Portada" data-screen-label="Portada">
   <div class="wrap">
-    <p class="kick">Ingeniería de Sistemas</p>
-    <h1>Kevin Axel<br /><em>Herazo Rolón</em></h1>
-    <p class="rol">Backend · Datos · Inteligencia Artificial — Bogotá</p>
+    <div class="pcols">
+      <div class="ptexto">
+        <p class="kick">Ingeniería de Sistemas</p>
+        <h1>Kevin Axel<br /><em>Herazo Rolón</em></h1>
+        <p class="rol">Backend · Datos · Inteligencia Artificial — Bogotá</p>
+        <ul class="actos">
+          <li>
+            <svg class="ic" aria-hidden="true"><use href="#ic-server" /></svg>
+            <strong>I</strong> — El trabajo
+          </li>
+          <li>
+            <svg class="ic" aria-hidden="true"><use href="#ic-code" /></svg>
+            <strong>II</strong> — El equipo
+          </li>
+          <li>
+            <svg class="ic" aria-hidden="true"><use href="#ic-film" /></svg>
+            <strong>III</strong> — Conóceme
+          </li>
+        </ul>
+      </div>
+
+      <figure class="portrait">
+        <img
+          src="/assets/me/retrato.png"
+          alt="Kevin A. Herazo R., autorretrato"
+          onerror="this.closest('.portrait').classList.add('empty')"
+        />
+        <span class="ph" aria-hidden="true">
+          <svg class="ic"><use href="#ic-portrait" /></svg>
+          retrato
+        </span>
+        <figcaption>Kevin A. Herazo R. · autorretrato</figcaption>
+      </figure>
+    </div>
   </div>
 </section>
 
-<!-- TODO(Fase 2): actos con iconos, retrato (assets/me/retrato.png + onerror placeholder). -->
+<style>
+  .pcols {
+    display: grid;
+    grid-template-columns: 1.25fr .75fr;
+    gap: clamp(28px, 6vw, 72px);
+    align-items: center;
+  }
+
+  .kick {
+    margin: 0 0 18px;
+    font-family: var(--mono);
+    font-size: clamp(11px, 1.6vw, 13px);
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+
+  .rol {
+    margin: 22px 0 0;
+    font-family: var(--mono);
+    font-size: clamp(12px, 1.8vw, 15px);
+    letter-spacing: .08em;
+    color: var(--soft);
+  }
+
+  .actos {
+    list-style: none;
+    margin: clamp(26px, 5vh, 44px) 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .actos li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: clamp(12px, 1.6vw, 15px);
+    letter-spacing: .08em;
+    color: var(--soft);
+  }
+
+  .actos .ic {
+    font-size: 18px;
+    color: var(--teal);
+  }
+
+  .actos strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* Retrato 4/5 con marco; el placeholder aparece si la imagen no carga (.empty) */
+  .portrait {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--wall);
+    border: 1px solid var(--ink);
+    box-shadow: 0 24px 60px -28px rgba(0, 0, 0, .55);
+  }
+
+  .portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .portrait .ph {
+    display: none;
+    position: absolute;
+    inset: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--faint);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .portrait .ph .ic {
+    font-size: 40px;
+  }
+
+  .portrait.empty img {
+    display: none;
+  }
+
+  .portrait.empty .ph {
+    display: flex;
+  }
+
+  .portrait figcaption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 8px 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    color: var(--paper);
+    background: color-mix(in srgb, var(--ink) 72%, transparent);
+  }
+
+  @media (max-width: 820px) {
+    .pcols {
+      grid-template-columns: 1fr;
+    }
+
+    .portrait {
+      max-width: 320px;
+    }
+  }
+</style>

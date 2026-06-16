@@ -1,12 +1,13 @@
 # CURRENT — Estado del proyecto
 
 ## Fase activa
-- **Activo:** Fase 2 — Escenas estáticas (Portada, Equipo, Salida) (ver [ROADMAP.md](./ROADMAP.md)).
-- **Estado general:** Fases 0 y 1 completadas. Chrome global funcional: plaque fija con botón
-  de tema (Museo↔Noche, sin parpadeo, persistencia y seguimiento del SO), riel lateral
-  generado por JS con escena activa (IntersectionObserver), navegación por teclado y hint de
-  scroll. Sprite de iconos afinado y clase `.ic` definida. `astro check` y `astro build`
-  limpios, 0 JS de framework. Listo para maquetar las escenas estáticas con el copy del PRD.
+- **Activo:** Fase 3 — "El trabajo" (disposición Galería, fija) (ver [ROADMAP.md](./ROADMAP.md)).
+- **Estado general:** Fases 0, 1 y 2 completadas. Chrome global funcional + tres escenas
+  estáticas maquetadas con el copy exacto del PRD: Portada (texto|retrato con `onerror`),
+  Equipo (Stack + Formación) y Salida (frase + enlaces de contacto). Tipografía editorial
+  compartida en global.css; layout propio de cada escena en su `<style>` scoped. `astro check`
+  y `astro build` limpios, 0 JS de framework. Falta render dinámico de "El trabajo" (Galería)
+  y la persiana de "Conóceme".
 
 ## Pendientes que aporta el usuario (no bloquean el desarrollo)
 - `public/assets/me/retrato.png` — autorretrato (relación 4/5).
@@ -18,6 +19,14 @@
 Mientras falten, el `onerror` muestra placeholders y la maqueta no se rompe.
 
 ## Historial
+- **2026-06-15** — Fase 2. Maquetadas las tres escenas estáticas con el copy exacto del PRD
+  §6. Portada: grid texto|retrato, actos con iconos (I — El trabajo, II — El equipo, III —
+  Conóceme), retrato 4/5 con `onerror` a placeholder y caption. Equipo: grid Stack (5 filas
+  clave/valor con icono) + Formación (5 ítems con título y sub de dos columnas), colapsa en
+  ≤760px. Salida: etiqueta, frase serif italic y enlaces mono con icono (mail/tel/github/CV;
+  el primero relleno ink). Añadida tipografía editorial compartida (`.scene h1/h2/em`, `.sh`,
+  `.acto`, `.conteo`) a global.css; el resto en `<style>` scoped por escena. Verificado con
+  `astro check` (0 errores) y `astro build`.
 - **2026-06-15** — Fase 1. Construido el chrome global. `tema.ts`: API de tema
   (`temaActual`/`fijarTema`/`alternarTema`/`iniciarTema`), persistencia en `localStorage`,
   evento `salathemechange`, `window.setSalaTheme`/`__salaTheme` y listener de

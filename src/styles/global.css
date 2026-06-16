@@ -81,6 +81,56 @@ img {
 }
 
 /* ============================================================
+   Tipografia editorial de escenas (primitivas compartidas).
+   El layout propio de cada escena vive en su componente (<style> scoped).
+   ============================================================ */
+
+.scene h1 {
+  margin: 0;
+  font-size: clamp(40px, 8vw, 84px);
+  line-height: 1.02;
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+
+.scene h2 {
+  margin: 0;
+  font-size: clamp(28px, 5vw, 52px);
+  line-height: 1.06;
+  font-weight: 700;
+}
+
+.scene h1 em,
+.scene h2 em {
+  color: var(--teal);
+  font-style: italic;
+}
+
+/* Encabezado de acto, compartido por El trabajo / El equipo / Conóceme */
+.sh {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: clamp(26px, 5vh, 52px);
+}
+
+.sh .acto {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.sh .conteo {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+/* ============================================================
    Chrome global: iconos, plaque, riel y hint.
    Estilos compartidos por todo el sitio (el riel se genera por JS,
    por eso sus reglas viven aqui y no en un <style> con alcance).

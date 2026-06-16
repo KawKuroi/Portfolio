@@ -5,17 +5,12 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 
 ## Fase activa
 
-### Fase 2 — Escenas estáticas (Portada, Equipo, Salida)
-- [ ] Portada: grid texto|retrato, actos con iconos, retrato con `onerror` placeholder.
-- [ ] Equipo: grid Stack (5 filas) + Formación (5 ítems) con el copy exacto de §6.
-- [ ] Salida: frase serif italic + enlaces mono con icono (mail/tel/github/CV).
-
-## Próximas fases
-
 ### Fase 3 — "El trabajo" (disposición Galería, fija)
 - [ ] Disposición Galería (`#twGaleria`): botones a la izquierda + escenario a la derecha.
 - [ ] Selección por clic fija; empieza en el proyecto 0; placa con meta (año · estado · Repo).
 - [ ] Placeholder `onerror` "captura" para imágenes de proyecto faltantes.
+
+## Próximas fases
 
 ### Fase 4 — Persiana / Conóceme
 - [ ] `persiana.ts`: construir franjas desde FAVORITOS (gradiente, img, lomo, caption).
@@ -33,6 +28,13 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 - [ ] Confirmar dominio `*.vercel.app` (o dominio propio) y *preview deployments* por push.
 
 ## Histórico de fases completadas
+
+### Fase 2 — Escenas estáticas (Portada, Equipo, Salida) (2026-06-15)
+- [x] Portada: grid texto|retrato, actos con iconos (I/II/III), retrato 4/5 con `onerror`
+      a placeholder (ic-portrait + "retrato") y caption.
+- [x] Equipo: grid Stack (5 filas con icono) + Formación (5 ítems) con el copy exacto de §6.
+- [x] Salida: frase serif italic + enlaces mono con icono (mail/tel/github/CV), primero `.solid`.
+- [x] Tipografía editorial compartida (`.scene h1/h2/em`, `.sh`/`.acto`/`.conteo`) en global.css.
 
 ### Fase 1 — Layout y chrome global (2026-06-15)
 - [x] Plaque superior fija con estilos (mono, tracking) y botón de tema funcional.
