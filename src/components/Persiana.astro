@@ -65,6 +65,12 @@ const ICONO_CAT: Record<Categoria, string> = {
     border: 1px solid var(--ink);
   }
 
+  /* En tema Noche el marco con --ink (claro) se ve como un borde blanco fuerte;
+     se suaviza a una hairline tenue. */
+  :global(:root[data-tema='Noche']) .persiana {
+    border-color: var(--line);
+  }
+
   .pslat {
     position: relative;
     flex: 1 1 0;

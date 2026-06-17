@@ -438,6 +438,13 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
     transition: opacity .2s;
   }
 
+  /* "Ver en línea" solo en proyectos con demo: el JS marca [hidden] al cambiar de obra,
+     pero display:inline-flex anula el display:none nativo de [hidden]. Esta regla lo
+     restituye para que el enlace desaparezca en proyectos sin publicar. */
+  .twg-plate .pm .go[hidden] {
+    display: none;
+  }
+
   .twg-plate .pm .go:hover {
     opacity: .6;
   }

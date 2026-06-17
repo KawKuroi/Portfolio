@@ -204,8 +204,10 @@
     }
 
     .portrait {
-      max-width: 300px;
-      margin-top: 14px;
+      /* Ancho explicito (no por estiramiento del grid) para poder centrar con
+         margin auto sin que el marco colapse; antes quedaba pegado a la izquierda. */
+      width: min(300px, 100%);
+      margin: 14px auto 0;
     }
   }
 </style>

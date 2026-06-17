@@ -19,6 +19,19 @@
 - Autorizar el push de la iniciativa responsive cuando esté lista para publicar.
 
 ## Historial
+- **2026-06-17** — Arreglos de feedback tras la iniciativa responsive. (1) **Retrato de la
+  portada centrado en móvil**: en `<700px` el marco quedaba pegado a la izquierda; se le da un
+  ancho explícito (`width:min(300px,100%)`) y `margin:auto` para centrarlo (antes `margin:auto`
+  solo colapsaba el marco porque sus hijos van en `position:absolute`). (2) **Borde de Conóceme
+  en tema oscuro**: el marco de la persiana usaba `--ink`, que en Noche es claro y se veía como
+  un borde blanco fuerte; se suaviza a `var(--line)` solo en Noche (`:global(:root[data-tema=
+  'Noche'])`), Museo intacto. (3) **"Ver en línea" solo en proyectos publicados**: en la galería
+  de escritorio el enlace seguía visible al elegir un proyecto sin `demo` porque
+  `display:inline-flex` anulaba el `display:none` nativo de `[hidden]`; se añade la regla
+  `.twg-plate .pm .go[hidden]{display:none}`. (El acordeón móvil ya lo renderizaba condicional.)
+  Verificado: capturas (retrato centrado), `getComputedStyle` del borde (`rgba(236,228,212,.22)`
+  en Noche) y prueba CDP del toggle (Noti `flex` / Traductor·Turismo `none`); `astro check`/
+  `build` limpios.
 - **2026-06-17** — Reestructuración responsive móvil/tablet · **Fase M4 (El equipo + Contacto +
   QA)**. `Equipo.astro`: el corte de una columna pasa de 760px a **<700px** (en tablet/escritorio
   siguen dos columnas) y en teléfono las etiquetas del stack se estrechan a 120px. `Salida.astro`
