@@ -5,7 +5,7 @@
   [ROADMAP.md](./ROADMAP.md)). El usuario rehízo la adaptación móvil/tablet en un documento de
   referencia propio; interesa la **estructura/organización de la información**, no colores ni
   detalles de diseño. **Escritorio (≥1025px) intacto**; la nueva estructura aplica **≤1024px**.
-  Fase **M0 (cimientos)** cerrada; siguiente: **M1 (Portada)**.
+  Fases **M0 (cimientos)** y **M1 (Portada)** cerradas; siguiente: **M2 (El trabajo)**.
 - **Estado general:** Las 5 fases + SEO + ajustes de contenido cerradas. Sitio construido en
   Astro (0 JS de framework), desplegado en Vercel (estático desde CDN). Fotos reales ya
   integradas (retrato + 4 capturas en `.webp`). El formulario de contacto está **activo**
@@ -19,6 +19,13 @@
 - Autorizar el push de la iniciativa responsive cuando esté lista para publicar.
 
 ## Historial
+- **2026-06-17** — Reestructuración responsive móvil/tablet · **Fase M1 (Portada)**. En
+  ≤1024px los actos (I/II/III) pasan de una fila en línea en mayúsculas a un **índice vertical**
+  con divisores (icono + número + nombre, padding y bordes como la referencia) y el H1 deja de
+  forzar `nowrap` (envuelve, con tamaños por breakpoint). En teléfono (<700px) la portada va a
+  **una columna** con el retrato debajo; en tablet (700–1024px) se conserva el grid a dos
+  columnas (texto | retrato). Escritorio (≥1025px) sin cambios (fila en línea). Solo CSS sobre
+  el DOM existente. Verificado con capturas en 390/768/1440 y `astro check`/`build` limpios.
 - **2026-06-17** — Reestructuración responsive móvil/tablet · **Fase M0 (cimientos)**. Se mueve
   el corte responsive de 820px a **1024px** y se separa el sitio en dos modos: escritorio
   (≥1025px) conserva el carrete con `scroll-snap`, riel y plaque fija (intacto); móvil/tablet

@@ -17,8 +17,10 @@ detalles de diseño. **Escritorio (≥1025px) queda intacto**; la nueva estructu
       (`--pad`), el riel y el hint se ocultan y el plaque pasa a **sticky** con el nombre a la
       izquierda. Arreglados los colapsos en flujo (persiana de Conóceme y altura de El trabajo).
       Escritorio verificado pixel-idéntico. (Detalle en [ARCHITECTURE §7](./ARCHITECTURE.md).)
-- [ ] **Fase M1 — Portada móvil/tablet.** Actos como índice vertical (lista con bordes),
-      ajuste del H1, retrato y grid a dos columnas en tablet.
+- [x] **Fase M1 — Portada móvil/tablet.** En ≤1024px los actos pasan de fila en línea
+      (mayúsculas) a un índice vertical con divisores (número + icono + nombre) y el H1
+      envuelve; teléfono (<700px) a una columna con el retrato debajo; tablet (700–1024px)
+      conserva el grid a dos columnas. Escritorio (≥1025px) intacto.
 - [ ] **Fase M2 — El trabajo (acordeón índice).** Reemplazar la galería maestro-detalle por un
       acordeón índice en ≤1024px (nº · título · tags · año → abre imagen + descripción + meta).
       DOM dual: la galería de escritorio se conserva intacta.

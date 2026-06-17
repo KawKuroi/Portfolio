@@ -153,14 +153,59 @@
     text-transform: uppercase;
   }
 
-  @media (max-width: 820px) {
+  /* ── Movil/tablet (<=1024px): los actos pasan de fila en linea a un indice
+     vertical (lista con divisores) y el H1 puede envolver, como la referencia.
+     El escritorio (>=1025px) conserva la fila en linea en mayusculas. ── */
+  @media (max-width: 1024px) {
+    h1 {
+      white-space: normal;
+      font-size: clamp(44px, 8vw, 76px);
+    }
+
+    .acts {
+      flex-direction: column;
+      gap: 0;
+      margin-top: 24px;
+      border-top: 1px solid var(--line2);
+      font-size: 13px;
+      letter-spacing: normal;
+      text-transform: none;
+      color: var(--soft);
+    }
+
+    .acts span {
+      display: flex;
+      width: 100%;
+      gap: 11px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line2);
+    }
+
+    .acts .ic {
+      width: 16px;
+      height: 16px;
+    }
+
+    .acts b {
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: .1em;
+    }
+  }
+
+  /* Telefono (<700px): una columna; el retrato baja bajo el texto. */
+  @media (max-width: 699px) {
     .title-grid {
       grid-template-columns: 1fr;
     }
 
+    h1 {
+      font-size: clamp(40px, 12vw, 62px);
+    }
+
     .portrait {
-      max-width: 280px;
-      margin-top: 10px;
+      max-width: 300px;
+      margin-top: 14px;
     }
   }
 </style>
