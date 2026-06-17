@@ -5,8 +5,8 @@
   [ROADMAP.md](./ROADMAP.md)). El usuario rehízo la adaptación móvil/tablet en un documento de
   referencia propio; interesa la **estructura/organización de la información**, no colores ni
   detalles de diseño. **Escritorio (≥1025px) intacto**; la nueva estructura aplica **≤1024px**.
-  Fases **M0 (cimientos)**, **M1 (Portada)** y **M2 (El trabajo)** cerradas; siguiente:
-  **M3 (Conóceme)**.
+  Fases **M0**, **M1 (Portada)**, **M2 (El trabajo)** y **M3 (Conóceme)** cerradas; siguiente y
+  última: **M4 (El equipo + Contacto + QA)**.
 - **Estado general:** Las 5 fases + SEO + ajustes de contenido cerradas. Sitio construido en
   Astro (0 JS de framework), desplegado en Vercel (estático desde CDN). Fotos reales ya
   integradas (retrato + 4 capturas en `.webp`). El formulario de contacto está **activo**
@@ -20,6 +20,18 @@
 - Autorizar el push de la iniciativa responsive cuando esté lista para publicar.
 
 ## Historial
+- **2026-06-17** — Reestructuración responsive móvil/tablet · **Fase M3 (Conóceme)**. En
+  ≤1024px la persiana vertical gana una fila de **chips de filtro** por categoría (Todo / Cine /
+  Juegos / Libros / Música) en `Conoceme.astro`: al pulsar un chip se ocultan las franjas
+  (`.pslat`) que no coinciden y se abre la primera visible (JS nuevo que solo toca la
+  visibilidad; el acordeón sigue en `persiana.ts`). El **autoplay pasa a ser solo de escritorio**
+  (`persiana.ts`: media query `min-width:1025px` en `puedeReproducir` + listener `change` para
+  arrancar/parar al cruzar el corte); en móvil/tablet la persiana se abre al tocar, sin ciclo.
+  Si se vuelve a escritorio con un filtro activo, se restablece (limpia `display` en línea y
+  vuelve a "Todo") para no dejar huecos en la persiana horizontal. Los chips se ocultan en
+  escritorio (`.cf-filter{display:none}`), así la escena de escritorio queda intacta. Verificado
+  con capturas en 390/768 y prueba funcional vía CDP (filtro "Cine" → 20→5 franjas); `astro
+  check`/`build` limpios.
 - **2026-06-17** — Reestructuración responsive móvil/tablet · **Fase M2 (El trabajo)**. En
   ≤1024px la galería maestro-detalle (`#twGaleria`) se reemplaza por un **acordeón índice**
   (`.tw-acc`): cada proyecto es una fila plegable (nº · título · tags · año + chevron) que abre

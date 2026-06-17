@@ -1,9 +1,21 @@
 ---
 /*
-  Escena 4 — III · Conoceme. Persiana (acordeon) con 20 piezas favoritas. La persiana llena
-  el alto disponible de la escena (estirada), igual que el diseno original (PRD 8).
+  Escena 4 — III · Conoceme. Persiana (acordeon) con 20 piezas favoritas.
+  - Escritorio (>=1025px): persiana horizontal estirada con autoplay (intacta, PRD 8).
+  - Movil/tablet (<=1024px): persiana vertical (acordeon) precedida por chips de filtro por
+    categoria (Todo / Cine / Juegos / Libros / Musica). Sin autoplay.
 */
 import Persiana from '../Persiana.astro';
+import { type Categoria } from '../../data/favoritos';
+
+// Chips de filtro (solo movil/tablet). Mismo icono por categoria que la persiana.
+const CATEGORIAS: Categoria[] = ['Cine', 'Juegos', 'Libros', 'Música'];
+const ICONO_CAT: Record<Categoria, string> = {
+  Cine: 'ic-film',
+  Juegos: 'ic-game',
+  Libros: 'ic-book',
+  Música: 'ic-music',
+};
 ---
 
 <section class="scene act-persiana" data-slate="Conóceme" data-screen-label="Conóceme">
@@ -14,6 +26,20 @@ import Persiana from '../Persiana.astro';
       <span class="ln"></span>
       <span class="ct">20 piezas · cine · juegos · libros · música</span>
     </div>
+
+    {/* Filtro por categoria: visible solo en movil/tablet (<=1024px). */}
+    <div class="cf-filter" role="group" aria-label="Filtrar por categoría">
+      <button class="cf-chip on" type="button" data-f="all" aria-pressed="true">Todo</button>
+      {
+        CATEGORIAS.map((c) => (
+          <button class="cf-chip" type="button" data-f={c} aria-pressed="false">
+            <svg class="ic" aria-hidden="true"><use href={`#${ICONO_CAT[c]}`} /></svg>
+            {c}
+          </button>
+        ))
+      }
+    </div>
+
     <Persiana />
     <p class="note">
       // aquí están las piezas que me formaron el gusto —composición, ritmo y color.
@@ -21,6 +47,55 @@ import Persiana from '../Persiana.astro';
     </p>
   </div>
 </section>
+
+<script>
+  // Filtro por categoria de Conoceme (solo movil/tablet). Muestra/oculta las franjas de la
+  // persiana segun el chip activo y abre la primera visible. El acordeon y (en escritorio) el
+  // autoplay los gestiona persiana.ts; aqui solo se toca la visibilidad.
+  const seccion = document.querySelector<HTMLElement>('.act-persiana');
+  if (seccion) {
+    const chips = Array.from(seccion.querySelectorAll<HTMLButtonElement>('.cf-chip'));
+    const franjas = Array.from(seccion.querySelectorAll<HTMLElement>('.pslat'));
+
+    const filtrar = (filtro: string): void => {
+      let primeraVisible: HTMLElement | null = null;
+      franjas.forEach((franja) => {
+        const visible = filtro === 'all' || franja.dataset.cat === filtro;
+        franja.style.display = visible ? '' : 'none';
+        if (visible && !primeraVisible) primeraVisible = franja;
+      });
+      // Abre la primera franja visible y cierra el resto (las ocultas no estorban).
+      franjas.forEach((franja) => franja.classList.toggle('open', franja === primeraVisible));
+    };
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        chips.forEach((c) => {
+          const activo = c === chip;
+          c.classList.toggle('on', activo);
+          c.setAttribute('aria-pressed', String(activo));
+        });
+        filtrar(chip.dataset.f ?? 'all');
+      });
+    });
+
+    // Al pasar a escritorio, deshace cualquier filtro (limpia el display en linea y vuelve a
+    // "Todo") para no dejar franjas ocultas en la persiana horizontal.
+    const escritorio = window.matchMedia('(min-width: 1025px)');
+    const restablecer = (): void => {
+      if (!escritorio.matches) return;
+      franjas.forEach((franja) => {
+        franja.style.display = '';
+      });
+      chips.forEach((c) => {
+        const todo = c.dataset.f === 'all';
+        c.classList.toggle('on', todo);
+        c.setAttribute('aria-pressed', String(todo));
+      });
+    };
+    escritorio.addEventListener('change', restablecer);
+  }
+</script>
 
 <style>
   /* La escena estira su contenido; la persiana ocupa el alto disponible. */
@@ -52,6 +127,50 @@ import Persiana from '../Persiana.astro';
     color: var(--soft);
   }
 
+  /* ── Chips de filtro: ocultos en escritorio; fila desplazable en movil/tablet ── */
+  .cf-filter {
+    display: none;
+  }
+
+  .cf-chip {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    appearance: none;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .04em;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: none;
+    color: var(--soft);
+    transition: background .25s, color .25s, border-color .25s;
+  }
+
+  .cf-chip .ic {
+    width: 13px;
+    height: 13px;
+    color: var(--teal);
+  }
+
+  .cf-chip.on {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .cf-chip.on .ic {
+    color: var(--paper);
+  }
+
+  .cf-chip:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+  }
+
   @media (max-width: 1024px) {
     .act-persiana .wrap {
       display: block;
@@ -59,6 +178,19 @@ import Persiana from '../Persiana.astro';
 
     .act-persiana .sh {
       margin-bottom: 18px;
+    }
+
+    .cf-filter {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      margin: 0 calc(-1 * var(--pad)) 16px;
+      padding: 0 var(--pad);
+    }
+
+    .cf-filter::-webkit-scrollbar {
+      display: none;
     }
   }
 </style>

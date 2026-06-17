@@ -28,8 +28,13 @@ detalles de diseño. **Escritorio (≥1025px) queda intacto**; la nueva estructu
       escritorio queda intacto. Panel plegable animado con `grid-template-rows 0fr→1fr`; en
       tablet (700–1024px) el panel abierto reparte imagen | texto en dos columnas. JS: cada
       cabecera abre/cierra su panel (con `aria-expanded`/`aria-controls`).
-- [ ] **Fase M3 — Conóceme (filtros + acordeón).** Chips de filtro por categoría sobre la
-      persiana vertical; autoplay solo en escritorio.
+- [x] **Fase M3 — Conóceme (filtros + acordeón).** En ≤1024px se añaden **chips de filtro**
+      por categoría (Todo / Cine / Juegos / Libros / Música) sobre la persiana vertical; al
+      elegir un chip se ocultan las franjas que no coinciden y se abre la primera visible. El
+      **autoplay pasa a ser solo de escritorio** (`min-width:1025px`); en móvil/tablet la
+      persiana se abre al tocar, sin ciclo. Al volver a escritorio (resize) el filtro se
+      restablece para no dejar franjas ocultas. Probado con CDP: el filtro "Cine" deja 5
+      franjas visibles (20→5). Desktop intacto (chips ocultos).
 - [ ] **Fase M4 — El equipo + Contacto + QA.** Equipo a una columna <700px (dos columnas en
       tablet), Contacto en columna <700px; QA responsive en 375/390/700/768/1024/1025/1440.
 

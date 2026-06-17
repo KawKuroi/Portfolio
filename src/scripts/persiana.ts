@@ -16,6 +16,9 @@
 */
 
 const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)');
+/* El autoplay es solo de escritorio (>=1025px). En movil/tablet la persiana es un acordeon
+   vertical con filtro por categoria: se abre al tocar, sin ciclo automatico. */
+const ESCRITORIO = window.matchMedia('(min-width: 1025px)');
 
 /** Activa el acordeon y el autoplay de una persiana concreta. */
 function iniciarUnaPersiana(persiana: HTMLElement): void {
@@ -37,7 +40,7 @@ function iniciarUnaPersiana(persiana: HTMLElement): void {
   const avanzar = (): void => abrir(abierta + 1);
 
   const puedeReproducir = (): boolean =>
-    !REDUCE.matches && enViewport && !hover && !document.hidden;
+    ESCRITORIO.matches && !REDUCE.matches && enViewport && !hover && !document.hidden;
 
   const parar = (): void => {
     if (timer) {
@@ -70,6 +73,12 @@ function iniciarUnaPersiana(persiana: HTMLElement): void {
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) parar();
     else reproducir();
+  });
+
+  // Inicia/detiene el autoplay al cruzar el corte de escritorio (resize/orientacion).
+  ESCRITORIO.addEventListener('change', () => {
+    if (ESCRITORIO.matches) reproducir();
+    else parar();
   });
 
   // Pausa fuera del viewport.
