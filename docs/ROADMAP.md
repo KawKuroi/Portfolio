@@ -21,9 +21,13 @@ detalles de diseño. **Escritorio (≥1025px) queda intacto**; la nueva estructu
       (mayúsculas) a un índice vertical con divisores (número + icono + nombre) y el H1
       envuelve; teléfono (<700px) a una columna con el retrato debajo; tablet (700–1024px)
       conserva el grid a dos columnas. Escritorio (≥1025px) intacto.
-- [ ] **Fase M2 — El trabajo (acordeón índice).** Reemplazar la galería maestro-detalle por un
-      acordeón índice en ≤1024px (nº · título · tags · año → abre imagen + descripción + meta).
-      DOM dual: la galería de escritorio se conserva intacta.
+- [x] **Fase M2 — El trabajo (acordeón índice).** En ≤1024px la galería maestro-detalle se
+      reemplaza por un acordeón índice (nº · título · tags · año → abre imagen + descripción +
+      meta con estado/demo/repo). **DOM dual**: el acordeón (`.tw-acc`) y la galería
+      (`.tw-galeria`) conviven; CSS muestra uno u otro según el corte de 1024px, así el
+      escritorio queda intacto. Panel plegable animado con `grid-template-rows 0fr→1fr`; en
+      tablet (700–1024px) el panel abierto reparte imagen | texto en dos columnas. JS: cada
+      cabecera abre/cierra su panel (con `aria-expanded`/`aria-controls`).
 - [ ] **Fase M3 — Conóceme (filtros + acordeón).** Chips de filtro por categoría sobre la
       persiana vertical; autoplay solo en escritorio.
 - [ ] **Fase M4 — El equipo + Contacto + QA.** Equipo a una columna <700px (dos columnas en

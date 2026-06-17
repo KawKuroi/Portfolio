@@ -77,6 +77,55 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
         </div>
       </div>
     </div>
+
+    {/* Acordeon indice (movil/tablet <=1024px): reemplaza la galeria maestro-detalle.
+        DOM dual: la galeria de escritorio queda intacta; esto se muestra solo en <=1024px. */}
+    <div class="tw-acc">
+      {
+        PROYECTOS.map((proyecto, i) => (
+          <div class:list={['twa-item', { open: i === 0 }]}>
+            <button
+              class="twa-head"
+              type="button"
+              aria-expanded={i === 0 ? 'true' : 'false'}
+              aria-controls={`twa-panel-${i}`}
+            >
+              <span class="twa-no">{numero(i)}</span>
+              <span class="twa-tx">
+                <span class="twa-tt">{proyecto.titulo}</span>
+                <span class="twa-tg">{proyecto.tags}</span>
+              </span>
+              <span class="twa-yr">{proyecto.anio}</span>
+              <svg class="ic twa-chev" aria-hidden="true"><use href="#ic-chevron" /></svg>
+            </button>
+            <div class="twa-panel" id={`twa-panel-${i}`}>
+              <div class="twa-inner">
+                <figure class="twa-frame">
+                  <img
+                    src={proyecto.img}
+                    alt={`Captura de ${proyecto.titulo}`}
+                    loading="lazy"
+                    onerror="this.closest('.twa-frame').classList.add('empty')"
+                  />
+                </figure>
+                <div class="twa-txt">
+                  <p class="twa-desc">{proyecto.descripcion}</p>
+                  <div class="twa-meta">
+                    <span class="st">{proyecto.estado}</span>
+                    {proyecto.demo && (
+                      <a class="go demo" href={proyecto.demo} target="_blank" rel="noopener">
+                        <span class="dot" aria-hidden="true" />Ver en línea
+                      </a>
+                    )}
+                    <a class="go" href={proyecto.repo} target="_blank" rel="noopener">Repo →</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
   </div>
 </section>
 
@@ -130,6 +179,18 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
 
     items.forEach((boton, i) => boton.addEventListener('click', () => seleccionar(i)));
   }
+</script>
+
+<script>
+  // Acordeon indice de El trabajo (movil/tablet <=1024px). Cada cabecera abre/cierra su
+  // panel de forma independiente; el primero arranca abierto desde el render.
+  document.querySelectorAll<HTMLElement>('.tw-acc .twa-item').forEach((item) => {
+    const cabecera = item.querySelector<HTMLButtonElement>('.twa-head');
+    cabecera?.addEventListener('click', () => {
+      const abierto = item.classList.toggle('open');
+      cabecera.setAttribute('aria-expanded', String(abierto));
+    });
+  });
 </script>
 
 <style>
@@ -419,6 +480,184 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
     }
   }
 
+  /* ════════ Acordeon indice (movil/tablet) ════════
+     DOM dual: convive con la galeria de escritorio. Oculto por defecto; se
+     muestra solo en <=1024px (ver la media query de abajo). */
+  .tw-acc {
+    display: none;
+    border-top: 1px solid var(--line2);
+  }
+
+  .twa-item {
+    border-bottom: 1px solid var(--line2);
+  }
+
+  .twa-head {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 13px;
+    align-items: center;
+    width: 100%;
+    appearance: none;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    color: inherit;
+    font-family: inherit;
+    padding: 16px 0;
+  }
+
+  .twa-no {
+    font-family: var(--serif);
+    font-size: 20px;
+    line-height: 1;
+    color: var(--faint);
+    transition: color .3s;
+  }
+
+  .twa-item.open .twa-no {
+    color: var(--teal);
+  }
+
+  .twa-tx {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .twa-tt {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 1.12;
+    letter-spacing: -.01em;
+  }
+
+  .twa-tg {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--faint);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .twa-yr {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--faint);
+    white-space: nowrap;
+  }
+
+  .twa-chev {
+    width: 16px;
+    height: 16px;
+    color: var(--soft);
+    transition: transform .35s var(--ease), color .3s;
+  }
+
+  .twa-item.open .twa-chev {
+    transform: rotate(180deg);
+    color: var(--teal);
+  }
+
+  /* Panel plegable: anima la altura con grid-template-rows 0fr -> 1fr. */
+  .twa-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    overflow: hidden;
+    transition: grid-template-rows .4s var(--ease);
+  }
+
+  .twa-item.open .twa-panel {
+    grid-template-rows: 1fr;
+    padding-bottom: 18px;
+  }
+
+  .twa-panel > * {
+    min-height: 0; /* permite que el contenido colapse a 0 al cerrar */
+  }
+
+  .twa-frame {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    border: 1px solid var(--ink);
+    overflow: hidden;
+    background: var(--wall);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, .13);
+    margin-bottom: 13px;
+  }
+
+  .twa-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .twa-frame.empty {
+    background: repeating-linear-gradient(
+      135deg,
+      transparent 0 9px,
+      color-mix(in srgb, var(--ink) 5%, transparent) 9px 10px
+    );
+  }
+
+  .twa-frame.empty img {
+    display: none;
+  }
+
+  .twa-desc {
+    font-size: 14px;
+    color: var(--soft);
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .twa-meta {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 13px;
+  }
+
+  .twa-meta .st {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  .twa-meta .go {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--teal);
+    border-bottom: 1px solid var(--teal);
+    padding-bottom: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: opacity .2s;
+  }
+
+  .twa-meta .go:hover {
+    opacity: .6;
+  }
+
+  .twa-meta .go.demo .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #5b9c74;
+    box-shadow: 0 0 0 0 rgba(91, 156, 116, .5);
+    animation: livePulse 2.2s var(--ease) infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .twg-frame .ph {
       transition: opacity .3s;
@@ -429,26 +668,32 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
   }
 
   @media (max-width: 1024px) {
-    /* En flujo movil/tablet la escena mide su contenido (no una pantalla). */
+    /* En flujo movil/tablet la escena mide su contenido y se cambia la galeria
+       maestro-detalle por el acordeon indice. */
     .scene.scene-trabajo {
       min-height: 0;
     }
 
     .tw-galeria {
-      grid-template-columns: 1fr;
-      gap: 24px;
+      display: none;
+    }
+
+    .tw-acc {
+      display: block;
     }
   }
 
-  @media (max-width: 560px) {
-    .twg-item {
-      grid-template-columns: auto 1fr;
+  /* Tablet (700-1024px): el panel abierto reparte imagen | texto en dos columnas. */
+  @media (min-width: 700px) and (max-width: 1024px) {
+    .twa-inner {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 24px;
+      align-items: start;
     }
-    .twg-yr {
-      display: none;
-    }
-    .twg-tg {
-      white-space: normal;
+
+    .twa-frame {
+      margin-bottom: 0;
     }
   }
 </style>

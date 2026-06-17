@@ -5,7 +5,8 @@
   [ROADMAP.md](./ROADMAP.md)). El usuario rehízo la adaptación móvil/tablet en un documento de
   referencia propio; interesa la **estructura/organización de la información**, no colores ni
   detalles de diseño. **Escritorio (≥1025px) intacto**; la nueva estructura aplica **≤1024px**.
-  Fases **M0 (cimientos)** y **M1 (Portada)** cerradas; siguiente: **M2 (El trabajo)**.
+  Fases **M0 (cimientos)**, **M1 (Portada)** y **M2 (El trabajo)** cerradas; siguiente:
+  **M3 (Conóceme)**.
 - **Estado general:** Las 5 fases + SEO + ajustes de contenido cerradas. Sitio construido en
   Astro (0 JS de framework), desplegado en Vercel (estático desde CDN). Fotos reales ya
   integradas (retrato + 4 capturas en `.webp`). El formulario de contacto está **activo**
@@ -19,6 +20,18 @@
 - Autorizar el push de la iniciativa responsive cuando esté lista para publicar.
 
 ## Historial
+- **2026-06-17** — Reestructuración responsive móvil/tablet · **Fase M2 (El trabajo)**. En
+  ≤1024px la galería maestro-detalle (`#twGaleria`) se reemplaza por un **acordeón índice**
+  (`.tw-acc`): cada proyecto es una fila plegable (nº · título · tags · año + chevron) que abre
+  un panel con la captura, la descripción y la meta (estado · "Ver en línea" con punto pulsante
+  solo si hay demo · "Repo →"). Se resuelve con **DOM dual**: la galería de escritorio y el
+  acordeón conviven en `Trabajo.astro`, ambos renderizados en build desde `PROYECTOS`, y el CSS
+  muestra uno u otro según el corte de 1024px (`.tw-acc{display:none}` por defecto). El panel
+  anima su altura con `grid-template-rows:0fr→1fr`; en tablet (700–1024px) reparte imagen | texto
+  en dos columnas. JS nuevo: cada cabecera abre/cierra su panel actualizando `aria-expanded`
+  (con `aria-controls` al panel). El primer proyecto arranca abierto. Verificado con capturas en
+  390/768 (acordeón) y revisión del DOM/CSS del build para el escritorio (galería intacta);
+  `astro check`/`build` limpios.
 - **2026-06-17** — Reestructuración responsive móvil/tablet · **Fase M1 (Portada)**. En
   ≤1024px los actos (I/II/III) pasan de una fila en línea en mayúsculas a un **índice vertical**
   con divisores (icono + número + nombre, padding y bordes como la referencia) y el H1 deja de
