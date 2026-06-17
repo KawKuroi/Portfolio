@@ -30,7 +30,8 @@
 
   /* Movimiento y medidas */
   --ease: cubic-bezier(.22, 1, .36, 1);
-  --bar: clamp(30px, 5vh, 52px); /* alto del plaque superior */
+  --bar: clamp(30px, 5vh, 52px); /* alto del plaque superior (escritorio) */
+  --pad: 20px; /* padding lateral en movil/tablet (<=1024px); escritorio usa su propio clamp */
 }
 
 /* Tema Museo (claro) — explicito para el conmutador */

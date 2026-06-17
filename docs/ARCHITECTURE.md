@@ -88,9 +88,24 @@ scripts/
 
 ## 7. Responsividad
 
-- Escritorio: carrete con `scroll-snap` vertical, riel lateral visible.
-- Móvil (≤820px): se desactiva el snap y el riel; las escenas fluyen en vertical normal; la
-  persiana pasa de columnas a filas.
+El sitio tiene **dos modos** separados por un corte en **1024px**:
+
+- **Escritorio (≥1025px):** carrete con `scroll-snap` vertical (`.reel` a `100vh`), escenas
+  de pantalla completa centradas, riel lateral y hint de teclado visibles, plaque **fija**.
+  Esta experiencia está **congelada** (el usuario la quiere intacta); no se toca.
+- **Móvil/Tablet (≤1024px):** el carrete pasa a **flujo vertical normal** (`.reel` a
+  `height:auto`, sin snap), las escenas miden su contenido (sin `100vh`) con padding compacto
+  (`--pad`), el riel y el hint se ocultan y el plaque pasa a **sticky** (en flujo, con el
+  nombre a la izquierda). La estructura interna de cada escena se reorganiza siguiendo el
+  **documento de referencia móvil** del usuario (acordeones, filtros, etc.).
+  - **Refinamiento tablet (700–1024px):** más aire (`--pad:44px`) y disposiciones a dos
+    columnas donde la referencia lo indica.
+  - **Teléfono (<700px):** una columna, disposiciones plegables.
+
+El corte de 1024px y el flujo base viven en `global.css` (`.reel`/`.scene`/plaque/riel/hint)
+y `tokens.css` (`--pad`). Cada escena añade sus propias reglas `@media (max-width:1024px)`
+(y subcortes en 700px) en su `<style>` scoped. La reestructuración móvil/tablet se ejecuta por
+fases (ver [ROADMAP.md](./ROADMAP.md)).
 
 ## 8. Build y despliegue
 

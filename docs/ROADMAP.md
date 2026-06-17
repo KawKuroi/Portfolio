@@ -5,11 +5,33 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 
 ## Fase activa
 
-Ninguna — el roadmap está completo (incluida la Fase 6 de SEO) más una ronda de ajustes de
-contenido/contacto. El sitio está construido y **publicado en Vercel**:
-<https://portfolio-topaz-nu-46.vercel.app/>. Las fotos reales ya están integradas. Pendiente del
-usuario (no bloquea): pegar la access key de Web3Forms en `Salida.astro` para activar el
-formulario de contacto (ver [CURRENT.md](./CURRENT.md)).
+**Iniciativa: Reestructuración responsive móvil/tablet.** El usuario rehízo la adaptación
+móvil/tablet en un documento de referencia propio
+(`Portfolio_claude/portfolio/Portafolio movil - diseno de referencia.html`, modo convergido
+`ce=acordeon`). Interesa **la estructura y la organización de la información**, no colores ni
+detalles de diseño. **Escritorio (≥1025px) queda intacto**; la nueva estructura aplica
+**≤1024px** (la referencia divide internamente <700px teléfono / ≥700px tablet).
+
+- [x] **Fase M0 — Cimientos responsive.** Corte 820→**1024px**: el carrete pasa a flujo
+      vertical (sin snap), las escenas miden su contenido (sin `100vh`) con padding compacto
+      (`--pad`), el riel y el hint se ocultan y el plaque pasa a **sticky** con el nombre a la
+      izquierda. Arreglados los colapsos en flujo (persiana de Conóceme y altura de El trabajo).
+      Escritorio verificado pixel-idéntico. (Detalle en [ARCHITECTURE §7](./ARCHITECTURE.md).)
+- [ ] **Fase M1 — Portada móvil/tablet.** Actos como índice vertical (lista con bordes),
+      ajuste del H1, retrato y grid a dos columnas en tablet.
+- [ ] **Fase M2 — El trabajo (acordeón índice).** Reemplazar la galería maestro-detalle por un
+      acordeón índice en ≤1024px (nº · título · tags · año → abre imagen + descripción + meta).
+      DOM dual: la galería de escritorio se conserva intacta.
+- [ ] **Fase M3 — Conóceme (filtros + acordeón).** Chips de filtro por categoría sobre la
+      persiana vertical; autoplay solo en escritorio.
+- [ ] **Fase M4 — El equipo + Contacto + QA.** Equipo a una columna <700px (dos columnas en
+      tablet), Contacto en columna <700px; QA responsive en 375/390/700/768/1024/1025/1440.
+
+### Pendiente del usuario (no bloquea)
+
+El sitio está **publicado en Vercel** (<https://portfolio-topaz-nu-46.vercel.app/>). Las fotos
+reales ya están integradas. La access key de Web3Forms ya está pegada en `Salida.astro`. El push
+de esta iniciativa se hace solo cuando el usuario lo autorice.
 
 ## Histórico de fases completadas
 

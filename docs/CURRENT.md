@@ -1,24 +1,35 @@
 # CURRENT — Estado del proyecto
 
 ## Fase activa
-- **Activo:** Ninguna — roadmap completo (incluida la Fase 6 de SEO) más una ronda de ajustes
-  de contenido/contacto. Sitio **publicado en Vercel**: <https://portfolio-topaz-nu-46.vercel.app/>.
-- **Estado general:** Las 5 fases + SEO cerradas. Sitio construido en Astro (0 JS de framework),
-  desplegado en Vercel (estático desde CDN). Fotos reales ya integradas (retrato + 4 capturas en
-  `.webp`, normalizadas). Verificado: `astro check`/`build` limpios. Última auditoría
-  **Lighthouse móvil: Performance 99 · Accessibility 95 · Best Practices 96 · SEO 100** (previa
-  a integrar las fotos; conviene re-auditar tras el próximo deploy).
+- **Activo:** Iniciativa **Reestructuración responsive móvil/tablet** (ver
+  [ROADMAP.md](./ROADMAP.md)). El usuario rehízo la adaptación móvil/tablet en un documento de
+  referencia propio; interesa la **estructura/organización de la información**, no colores ni
+  detalles de diseño. **Escritorio (≥1025px) intacto**; la nueva estructura aplica **≤1024px**.
+  Fase **M0 (cimientos)** cerrada; siguiente: **M1 (Portada)**.
+- **Estado general:** Las 5 fases + SEO + ajustes de contenido cerradas. Sitio construido en
+  Astro (0 JS de framework), desplegado en Vercel (estático desde CDN). Fotos reales ya
+  integradas (retrato + 4 capturas en `.webp`). El formulario de contacto está **activo**
+  (access key de Web3Forms ya pegada en `Salida.astro`). Verificado: `astro check`/`build`
+  limpios. Última auditoría **Lighthouse móvil: Performance 99 · Accessibility 95 · Best
+  Practices 96 · SEO 100** (previa a integrar las fotos; conviene re-auditar tras el deploy).
 
 ## Pendiente del usuario (no bloquea el build)
-- **Access key de Web3Forms para el formulario de contacto.** El formulario de la sección
-  Contacto está completo pero inerte hasta pegar la clave: en
-  `src/components/scenes/Salida.astro`, reemplazar el marcador `PEGA-AQUI-TU-ACCESS-KEY` por la
-  access key gratuita de <https://web3forms.com> (es pública por diseño). Sin ella, el envío
-  muestra "No se pudo enviar"; `mailto:`/`tel:` siguen como respaldo.
 - (Opcional) Sustituir el retrato por un headshot editorial: la foto actual es una toma nocturna
   casual y se nota más ahora que la imagen es más grande.
+- Autorizar el push de la iniciativa responsive cuando esté lista para publicar.
 
 ## Historial
+- **2026-06-17** — Reestructuración responsive móvil/tablet · **Fase M0 (cimientos)**. Se mueve
+  el corte responsive de 820px a **1024px** y se separa el sitio en dos modos: escritorio
+  (≥1025px) conserva el carrete con `scroll-snap`, riel y plaque fija (intacto); móvil/tablet
+  (≤1024px) pasa a **flujo vertical** (`.reel` a `height:auto`, sin snap), las escenas miden su
+  contenido (sin `min-height:100vh`) con padding compacto vía `--pad` (20px teléfono, 44px
+  tablet), se ocultan riel y hint, y el plaque pasa a **sticky** mostrando el nombre a la
+  izquierda (`.lb-name`) y ocultando la meta de la derecha (`.lb-meta`). Arreglados dos colapsos
+  que el flujo provocaba: la persiana de Conóceme y la altura de El trabajo (sus `@media`
+  pasan a 1024px; El trabajo añade `min-height:0`). Verificado con capturas headless (Chrome) en
+  390/768/1024/1440: escritorio pixel-idéntico y móvil/tablet fluyendo compactos sin secciones
+  rotas. `astro check`/`astro build` limpios (0 errores).
 - **2026-06-16** — Cache-busting de la tarjeta social. Renombrada `og-image.png` →
   `og-image-v2.png` y actualizada la referencia (`imagen` en `Base.astro` + generador + docs).
   Las plataformas sociales cachean la imagen por URL; el sufijo versionado fuerza a que

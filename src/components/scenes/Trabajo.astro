@@ -428,7 +428,12 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
     }
   }
 
-  @media (max-width: 820px) {
+  @media (max-width: 1024px) {
+    /* En flujo movil/tablet la escena mide su contenido (no una pantalla). */
+    .scene.scene-trabajo {
+      min-height: 0;
+    }
+
     .tw-galeria {
       grid-template-columns: 1fr;
       gap: 24px;

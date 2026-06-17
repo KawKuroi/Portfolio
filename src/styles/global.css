@@ -85,7 +85,11 @@ img {
   margin: 0 auto;
 }
 
-@media (max-width: 820px) {
+/* ── Movil/tablet (<=1024px): el carrete pasa a flujo vertical normal ──
+   El escritorio (>=1025px) conserva el carrete con scroll-snap. Las escenas
+   dejan de medir una pantalla completa y fluyen compactas (estilo de la
+   referencia movil); la estructura interna se reorganiza por fases. */
+@media (max-width: 1024px) {
   .reel {
     height: auto;
     overflow: visible;
@@ -94,9 +98,24 @@ img {
 
   .scene {
     height: auto;
-    min-height: 100vh;
+    min-height: 0;
     scroll-snap-align: none;
     scroll-snap-stop: normal;
+    scroll-margin-top: 54px;
+    /* El plaque pasa a sticky (en flujo), asi que el padding superior ya no
+       reserva --bar. Ritmo vertical compacto al estilo de la referencia. */
+    padding: 30px var(--pad) 36px;
+  }
+}
+
+/* Tablet (700-1024px): mas aire lateral y vertical, como la referencia. */
+@media (min-width: 700px) and (max-width: 1024px) {
+  :root {
+    --pad: 44px;
+  }
+
+  .scene {
+    padding: 46px var(--pad) 52px;
   }
 }
 
@@ -149,6 +168,32 @@ img {
   display: inline-flex;
   align-items: center;
   gap: 16px;
+}
+
+/* Nombre a la izquierda: oculto en escritorio (el plaque fijo va vacio a la
+   izquierda), visible en movil/tablet donde el plaque pasa a sticky. */
+.lb .lb-name {
+  display: none;
+  font-family: var(--serif);
+  font-style: italic;
+}
+
+/* Movil/tablet (<=1024px): plaque sticky (ocupa su espacio en el flujo),
+   nombre a la izquierda y se oculta la meta de la derecha para no duplicarlo. */
+@media (max-width: 1024px) {
+  .lb.top {
+    position: sticky;
+    height: 46px;
+    pointer-events: auto;
+  }
+
+  .lb .lb-name {
+    display: inline;
+  }
+
+  .lb .lb-meta {
+    display: none;
+  }
 }
 
 #themeToggle {
@@ -256,7 +301,7 @@ img {
   border-radius: 4px;
 }
 
-@media (max-width: 820px) {
+@media (max-width: 1024px) {
   .rail {
     display: none;
   }
@@ -312,7 +357,7 @@ img {
   color: var(--paper);
 }
 
-@media (max-width: 820px) {
+@media (max-width: 1024px) {
   .hint {
     display: none;
   }
