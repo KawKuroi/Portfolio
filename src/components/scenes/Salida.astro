@@ -429,7 +429,9 @@
     color: var(--ink);
   }
 
-  @media (max-width: 560px) {
+  /* Telefono (<700px): enlaces en columna a ancho completo. En tablet (700–1024px) y
+     escritorio siguen en fila centrada con wrap (como la referencia). */
+  @media (max-width: 699px) {
     .links {
       flex-direction: column;
       align-items: stretch;

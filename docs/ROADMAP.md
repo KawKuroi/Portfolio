@@ -5,12 +5,21 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 
 ## Fase activa
 
-**Iniciativa: Reestructuración responsive móvil/tablet.** El usuario rehízo la adaptación
-móvil/tablet en un documento de referencia propio
+Ninguna. La **reestructuración responsive móvil/tablet** (fases M0–M4) está **completa** — ver
+el detalle en el histórico. El **escritorio (≥1025px) quedó intacto**; la nueva estructura
+aplica **≤1024px** (la referencia divide internamente <700px teléfono / ≥700px tablet).
+
+**Pendiente del usuario (no bloquea):** autorizar el push a `main` para publicar los cambios en
+Vercel (<https://portfolio-topaz-nu-46.vercel.app/>).
+
+## Histórico de fases completadas
+
+### Reestructuración responsive móvil/tablet (2026-06-17)
+
+El usuario rehízo la adaptación móvil/tablet en un documento de referencia propio
 (`Portfolio_claude/portfolio/Portafolio movil - diseno de referencia.html`, modo convergido
-`ce=acordeon`). Interesa **la estructura y la organización de la información**, no colores ni
-detalles de diseño. **Escritorio (≥1025px) queda intacto**; la nueva estructura aplica
-**≤1024px** (la referencia divide internamente <700px teléfono / ≥700px tablet).
+`ce=acordeon`). Interesaba **la estructura y la organización de la información**, no colores ni
+detalles de diseño. Escritorio (≥1025px) intacto; nueva estructura ≤1024px.
 
 - [x] **Fase M0 — Cimientos responsive.** Corte 820→**1024px**: el carrete pasa a flujo
       vertical (sin snap), las escenas miden su contenido (sin `100vh`) con padding compacto
@@ -35,16 +44,12 @@ detalles de diseño. **Escritorio (≥1025px) queda intacto**; la nueva estructu
       persiana se abre al tocar, sin ciclo. Al volver a escritorio (resize) el filtro se
       restablece para no dejar franjas ocultas. Probado con CDP: el filtro "Cine" deja 5
       franjas visibles (20→5). Desktop intacto (chips ocultos).
-- [ ] **Fase M4 — El equipo + Contacto + QA.** Equipo a una columna <700px (dos columnas en
-      tablet), Contacto en columna <700px; QA responsive en 375/390/700/768/1024/1025/1440.
-
-### Pendiente del usuario (no bloquea)
-
-El sitio está **publicado en Vercel** (<https://portfolio-topaz-nu-46.vercel.app/>). Las fotos
-reales ya están integradas. La access key de Web3Forms ya está pegada en `Salida.astro`. El push
-de esta iniciativa se hace solo cuando el usuario lo autorice.
-
-## Histórico de fases completadas
+- [x] **Fase M4 — El equipo + Contacto + QA.** Equipo a **una columna <700px** (dos columnas en
+      tablet/escritorio; etiquetas a 120px en teléfono); Contacto en **columna a ancho completo
+      <700px** (fila con wrap en tablet/escritorio). Se alinean los últimos breakpoints sueltos
+      al esquema 1024/700 (Equipo 760→699, Contacto 560→699). QA responsive con capturas en
+      375/390/700/768/1024/1025/1440 (sin desbordes; escritorio idéntico) y `astro check`/`build`
+      limpios.
 
 ### Ajustes de contenido y contacto (2026-06-16)
 - [x] Portada: retirado el caption del retrato y agrandada la imagen.

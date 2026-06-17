@@ -1,12 +1,11 @@
 # CURRENT — Estado del proyecto
 
 ## Fase activa
-- **Activo:** Iniciativa **Reestructuración responsive móvil/tablet** (ver
-  [ROADMAP.md](./ROADMAP.md)). El usuario rehízo la adaptación móvil/tablet en un documento de
-  referencia propio; interesa la **estructura/organización de la información**, no colores ni
-  detalles de diseño. **Escritorio (≥1025px) intacto**; la nueva estructura aplica **≤1024px**.
-  Fases **M0**, **M1 (Portada)**, **M2 (El trabajo)** y **M3 (Conóceme)** cerradas; siguiente y
-  última: **M4 (El equipo + Contacto + QA)**.
+- **Activo:** Ninguna. La iniciativa **Reestructuración responsive móvil/tablet** (fases M0–M4)
+  está **completa** (ver [ROADMAP.md](./ROADMAP.md)). El **escritorio (≥1025px) quedó intacto**;
+  la nueva estructura (flujo vertical, índice de actos, acordeón de El trabajo, filtros de
+  Conóceme, Equipo/Contacto en columna) aplica **≤1024px** (con refinamiento de tablet ≥700px).
+  **Pendiente:** autorizar el push a `main` para publicar en Vercel.
 - **Estado general:** Las 5 fases + SEO + ajustes de contenido cerradas. Sitio construido en
   Astro (0 JS de framework), desplegado en Vercel (estático desde CDN). Fotos reales ya
   integradas (retrato + 4 capturas en `.webp`). El formulario de contacto está **activo**
@@ -20,6 +19,14 @@
 - Autorizar el push de la iniciativa responsive cuando esté lista para publicar.
 
 ## Historial
+- **2026-06-17** — Reestructuración responsive móvil/tablet · **Fase M4 (El equipo + Contacto +
+  QA)**. `Equipo.astro`: el corte de una columna pasa de 760px a **<700px** (en tablet/escritorio
+  siguen dos columnas) y en teléfono las etiquetas del stack se estrechan a 120px. `Salida.astro`
+  (Contacto): los enlaces pasan a **columna a ancho completo <700px** (antes <560px); en
+  tablet/escritorio siguen en fila con wrap. Así quedan todos los breakpoints alineados al
+  esquema **1024/700**. QA responsive con capturas en 375/390/700/768/1024/1025/1440: el flujo
+  móvil/tablet no desborda y el escritorio (carrete + riel) queda idéntico; prueba funcional del
+  filtro de Conóceme vía CDP. `astro check`/`build` limpios. **Cierra la iniciativa responsive.**
 - **2026-06-17** — Reestructuración responsive móvil/tablet · **Fase M3 (Conóceme)**. En
   ≤1024px la persiana vertical gana una fila de **chips de filtro** por categoría (Todo / Cine /
   Juegos / Libros / Música) en `Conoceme.astro`: al pulsar un chip se ocultan las franjas

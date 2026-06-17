@@ -152,10 +152,17 @@
     gap: 12px;
   }
 
-  @media (max-width: 760px) {
+  /* Telefono (<700px): Stack y Formacion en una columna; etiquetas mas estrechas.
+     En tablet (700–1024px) y escritorio se mantienen las dos columnas. */
+  @media (max-width: 699px) {
     .two {
       grid-template-columns: 1fr;
       gap: 30px;
+    }
+
+    .grp {
+      grid-template-columns: 120px 1fr;
+      gap: 12px;
     }
   }
 </style>
