@@ -19,6 +19,12 @@
 - Autorizar el push de la iniciativa responsive cuando esté lista para publicar.
 
 ## Historial
+- **2026-06-17** — El trabajo (móvil/tablet): el acordeón pasa a **un solo panel abierto a la
+  vez**. Antes cada cabecera abría/cerraba su panel de forma independiente (varios a la vez);
+  ahora al abrir un proyecto se colapsan los demás, y volver a pulsar el abierto lo cierra (en
+  todo momento hay como mucho uno abierto, o ninguno). Cambio solo en el script del acordeón de
+  `Trabajo.astro` (mantiene `aria-expanded`). Verificado con prueba CDP: `[0]→[2]→[3]→[]`;
+  `astro check`/`build` limpios.
 - **2026-06-17** — Arreglos de feedback tras la iniciativa responsive. (1) **Retrato de la
   portada centrado en móvil**: en `<700px` el marco quedaba pegado a la izquierda; se le da un
   ancho explícito (`width:min(300px,100%)`) y `margin:auto` para centrarlo (antes `margin:auto`

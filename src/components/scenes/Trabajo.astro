@@ -182,13 +182,20 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
 </script>
 
 <script>
-  // Acordeon indice de El trabajo (movil/tablet <=1024px). Cada cabecera abre/cierra su
-  // panel de forma independiente; el primero arranca abierto desde el render.
-  document.querySelectorAll<HTMLElement>('.tw-acc .twa-item').forEach((item) => {
+  // Acordeon indice de El trabajo (movil/tablet <=1024px). Comportamiento de un solo panel
+  // abierto a la vez: al abrir uno, los demas se colapsan; pulsar el abierto lo cierra
+  // (en todo momento hay como mucho un proyecto abierto, o ninguno). El primero arranca
+  // abierto desde el render.
+  const itemsTrabajo = Array.from(document.querySelectorAll<HTMLElement>('.tw-acc .twa-item'));
+  itemsTrabajo.forEach((item) => {
     const cabecera = item.querySelector<HTMLButtonElement>('.twa-head');
     cabecera?.addEventListener('click', () => {
-      const abierto = item.classList.toggle('open');
-      cabecera.setAttribute('aria-expanded', String(abierto));
+      const yaAbierto = item.classList.contains('open');
+      itemsTrabajo.forEach((otro) => {
+        const abrir = otro === item && !yaAbierto;
+        otro.classList.toggle('open', abrir);
+        otro.querySelector('.twa-head')?.setAttribute('aria-expanded', String(abrir));
+      });
     });
   });
 </script>
