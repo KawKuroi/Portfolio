@@ -95,10 +95,10 @@ export const FAVORITOS: Favorito[] = [
   },
   {
     c: 'Juegos',
-    t: 'Borderlands 2',
-    s: 'Gearbox · 2012',
-    img: '/assets/videogames/borderlands2.jpg',
-    g: 'linear-gradient(135deg, #241405 0%, #9c5a16 50%, #e0962a 100%)',
+    t: "Baldur's Gate 3",
+    s: 'Larian · 2023',
+    img: '/assets/videogames/baldursgate3.jpg',
+    g: 'linear-gradient(135deg, #0d0f16 0%, #3a2a4d 55%, #b58a3a 100%)',
   },
 
   // --- Libros ---
@@ -118,10 +118,10 @@ export const FAVORITOS: Favorito[] = [
   },
   {
     c: 'Libros',
-    t: '1984',
-    s: 'George Orwell · 1949',
-    img: '/assets/books/1984.jpg',
-    g: 'linear-gradient(135deg, #16130e 0%, #3a342a 55%, #6c6457 100%)',
+    t: 'El nombre del viento',
+    s: 'Patrick Rothfuss · 2007',
+    img: '/assets/books/el_nombre_del_viento.jpg',
+    g: 'linear-gradient(135deg, #0d0f08 0%, #2a3315 55%, #c8862e 100%)',
   },
   {
     c: 'Libros',
