@@ -59,16 +59,10 @@ const ICONO_CAT: Record<Categoria, string> = {
     flex: 1 1 auto;
     min-height: 0;
     display: flex;
-    gap: 4px;
+    gap: 0;
     margin: 0;
     overflow: hidden;
-    border: 1px solid var(--ink);
-  }
-
-  /* En tema Noche el marco con --ink (claro) se ve como un borde blanco fuerte;
-     se suaviza a una hairline tenue. */
-  :global(:root[data-tema='Noche']) .persiana {
-    border-color: var(--line);
+    border: 1px solid var(--marco);
   }
 
   .pslat {
@@ -78,6 +72,9 @@ const ICONO_CAT: Record<Categoria, string> = {
     margin: 0;
     overflow: hidden;
     cursor: pointer;
+    /* Costura oscura entre franjas pegadas (igual a la referencia): delinea las caratulas
+       sin dejar el hueco claro que se leia como borde. */
+    outline: 1px solid rgba(6, 8, 11, .5);
     filter: brightness(.58);
     transition: flex-grow .6s var(--ease), filter .6s var(--ease);
   }

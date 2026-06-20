@@ -19,6 +19,17 @@
 - Autorizar el push de la iniciativa responsive cuando esté lista para publicar.
 
 ## Historial
+- **2026-06-20** — Bordes: Conóceme como la referencia + sin bordes blancos en Noche. (A) La
+  persiana ahora va con franjas **pegadas** (`gap:4px → 0`) y una **costura oscura** por franja
+  (`.pslat{outline:1px solid rgba(6,8,11,.5)}`), replicando `Sala - Kevin Herazo.html`; antes el
+  hueco de 4px dejaba ver el fondo claro y se leía como borde. (B) Nuevo token **`--marco`** en
+  `tokens.css` (Museo = `var(--ink)`, idéntico a hoy; Noche = `rgba(20,18,13,.55)`, marco oscuro
+  y sutil) que reemplaza `border:1px solid var(--ink)` en retrato (`Portada`), capturas de
+  proyecto (`.twg-frame`/`.twa-frame`, `Trabajo`), diálogo de contacto (`.cform`, `Salida`) y el
+  marco exterior de la persiana → en Noche ya no hay borde blanco. Se retira el parche Noche
+  previo de la persiana (`--line`), que seguía siendo crema. Las hairlines `--line/--line2`
+  (divisores de Equipo/Portada/plaque/inputs/botones) se conservan. Verificado: `astro check`
+  limpio (0 errores). Pendiente: validación visual en producción.
 - **2026-06-19** — Contacto: aclarado que el correo abre un formulario. El enlace del correo
   seguía mostrando solo la dirección `kevinaxelhr18@gmail.com` con el icono de sobre, así que se
   leía como un `mailto:` y no se intuía que abre el formulario embebido. Se conserva la dirección

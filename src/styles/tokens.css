@@ -23,6 +23,11 @@
   --line: rgba(20, 18, 13, .16);
   --line2: rgba(20, 18, 13, .075);
 
+  /* Color de marco (retrato, capturas, persiana, dialogo). Separa el concepto "borde de
+     marco" del color de tinta (--ink): asi en Noche el marco no sale blanco. Oscuro en ambos
+     temas. */
+  --marco: var(--ink);
+
   /* Tipografia fija (preset "Clasica") = todo Libre Baskerville. */
   --serif: 'Libre Baskerville', Georgia, serif;
   --sans: 'Libre Baskerville', Georgia, serif;
@@ -43,6 +48,7 @@
   --faint: #a39c8d;
   --line: rgba(20, 18, 13, .16);
   --line2: rgba(20, 18, 13, .075);
+  --marco: var(--ink);
 }
 
 /* Tema Noche (oscuro) */
@@ -54,6 +60,8 @@
   --faint: #736b5b;
   --line: rgba(236, 228, 212, .22);
   --line2: rgba(236, 228, 212, .10);
+  /* Marco oscuro y sutil (tono de tinta del tema claro): evita el borde blanco que daba --ink. */
+  --marco: rgba(20, 18, 13, .55);
 }
 
 /*
@@ -70,5 +78,6 @@
     --faint: #736b5b;
     --line: rgba(236, 228, 212, .22);
     --line2: rgba(236, 228, 212, .10);
+    --marco: rgba(20, 18, 13, .55);
   }
 }
