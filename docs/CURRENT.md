@@ -19,6 +19,13 @@
 - Autorizar el push de la iniciativa responsive cuando esté lista para publicar.
 
 ## Historial
+- **2026-06-19** — Contacto: aclarado que el correo abre un formulario. El enlace del correo
+  seguía mostrando solo la dirección `kevinaxelhr18@gmail.com` con el icono de sobre, así que se
+  leía como un `mailto:` y no se intuía que abre el formulario embebido. Se conserva la dirección
+  visible (la fila de enlaces no cambia), se añade `aria-haspopup="dialog"` al enlace y una nota
+  mono bajo los enlaces (`.links-nota`): `// el correo abre un formulario para enviarme tu mensaje
+  aquí mismo`. El `<dialog>`, el JS y el respaldo `mailto:` quedan intactos. Cambios en
+  `Salida.astro`; PRD §6 Escena 5 sincronizado. Verificado: `astro check` limpio (0 errores).
 - **2026-06-19** — El equipo y los créditos: actualizado el bloque Stack. La fila **IA** deja de
   listar `LangChain · Hugging Face · LLMs` y pasa a `Claude · Gemini · Agentes · Skills · MCP ·
   Arquitecturas de IA` (manejo de Claude/Gemini y conocimiento avanzado: agentes, skills, MCP y

@@ -11,7 +11,7 @@
   <div class="wrap">
     <div class="q">Contáctame.</div>
     <nav class="links" aria-label="Contacto">
-      <a class="solid" href="mailto:kevinaxelhr18@gmail.com" data-form-open>
+      <a class="solid" href="mailto:kevinaxelhr18@gmail.com" data-form-open aria-haspopup="dialog">
         <svg class="ic" aria-hidden="true"><use href="#ic-mail" /></svg>
         kevinaxelhr18@gmail.com
       </a>
@@ -36,6 +36,7 @@
         CV
       </a>
     </nav>
+    <p class="links-nota">// el correo abre un formulario para enviarme tu mensaje aquí mismo</p>
   </div>
 
   <!-- Formulario de contacto (se abre al hacer clic en el correo). -->
@@ -208,6 +209,15 @@
   .links a .ic {
     width: 15px;
     height: 15px;
+  }
+
+  .links-nota {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .04em;
+    color: var(--faint);
+    text-align: center;
+    margin-top: 14px;
   }
 
   .links a:hover {

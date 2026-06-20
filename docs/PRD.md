@@ -233,7 +233,10 @@ Centrada.
 - Etiqueta (`.end`, acento): **"Salida · libro de visitas"**
 - Frase grande (serif italic, `.q`): **"Hagamos el próximo."**
 - Enlaces (`.links`, mono, con icono; el primero `.solid` = relleno ink):
-  - `mailto:kevinaxelhr18@gmail.com` (`ic-mail`) — **kevinaxelhr18@gmail.com**
+  - Correo (`ic-mail`, `.solid`) — **kevinaxelhr18@gmail.com**. Al hacer clic abre un
+    formulario de contacto en la misma página (`<dialog>` + Web3Forms, sin backend); el
+    `href="mailto:…"` queda como respaldo sin JS. Bajo los enlaces, una nota mono
+    (`.links-nota`) aclara que el correo abre ese formulario.
   - `tel:+573001908759` (`ic-phone`) — **+57 3001908759**
   - `https://github.com/KawKuroi` (`ic-github`, target _blank) — **github.com/KawKuroi**
   - `/assets/CV-Kevin-Herazo.pdf` (`ic-doc`, target _blank) — **CV**
