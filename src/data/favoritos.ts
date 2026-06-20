@@ -97,7 +97,7 @@ export const FAVORITOS: Favorito[] = [
     c: 'Juegos',
     t: "Baldur's Gate 3",
     s: 'Larian · 2023',
-    img: '/assets/videogames/baldursgate3.jpg',
+    img: '/assets/videogames/baldursgate3-v2.jpg',
     g: 'linear-gradient(135deg, #0d0f16 0%, #3a2a4d 55%, #b58a3a 100%)',
   },
 
