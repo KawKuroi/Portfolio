@@ -204,9 +204,10 @@ Encabezado: acto **II**, **"El *equipo* y los *créditos*"** (em teal), subtítu
 |---|---|
 | Lenguajes (`ic-code`) | Python · Java · SQL · MongoDB |
 | Backend (`ic-server`) | Spring Boot · Django · DRF · FastAPI |
-| IA (`ic-spark`) | LangChain · Hugging Face · LLMs |
+| IA (`ic-spark`) | Claude · Gemini · Agentes · Skills · MCP · Arquitecturas de IA |
 | Datos / ML (`ic-chart`) | TensorFlow · Pandas · NumPy · Power BI |
-| Cloud (`ic-cloud`) | Google Cloud · Apigee · Docker · Git |
+| Cloud (`ic-cloud`) | Google Cloud · Vercel · Supabase |
+| Control de versiones (`ic-github`) | Docker · Git · GitHub |
 
 **Columna Formación** (`.eh` = "Formación"), ítems (`.ei` → título `.t`, sub `.s` con dos spans):
 | Título | Izq. | Der. |

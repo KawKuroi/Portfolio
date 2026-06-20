@@ -19,6 +19,13 @@
 - Autorizar el push de la iniciativa responsive cuando esté lista para publicar.
 
 ## Historial
+- **2026-06-19** — El equipo y los créditos: actualizado el bloque Stack. La fila **IA** deja de
+  listar `LangChain · Hugging Face · LLMs` y pasa a `Claude · Gemini · Agentes · Skills · MCP ·
+  Arquitecturas de IA` (manejo de Claude/Gemini y conocimiento avanzado: agentes, skills, MCP y
+  estructuración de arquitecturas de IA). La fila **Cloud** queda en `Google Cloud · Vercel ·
+  Supabase` (antes incluía Apigee/Docker/Git) y se añade una nueva fila **Control de versiones**
+  (`ic-github`) = `Docker · Git · GitHub`. Cambios en `Equipo.astro`; PRD §6 sincronizado.
+  Verificado: `astro check` limpio (0 errores) y validación visual del usuario.
 - **2026-06-17** — El trabajo (móvil/tablet): el acordeón pasa a **un solo panel abierto a la
   vez**. Antes cada cabecera abría/cerraba su panel de forma independiente (varios a la vez);
   ahora al abrir un proyecto se colapsan los demás, y volver a pulsar el abierto lo cierra (en
