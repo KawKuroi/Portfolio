@@ -95,10 +95,10 @@ export const FAVORITOS: Favorito[] = [
   },
   {
     c: 'Juegos',
-    t: 'Resident Evil 2',
-    s: 'Capcom · 2019',
-    img: '/assets/videogames/re2.jpg',
-    g: 'linear-gradient(135deg, #1a0d0d 0%, #6e1f1f 55%, #b53a3a 100%)',
+    t: 'Borderlands 2',
+    s: 'Gearbox · 2012',
+    img: '/assets/videogames/borderlands2.jpg',
+    g: 'linear-gradient(135deg, #241405 0%, #9c5a16 50%, #e0962a 100%)',
   },
 
   // --- Libros ---
