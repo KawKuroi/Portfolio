@@ -26,7 +26,7 @@ tipado (clave faltante = error de compilación).
 - [x] **Diccionario tipado** `src/i18n/ui.ts` (`UI: Record<Idioma, Textos>` +
       `obtenerIdioma`/`obtenerTextos`) como única fuente del copy; datos de proyectos a
       `Record<Idioma,string>`; categorías traducidas por etiqueta con clave estable.
-- [x] **Botón de idioma** `#langToggle` en el plaque (gemelo del de tema, a su izquierda):
+- [x] **Botón de idioma** `#langToggle` en el plaque (gemelo del de tema, a su derecha):
       enlaza a la ruta hermana y persiste la elección en `localStorage['sala-lang']`.
 - [x] **Detección automática** del idioma del dispositivo (script inline anti-parpadeo: sigue
       `navigator.language` salvo elección manual; redirección única).

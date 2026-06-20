@@ -28,7 +28,7 @@
   `document.documentElement.lang`. Los datos de proyectos pasan a `Record<Idioma,string>` en los
   campos de copy; `favoritos.ts` no cambia (solo se traduce la **etiqueta** de categoría, la clave
   `c`/`data-cat`/`data-f` queda en español). **Botón de idioma** `#langToggle` en el plaque, a la
-  izquierda del de tema (gemelo redondo), que enlaza a la ruta hermana y persiste la elección en
+  derecha del de tema (gemelo redondo), que enlaza a la ruta hermana y persiste la elección en
   `localStorage['sala-lang']`. **Detección automática** del idioma del dispositivo por un script
   inline anti-parpadeo (sigue `navigator.language` salvo elección manual; redirección única). SEO
   por idioma: `<html lang>`, title/description/JSON-LD, `og:locale`+alternate, `hreflang`

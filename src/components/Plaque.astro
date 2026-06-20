@@ -1,7 +1,7 @@
 ---
 /*
   Plaque superior fija (.lb.top), z-index 80. Estilos en global.css (chrome global).
-  Izquierda: nombre (visible en movil). Derecha: meta + boton de idioma + boton de tema.
+  Izquierda: nombre (visible en movil). Derecha: meta + boton de tema + boton de idioma.
   - Boton de tema: alterna Museo<->Noche via tema.ts; el icono refleja el tema vigente.
   - Boton de idioma: enlace a la ruta hermana (es <-> en); muestra el codigo del idioma destino
     y persiste la eleccion en localStorage['sala-lang'].
@@ -19,15 +19,15 @@ const urlOtroIdioma = getRelativeLocaleUrl(otroIdioma);
   <span class="lb-left"><b class="lb-name">Kevin Herazo</b></span>
   <span class="lb-right">
     <span class="lb-meta">Kevin Herazo — 2026</span>
+    <button id="themeToggle" type="button" aria-label={t.aria.cambiarTema} aria-pressed="false">
+      <svg class="ic" aria-hidden="true"><use href="#ic-sun" /></svg>
+    </button>
     <a
       id="langToggle"
       href={urlOtroIdioma}
       data-lang-destino={otroIdioma}
       aria-label={t.aria.cambiarIdioma}>{t.langCodigoDestino}</a
     >
-    <button id="themeToggle" type="button" aria-label={t.aria.cambiarTema} aria-pressed="false">
-      <svg class="ic" aria-hidden="true"><use href="#ic-sun" /></svg>
-    </button>
   </span>
 </header>
 

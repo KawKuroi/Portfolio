@@ -320,7 +320,7 @@ categoría (`Cine→ic-film, Juegos→ic-game, Libros→ic-book, Música→ic-mu
 No hay panel de Tweaks: la disposición (Galería), el acento (aguamarino `#2aa198`) y la
 tipografía (Clásica) son fijos.
 
-**Conmutador de idioma.** A la izquierda del botón de tema, un botón redondo gemelo
+**Conmutador de idioma.** A la derecha del botón de tema, un botón redondo gemelo
 (`#langToggle`) muestra el código del idioma destino (`EN` en la página ES, `ES` en la EN) y
 enlaza a la ruta hermana (`/` ↔ `/en/`), persistiendo la elección en `localStorage['sala-lang']`.
 Por defecto el idioma sigue al dispositivo (`navigator.language`) salvo elección manual. Detalle

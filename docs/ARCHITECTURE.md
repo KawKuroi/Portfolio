@@ -175,7 +175,7 @@ Sitio **bilingüe ES/EN** con el i18n **nativo de Astro**, sin librerías ni JS 
   resuelve el idioma antes del pintado: elección manual (`localStorage['sala-lang']`) manda; si no,
   sigue `navigator.language`; si difiere del idioma servido, redirige una sola vez con
   `location.replace` (sin bucle: tras redirigir ya coincide). Mismo patrón anti-parpadeo que el tema.
-- **Conmutador:** botón `#langToggle` en el plaque (a la izquierda del de tema), un `<a>` a la
+- **Conmutador:** botón `#langToggle` en el plaque (a la derecha del de tema), un `<a>` a la
   ruta hermana vía `getRelativeLocaleUrl`; al pulsar persiste la elección en `localStorage`.
 - **Scripts de cliente** (Trabajo, Salida, navegación): leen el idioma de
   `document.documentElement.lang` e importan `src/i18n/ui.ts` (y los datos) → una sola fuente.
