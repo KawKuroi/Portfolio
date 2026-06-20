@@ -2,21 +2,24 @@
 /*
   Escena 2 — I · El trabajo. Disposicion fija: Galeria (la unica). Render en build desde
   PROYECTOS; un script minimo cambia la obra activa y la placa. Estilado 1:1 con el diseno
-  original (PRD 7.2). Datos en src/data/proyectos.ts.
+  original (PRD 7.2). Datos en src/data/proyectos.ts. Copy bilingue por idioma vigente.
 */
 import { PROYECTOS } from '../../data/proyectos';
+import { obtenerIdioma, obtenerTextos } from '../../i18n/ui';
 
+const idioma = obtenerIdioma(Astro.currentLocale);
+const t = obtenerTextos(idioma);
 const inicial = PROYECTOS[0];
 const numero = (i: number): string => String(i + 1).padStart(2, '0');
 ---
 
-<section class="scene scene-trabajo" data-slate="El trabajo" data-screen-label="El trabajo">
+<section class="scene scene-trabajo" data-slate={t.slates.trabajo} data-screen-label={t.slates.trabajo}>
   <div class="wrap">
     <div class="sh">
       <span class="act">I</span>
-      <h2>El <em>trabajo</em></h2>
+      <h2 set:html={t.trabajo.tituloHtml}></h2>
       <span class="ln"></span>
-      <span class="ct">{PROYECTOS.length} proyectos</span>
+      <span class="ct">{PROYECTOS.length} {t.trabajo.proyectos}</span>
     </div>
 
     <div id="twGaleria" class="tw-galeria">
@@ -31,14 +34,14 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
             >
               <span class="twg-num">{numero(i)}</span>
               <span class="twg-tx">
-                <span class="twg-tt">{proyecto.titulo}</span>
-                <span class="twg-tg">{proyecto.tags}</span>
+                <span class="twg-tt">{proyecto.titulo[idioma]}</span>
+                <span class="twg-tg">{proyecto.tags[idioma]}</span>
               </span>
-              <span class="twg-yr">{proyecto.anio}</span>
+              <span class="twg-yr">{proyecto.anio[idioma]}</span>
             </button>
           ))
         }
-        <div class="twg-hint">// clic en una obra para verla en grande</div>
+        <div class="twg-hint">{t.trabajo.pista}</div>
       </div>
 
       <div class="twg-stage">
@@ -48,7 +51,7 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
               <figure class:list={['ph', { on: i === 0 }]} data-i={i}>
                 <img
                   src={proyecto.img}
-                  alt={`Captura de ${proyecto.titulo}`}
+                  alt={`${t.trabajo.capturaAlt}${proyecto.titulo[idioma]}`}
                   loading="lazy"
                   onerror="this.closest('.ph').classList.add('empty')"
                 />
@@ -58,11 +61,11 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
         </div>
 
         <div class="twg-plate" aria-live="polite">
-          <div class="pt" data-plate-titulo>{inicial.titulo}</div>
-          <p class="pd" data-plate-desc>{inicial.descripcion}</p>
+          <div class="pt" data-plate-titulo>{inicial.titulo[idioma]}</div>
+          <p class="pd" data-plate-desc>{inicial.descripcion[idioma]}</p>
           <div class="pm">
-            <span data-plate-anio>{inicial.anio}</span>
-            <span class="st" data-plate-estado>{inicial.estado}</span>
+            <span data-plate-anio>{inicial.anio[idioma]}</span>
+            <span class="st" data-plate-estado>{inicial.estado[idioma]}</span>
             <a
               class="go demo"
               data-plate-demo
@@ -70,9 +73,9 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
               target="_blank"
               rel="noopener"
               hidden={!inicial.demo}
-              ><span class="dot" aria-hidden="true"></span>Ver en línea</a
+              ><span class="dot" aria-hidden="true"></span>{t.trabajo.verEnLinea}</a
             >
-            <a class="go" data-plate-repo href={inicial.repo} target="_blank" rel="noopener">Repo</a>
+            <a class="go" data-plate-repo href={inicial.repo} target="_blank" rel="noopener">{t.trabajo.repo}</a>
           </div>
         </div>
       </div>
@@ -92,10 +95,10 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
             >
               <span class="twa-no">{numero(i)}</span>
               <span class="twa-tx">
-                <span class="twa-tt">{proyecto.titulo}</span>
-                <span class="twa-tg">{proyecto.tags}</span>
+                <span class="twa-tt">{proyecto.titulo[idioma]}</span>
+                <span class="twa-tg">{proyecto.tags[idioma]}</span>
               </span>
-              <span class="twa-yr">{proyecto.anio}</span>
+              <span class="twa-yr">{proyecto.anio[idioma]}</span>
               <svg class="ic twa-chev" aria-hidden="true"><use href="#ic-chevron" /></svg>
             </button>
             <div class="twa-panel" id={`twa-panel-${i}`}>
@@ -103,21 +106,21 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
                 <figure class="twa-frame">
                   <img
                     src={proyecto.img}
-                    alt={`Captura de ${proyecto.titulo}`}
+                    alt={`${t.trabajo.capturaAlt}${proyecto.titulo[idioma]}`}
                     loading="lazy"
                     onerror="this.closest('.twa-frame').classList.add('empty')"
                   />
                 </figure>
                 <div class="twa-txt">
-                  <p class="twa-desc">{proyecto.descripcion}</p>
+                  <p class="twa-desc">{proyecto.descripcion[idioma]}</p>
                   <div class="twa-meta">
-                    <span class="st">{proyecto.estado}</span>
+                    <span class="st">{proyecto.estado[idioma]}</span>
                     {proyecto.demo && (
                       <a class="go demo" href={proyecto.demo} target="_blank" rel="noopener">
-                        <span class="dot" aria-hidden="true" />Ver en línea
+                        <span class="dot" aria-hidden="true" />{t.trabajo.verEnLinea}
                       </a>
                     )}
-                    <a class="go" href={proyecto.repo} target="_blank" rel="noopener">Repo →</a>
+                    <a class="go" href={proyecto.repo} target="_blank" rel="noopener">{t.trabajo.repoFlecha}</a>
                   </div>
                 </div>
               </div>
@@ -131,6 +134,10 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
 
 <script>
   import { PROYECTOS } from '../../data/proyectos';
+  import { obtenerIdioma } from '../../i18n/ui';
+
+  // Idioma vigente (lo fija <html lang> en build) para volcar la placa en el idioma correcto.
+  const idioma = obtenerIdioma(document.documentElement.lang);
 
   const galeria = document.getElementById('twGaleria');
   if (galeria) {
@@ -154,10 +161,10 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
         boton.setAttribute('aria-pressed', String(activo));
       });
       slides.forEach((slide, j) => slide.classList.toggle('on', j === i));
-      if (titulo) titulo.textContent = proyecto.titulo;
-      if (desc) desc.textContent = proyecto.descripcion;
-      if (anio) anio.textContent = proyecto.anio;
-      if (estado) estado.textContent = proyecto.estado;
+      if (titulo) titulo.textContent = proyecto.titulo[idioma];
+      if (desc) desc.textContent = proyecto.descripcion[idioma];
+      if (anio) anio.textContent = proyecto.anio[idioma];
+      if (estado) estado.textContent = proyecto.estado[idioma];
       if (repo) repo.href = proyecto.repo;
       // Enlace al demo con indicador "en línea": solo si el proyecto está publicado.
       if (demo) {

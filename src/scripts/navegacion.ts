@@ -9,10 +9,15 @@
     - Hint de scroll: aparece a ~1.3s, se oculta al primer gesto o a ~6.2s. Oculto en movil.
 */
 
+import { obtenerIdioma, obtenerTextos } from '../i18n/ui';
+
 interface Escena {
   el: HTMLElement;
   etiqueta: string;
 }
+
+// Idioma vigente de la pagina (lo fija <html lang> en build) para los rotulos accesibles.
+const textos = obtenerTextos(obtenerIdioma(document.documentElement.lang));
 
 let escenas: Escena[] = [];
 let botones: HTMLButtonElement[] = [];
@@ -48,7 +53,7 @@ function construirRiel(): void {
     const boton = document.createElement('button');
     boton.type = 'button';
     boton.className = 'rail-dot';
-    boton.setAttribute('aria-label', `Ir a ${escena.etiqueta}`);
+    boton.setAttribute('aria-label', `${textos.aria.irA}${escena.etiqueta}`);
 
     const etiqueta = document.createElement('span');
     etiqueta.className = 'rail-label';

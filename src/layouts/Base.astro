@@ -1,13 +1,14 @@
 ---
 /*
   Layout base del portafolio. Define el documento, carga la tipografia fija (Libre Baskerville,
-  preset Clasica), resuelve el tema antes del primer pintado (unico ajuste variable: claro
-  Museo / oscuro Noche) y monta el sprite de iconos y el carrete con snap vertical.
-  Estructura rigida: disposicion Galeria, acento aguamarino y tipografia Clasica fijos.
+  preset Clasica), resuelve el tema e idioma antes del primer pintado (ajustes variables: tema
+  claro Museo / oscuro Noche; idioma es/en) y monta el sprite de iconos y el carrete con snap
+  vertical. Estructura rigida: disposicion Galeria, acento aguamarino y tipografia Clasica fijos.
 */
 import '../styles/tokens.css';
 import '../styles/global.css';
 import IconSprite from '../components/IconSprite.astro';
+import { obtenerIdioma, obtenerTextos } from '../i18n/ui';
 
 interface Props {
   titulo?: string;
@@ -18,20 +19,30 @@ interface Props {
   canonical?: string;
 }
 
+// Idioma de la pagina (es en `/`, en en `/en/`) y sus textos.
+const idioma = obtenerIdioma(Astro.currentLocale);
+const t = obtenerTextos(idioma);
+
 // URL pública del sitio (Vercel). Base para canonical, og:url y las URLs absolutas
 // que exigen Open Graph y los datos estructurados.
 const SITIO = 'https://portfolio-topaz-nu-46.vercel.app';
 
+// Rutas de cada idioma (sitio bilingue, ES por defecto sin prefijo).
+const RUTA_ES = '/';
+const RUTA_EN = '/en/';
+
 const {
-  titulo = 'Kevin Axel Herazo Rolón — Portafolio',
-  descripcion = 'Portafolio de Kevin Axel Herazo Rolón — Ingeniería de Sistemas: backend, datos e inteligencia artificial.',
+  titulo = t.htmlTitle,
+  descripcion = t.metaDescription,
   imagen = '/og-image-v2.png',
-  canonical = '/',
+  canonical = idioma === 'en' ? RUTA_EN : RUTA_ES,
 } = Astro.props;
 
 const urlCanonica = new URL(canonical, SITIO).href;
 const urlImagen = new URL(imagen, SITIO).href;
-const nombreSitio = 'Kevin Axel Herazo Rolón — Portafolio';
+const nombreSitio = t.htmlTitle;
+const urlEs = new URL(RUTA_ES, SITIO).href;
+const urlEn = new URL(RUTA_EN, SITIO).href;
 
 // Datos estructurados (JSON-LD): identidad (Person) + sitio (WebSite) enlazados, para
 // que los buscadores entiendan de quién es el portafolio y habiliten resultados ricos.
@@ -44,9 +55,9 @@ const datosEstructurados = {
       name: 'Kevin Axel Herazo Rolón',
       url: `${SITIO}/`,
       image: urlImagen,
-      jobTitle: 'Ingeniero de Sistemas',
+      jobTitle: t.jobTitle,
       description: descripcion,
-      knowsAbout: ['Backend', 'Ingeniería de datos', 'Inteligencia artificial'],
+      knowsAbout: t.knowsAbout,
       sameAs: [
         'https://github.com/KawKuroi',
         'https://www.linkedin.com/in/kevin-axel-herazo-rol%C3%B3n-15a517266/',
@@ -58,7 +69,7 @@ const datosEstructurados = {
       url: `${SITIO}/`,
       name: titulo,
       description: descripcion,
-      inLanguage: 'es',
+      inLanguage: idioma,
       publisher: { '@id': `${SITIO}/#kevin` },
     },
   ],
@@ -66,13 +77,18 @@ const datosEstructurados = {
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={idioma}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={urlCanonica} />
+
+    <!-- Alternativas de idioma (es/en) para los buscadores -->
+    <link rel="alternate" hreflang="es" href={urlEs} />
+    <link rel="alternate" hreflang="en" href={urlEn} />
+    <link rel="alternate" hreflang="x-default" href={urlEs} />
 
     <!-- Iconos: .ico/.png para buscadores (Google ignora el SVG), SVG para navegadores
          modernos, apple-touch para iOS y manifest para "añadir a inicio" en Android. -->
@@ -88,7 +104,8 @@ const datosEstructurados = {
     <!-- Open Graph (Facebook, LinkedIn, WhatsApp, iMessage…) -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={nombreSitio} />
-    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale" content={t.ogLocale} />
+    <meta property="og:locale:alternate" content={t.ogLocaleAlt} />
     <meta property="og:url" content={urlCanonica} />
     <meta property="og:title" content={titulo} />
     <meta property="og:description" content={descripcion} />
@@ -106,6 +123,30 @@ const datosEstructurados = {
 
     <!-- Datos estructurados -->
     <script type="application/ld+json" is:inline set:html={JSON.stringify(datosEstructurados)} />
+
+    <!-- Detector de idioma: corre antes del primer pintado. La eleccion manual
+         (localStorage 'sala-lang') manda; si no hay, sigue navigator.language. Si el idioma
+         deseado difiere del de esta pagina, redirige una sola vez (sitio estatico, sin server).
+         Tras redirigir el idioma ya coincide, asi que no hay bucle. -->
+    <script is:inline>
+      (function () {
+        try {
+          var guardado = localStorage.getItem('sala-lang');
+          var deseado =
+            guardado === 'es' || guardado === 'en'
+              ? guardado
+              : (navigator.language || 'es').toLowerCase().indexOf('en') === 0
+                ? 'en'
+                : 'es';
+          var actual = document.documentElement.lang || 'es';
+          if (deseado !== actual) {
+            location.replace(deseado === 'en' ? '/en/' : '/');
+          }
+        } catch (e) {
+          /* sin localStorage/navigator: se queda en el idioma servido */
+        }
+      })();
+    </script>
 
     <!-- Resolutor de tema anti-parpadeo: corre antes del primer pintado -->
     <script is:inline>

@@ -2,12 +2,15 @@
 /*
   Hint de scroll (.hint), chip oscuro fijo arriba a la derecha. Aparece a ~1.3s y se va al
   primer gesto o a ~6.2s. Los temporizadores los gestiona navegacion.ts; oculto en movil.
-  Estilos en global.css.
+  Estilos en global.css. Copy bilingue por idioma vigente.
 */
+import { obtenerIdioma, obtenerTextos } from '../i18n/ui';
+
+const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
 ---
 
 <aside class="hint" aria-hidden="true" data-hint>
-  <span>Desliza o usa</span>
+  <span>{t.hint.desliza}</span>
   <span class="keys"><kbd>↑</kbd><kbd>↓</kbd></span>
-  <span>para recorrer el portafolio</span>
+  <span>{t.hint.recorrer}</span>
 </aside>

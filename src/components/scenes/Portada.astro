@@ -2,31 +2,35 @@
 /*
   Escena 1 — Portada. Grid texto | retrato (1 col en <=820px). Copy y estilado 1:1 con el
   diseno original. El retrato degrada con onerror a un placeholder (.ept) sin romper la maqueta.
+  Copy bilingue por idioma vigente (el nombre propio del H1 no se traduce).
 */
+import { obtenerIdioma, obtenerTextos } from '../../i18n/ui';
+
+const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
 ---
 
-<section class="scene title" data-slate="Portada" data-screen-label="Portada">
+<section class="scene title" data-slate={t.slates.portada} data-screen-label={t.slates.portada}>
   <div class="wrap">
     <div class="title-grid">
       <div class="title-main">
-        <div class="kick">Ingeniería de Sistemas</div>
+        <div class="kick">{t.portada.kick}</div>
         <h1>Kevin Axel<br /><em>Herazo Rolón</em></h1>
-        <div class="role">Datos · Inteligencia Artificial · Automatizaciones — Bogotá</div>
+        <div class="role">{t.portada.rol}</div>
         <div class="acts">
-          <span><svg class="ic" aria-hidden="true"><use href="#ic-server" /></svg><b>I</b> — El trabajo</span>
-          <span><svg class="ic" aria-hidden="true"><use href="#ic-code" /></svg><b>II</b> — El equipo</span>
-          <span><svg class="ic" aria-hidden="true"><use href="#ic-film" /></svg><b>III</b> — Conóceme</span>
+          <span><svg class="ic" aria-hidden="true"><use href="#ic-server" /></svg><b>I</b> — {t.portada.actos.trabajo}</span>
+          <span><svg class="ic" aria-hidden="true"><use href="#ic-code" /></svg><b>II</b> — {t.portada.actos.equipo}</span>
+          <span><svg class="ic" aria-hidden="true"><use href="#ic-film" /></svg><b>III</b> — {t.portada.actos.conoceme}</span>
         </div>
       </div>
 
       <figure class="portrait">
         <img
           src="/assets/me/retrato.webp"
-          alt="Kevin Axel Herazo Rolón"
+          alt={t.portada.retratoAlt}
           fetchpriority="high"
           onerror="this.closest('.portrait').classList.add('empty')"
         />
-        <span class="ept"><svg class="ic"><use href="#ic-portrait" /></svg><span>retrato</span></span>
+        <span class="ept"><svg class="ic"><use href="#ic-portrait" /></svg><span>{t.portada.retratoPlaceholder}</span></span>
       </figure>
     </div>
   </div>

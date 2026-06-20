@@ -1,0 +1,35 @@
+---
+/*
+  Composicion compartida de la pagina: chrome global (plaque, riel, hint) y las 5 escenas dentro
+  del carrete. La usan las dos rutas del sitio bilingue (`/` es y `/en/` en); cada componente
+  resuelve su idioma de Astro.currentLocale. Sitio estatico sin React (estructura rigida; los
+  unicos ajustes variables son el tema y el idioma).
+*/
+import Base from '../layouts/Base.astro';
+import Plaque from './Plaque.astro';
+import Rail from './Rail.astro';
+import Hint from './Hint.astro';
+import Portada from './scenes/Portada.astro';
+import Trabajo from './scenes/Trabajo.astro';
+import Equipo from './scenes/Equipo.astro';
+import Conoceme from './scenes/Conoceme.astro';
+import Salida from './scenes/Salida.astro';
+---
+
+<Base>
+  <Plaque slot="chrome" />
+  <Rail slot="chrome" />
+  <Hint slot="chrome" />
+
+  <Portada />
+  <Trabajo />
+  <Equipo />
+  <Conoceme />
+  <Salida />
+</Base>
+
+<script>
+  // Chrome de navegacion: riel lateral, escena activa, teclado y hint de scroll.
+  import { iniciarNavegacion } from '../scripts/navegacion';
+  iniciarNavegacion();
+</script>

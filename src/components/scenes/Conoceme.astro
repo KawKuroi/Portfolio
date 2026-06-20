@@ -7,8 +7,12 @@
 */
 import Persiana from '../Persiana.astro';
 import { type Categoria } from '../../data/favoritos';
+import { obtenerIdioma, obtenerTextos } from '../../i18n/ui';
 
-// Chips de filtro (solo movil/tablet). Mismo icono por categoria que la persiana.
+const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
+
+// Chips de filtro (solo movil/tablet). La clave (data-f) se mantiene en espanol para casar con
+// data-cat de la persiana; solo se traduce la etiqueta visible. Mismo icono por categoria.
 const CATEGORIAS: Categoria[] = ['Cine', 'Juegos', 'Libros', 'Música'];
 const ICONO_CAT: Record<Categoria, string> = {
   Cine: 'ic-film',
@@ -18,33 +22,30 @@ const ICONO_CAT: Record<Categoria, string> = {
 };
 ---
 
-<section class="scene act-persiana" data-slate="Conóceme" data-screen-label="Conóceme">
+<section class="scene act-persiana" data-slate={t.slates.conoceme} data-screen-label={t.slates.conoceme}>
   <div class="wrap">
     <div class="sh">
       <span class="act">III</span>
-      <h2><em>Conóceme</em></h2>
+      <h2 set:html={t.conoceme.tituloHtml}></h2>
       <span class="ln"></span>
-      <span class="ct">20 piezas · cine · juegos · libros · música</span>
+      <span class="ct">{t.conoceme.sub}</span>
     </div>
 
     {/* Filtro por categoria: visible solo en movil/tablet (<=1024px). */}
-    <div class="cf-filter" role="group" aria-label="Filtrar por categoría">
-      <button class="cf-chip on" type="button" data-f="all" aria-pressed="true">Todo</button>
+    <div class="cf-filter" role="group" aria-label={t.aria.filtro}>
+      <button class="cf-chip on" type="button" data-f="all" aria-pressed="true">{t.conoceme.todo}</button>
       {
         CATEGORIAS.map((c) => (
           <button class="cf-chip" type="button" data-f={c} aria-pressed="false">
             <svg class="ic" aria-hidden="true"><use href={`#${ICONO_CAT[c]}`} /></svg>
-            {c}
+            {t.categorias[c]}
           </button>
         ))
       }
     </div>
 
     <Persiana />
-    <p class="note">
-      // aquí están las piezas que me formaron el gusto —composición, ritmo y color.
-      Pasá el cursor sobre una franja para abrirla.
-    </p>
+    <p class="note">{t.conoceme.nota}</p>
   </div>
 </section>
 

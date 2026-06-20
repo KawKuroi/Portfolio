@@ -196,7 +196,8 @@ img {
   }
 }
 
-#themeToggle {
+#themeToggle,
+#langToggle {
   pointer-events: auto;
   appearance: none;
   background: none;
@@ -225,9 +226,23 @@ img {
   stroke-width: 1.7;
 }
 
-#themeToggle:focus-visible {
+#themeToggle:focus-visible,
+#langToggle:focus-visible {
   outline: 2px solid var(--teal);
   outline-offset: 2px;
+}
+
+/* Boton de idioma: gemelo del de tema, con el codigo del idioma destino (EN/ES) en mono. */
+#langToggle {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--teal);
+  text-decoration: none;
+}
+
+#langToggle:hover {
+  border-color: var(--ink);
 }
 
 /* ── Riel lateral (generado por navegacion.ts) ── */

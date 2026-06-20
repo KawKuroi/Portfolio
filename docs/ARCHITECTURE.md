@@ -149,6 +149,36 @@ fases (ver [ROADMAP.md](./ROADMAP.md)).
   (sharp) desde `favicon.svg`; los binarios se commitean y Vercel los sirve estáticos
   (no se ejecuta sharp en el despliegue).
 - **Indexación:** `robots.txt` (permite todo + apunta al sitemap) y `sitemap.xml`
-  (la única URL del sitio).
-- **Notas:** `og:locale` = `es_ES` por máxima compatibilidad de plataformas;
-  `twitter:site/creator` se omite (no hay handle de X confirmado del usuario).
+  (las dos URLs del sitio, `/` y `/en/`, con `xhtml:link` alternate por idioma).
+- **Notas:** `og:locale` se emite por idioma (`es_ES`/`en_US`) con `og:locale:alternate`;
+  `twitter:site/creator` se omite (no hay handle de X confirmado del usuario). Las alternativas
+  de idioma (`hreflang`) van en el `<head>`; detalle del sistema bilingüe en §10.
+
+## 10. Internacionalización (i18n)
+
+Sitio **bilingüe ES/EN** con el i18n **nativo de Astro**, sin librerías ni JS de framework.
+
+- **Enrutado:** `astro.config.mjs` declara `i18n: { defaultLocale: 'es', locales: ['es','en'],
+  routing: { prefixDefaultLocale: false } }`. Se prerenderizan **dos páginas estáticas**: `/` (es)
+  y `/en/` (en). Ambas comparten la composición `src/components/Pagina.astro`; `src/pages/
+  index.astro` y `src/pages/en/index.astro` solo la montan. Cada componente `.astro` resuelve su
+  idioma con `Astro.currentLocale`.
+- **Diccionario:** `src/i18n/ui.ts` es la **única fuente de verdad** del copy
+  (`UI: Record<Idioma, Textos>`), con `obtenerIdioma()` (coerción con respaldo `es`) y
+  `obtenerTextos()`. Tipado estricto: una clave faltante en un idioma es **error de compilación**,
+  así no se publica una traducción olvidada. Añadir/cambiar texto = editar el diccionario.
+- **Datos:** `src/data/proyectos.ts` lleva los campos de copy como `Record<Idioma,string>`
+  (titulo, tags, anio, estado, descripcion). `favoritos.ts` no se traduce (nombres propios); solo
+  la **etiqueta** de categoría se traduce desde el diccionario, manteniendo la **clave** `c`
+  (`Cine/Juegos/Libros/Música`) estable para CSS (`[data-cat]`) y el filtro (`data-f`).
+- **Detección (cliente, sitio estático):** un script `is:inline` en el `<head>` de `Base.astro`
+  resuelve el idioma antes del pintado: elección manual (`localStorage['sala-lang']`) manda; si no,
+  sigue `navigator.language`; si difiere del idioma servido, redirige una sola vez con
+  `location.replace` (sin bucle: tras redirigir ya coincide). Mismo patrón anti-parpadeo que el tema.
+- **Conmutador:** botón `#langToggle` en el plaque (a la izquierda del de tema), un `<a>` a la
+  ruta hermana vía `getRelativeLocaleUrl`; al pulsar persiste la elección en `localStorage`.
+- **Scripts de cliente** (Trabajo, Salida, navegación): leen el idioma de
+  `document.documentElement.lang` e importan `src/i18n/ui.ts` (y los datos) → una sola fuente.
+- **SEO:** `<html lang>` por página, `title`/`description`/JSON-LD (`inLanguage`, `jobTitle`,
+  `knowsAbout`) y `og:locale` (+ `og:locale:alternate`) por idioma, `hreflang` (es/en/x-default)
+  en el `<head>` y ambas URLs en `sitemap.xml`.

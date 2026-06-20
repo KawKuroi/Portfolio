@@ -6,7 +6,8 @@
   la nueva estructura (flujo vertical, índice de actos, acordeón de El trabajo, filtros de
   Conóceme, Equipo/Contacto en columna) aplica **≤1024px** (con refinamiento de tablet ≥700px).
   **Pendiente:** autorizar el push a `main` para publicar en Vercel.
-- **Estado general:** Las 5 fases + SEO + ajustes de contenido cerradas. Sitio construido en
+- **Estado general:** Las 5 fases + SEO + ajustes de contenido + responsive móvil/tablet cerradas;
+  ahora el sitio es **bilingüe ES/EN** (i18n nativo de Astro, ver Historial 2026-06-20). Construido en
   Astro (0 JS de framework), desplegado en Vercel (estático desde CDN). Fotos reales ya
   integradas (retrato + 4 capturas en `.webp`). El formulario de contacto está **activo**
   (access key de Web3Forms ya pegada en `Salida.astro`). Verificado: `astro check`/`build`
@@ -19,6 +20,20 @@
 - Autorizar el push de la iniciativa responsive cuando esté lista para publicar.
 
 ## Historial
+- **2026-06-20** — Internacionalización a inglés (sitio bilingüe ES/EN). Se añade i18n con el
+  **enrutado nativo de Astro**: dos páginas estáticas, `/` (es, por defecto) y `/en/` (en), que
+  comparten la composición `Pagina.astro`. Todo el copy se extrae a un **diccionario tipado**
+  `src/i18n/ui.ts` (`UI: Record<Idioma, Textos>` + `obtenerIdioma`/`obtenerTextos`); cada componente
+  lee su idioma de `Astro.currentLocale` y los scripts de cliente (Trabajo, Salida, navegación) de
+  `document.documentElement.lang`. Los datos de proyectos pasan a `Record<Idioma,string>` en los
+  campos de copy; `favoritos.ts` no cambia (solo se traduce la **etiqueta** de categoría, la clave
+  `c`/`data-cat`/`data-f` queda en español). **Botón de idioma** `#langToggle` en el plaque, a la
+  izquierda del de tema (gemelo redondo), que enlaza a la ruta hermana y persiste la elección en
+  `localStorage['sala-lang']`. **Detección automática** del idioma del dispositivo por un script
+  inline anti-parpadeo (sigue `navigator.language` salvo elección manual; redirección única). SEO
+  por idioma: `<html lang>`, title/description/JSON-LD, `og:locale`+alternate, `hreflang`
+  (es/en/x-default) y ambas URLs en `sitemap.xml`. Sin librerías nuevas ni JS de framework.
+  Verificado: `astro check` (0/0/0) y `astro build` (2 páginas). Pendiente: validación visual y push.
 - **2026-06-20** — Bordes: Conóceme como la referencia + sin bordes blancos en Noche. (A) La
   persiana ahora va con franjas **pegadas** (`gap:4px → 0`) y una **costura oscura** por franja
   (`.pslat{outline:1px solid rgba(6,8,11,.5)}`), replicando `Sala - Kevin Herazo.html`; antes el

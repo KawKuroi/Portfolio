@@ -14,6 +14,25 @@ Vercel (<https://portfolio-topaz-nu-46.vercel.app/>).
 
 ## Histórico de fases completadas
 
+### Internacionalización ES/EN (2026-06-20)
+
+Sitio **bilingüe** (español por defecto / inglés) con el i18n **nativo de Astro**, sin librerías
+ni JS de framework. El usuario pidió un sistema fácilmente adaptable; se resolvió con diccionario
+tipado (clave faltante = error de compilación).
+
+- [x] **i18n nativo + rutas.** `astro.config.mjs` con `i18n` (`defaultLocale:'es'`,
+      `prefixDefaultLocale:false`) → `/` (es) y `/en/` (en) prerenderizadas, compartiendo
+      `Pagina.astro`; cada componente lee `Astro.currentLocale`.
+- [x] **Diccionario tipado** `src/i18n/ui.ts` (`UI: Record<Idioma, Textos>` +
+      `obtenerIdioma`/`obtenerTextos`) como única fuente del copy; datos de proyectos a
+      `Record<Idioma,string>`; categorías traducidas por etiqueta con clave estable.
+- [x] **Botón de idioma** `#langToggle` en el plaque (gemelo del de tema, a su izquierda):
+      enlaza a la ruta hermana y persiste la elección en `localStorage['sala-lang']`.
+- [x] **Detección automática** del idioma del dispositivo (script inline anti-parpadeo: sigue
+      `navigator.language` salvo elección manual; redirección única).
+- [x] **SEO por idioma:** `<html lang>`, title/description/JSON-LD, `og:locale`+alternate,
+      `hreflang` (es/en/x-default) y ambas URLs en `sitemap.xml`. `astro check`/`build` limpios.
+
 ### Reestructuración responsive móvil/tablet (2026-06-17)
 
 El usuario rehízo la adaptación móvil/tablet en un documento de referencia propio

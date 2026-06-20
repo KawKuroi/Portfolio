@@ -1,10 +1,10 @@
 # PRD — Portfolio Kevin Axel Herazo Rolón
 
 > Documento de producto del portafolio interactivo, reconstruido sobre **Astro**.
-> Producto final: un sitio de una sola página, en español, con la metáfora de una **sala de
-> museo / cine**: el visitante "recorre salas" haciendo scroll vertical con *snap*. Estética
-> editorial, papel tostado, acento aguamarino, tipografía con serifas.
-> Nombre del proyecto: **portfolio**.
+> Producto final: un sitio de una sola página, **bilingüe (español por defecto / inglés)**, con
+> la metáfora de una **sala de museo / cine**: el visitante "recorre salas" haciendo scroll
+> vertical con *snap*. Estética editorial, papel tostado, acento aguamarino, tipografía con
+> serifas. Nombre del proyecto: **portfolio**.
 
 ---
 
@@ -46,7 +46,10 @@ Incluye: barra superior tipo *plaque* de galería, riel de navegación lateral c
 *hint* de scroll, conmutador de tema claro/oscuro y navegación por teclado. La estructura es
 fija (Galería · aguamarino · Clásica); no hay panel de personalización.
 
-**Idioma:** todo el copy en español (incluye acentos y "Música").
+**Idioma:** sitio **bilingüe ES/EN** (español por defecto). Todo el copy visible vive en el
+diccionario `src/i18n/ui.ts` y se sirve prerenderizado en dos rutas: `/` (es) y `/en/` (en).
+El idioma inicial sigue al dispositivo (`navigator.language`) salvo elección manual guardada; un
+botón en el plaque (junto al de tema) alterna idioma. Detalle técnico en ARCHITECTURE §10.
 **Tono:** editorial, sobrio, cálido. Sin emojis, sin gradientes chillones (los gradientes
 solo se usan como *fallback* detrás de carátulas).
 
@@ -317,11 +320,18 @@ categoría (`Cine→ic-film, Juegos→ic-game, Libros→ic-book, Música→ic-mu
 No hay panel de Tweaks: la disposición (Galería), el acento (aguamarino `#2aa198`) y la
 tipografía (Clásica) son fijos.
 
+**Conmutador de idioma.** A la izquierda del botón de tema, un botón redondo gemelo
+(`#langToggle`) muestra el código del idioma destino (`EN` en la página ES, `ES` en la EN) y
+enlaza a la ruta hermana (`/` ↔ `/en/`), persistiendo la elección en `localStorage['sala-lang']`.
+Por defecto el idioma sigue al dispositivo (`navigator.language`) salvo elección manual. Detalle
+en ARCHITECTURE §10.
+
 ---
 
 ## 10. Detalles técnicos a respetar
 
-- `<html lang="es">`. `<title>Kevin Axel Herazo Rolón — Sala</title>`.
+- `<html lang>` por idioma (`es` en `/`, `en` en `/en/`); `<title>` y `description` desde el
+  diccionario i18n. Ver §9 (conmutador de idioma) y ARCHITECTURE §10.
 - Imágenes con `onerror` → placeholder (nunca rota la maqueta si falta un asset).
 - Respeto a `prefers-reduced-motion` en persiana, detalle y hint.
 - Accesibilidad: `aria-label` en riel/botones, `aria-pressed` en items de galería,

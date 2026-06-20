@@ -1,17 +1,31 @@
 ---
 /*
   Plaque superior fija (.lb.top), z-index 80. Estilos en global.css (chrome global).
-  Izquierda: "K. Herazo · Portafolio". Derecha: "Kevin Herazo — 2026" + boton de tema.
-  El boton alterna Museo<->Noche via tema.ts; el icono refleja el tema vigente
-  (sol en claro, luna en Noche), igual que el diseno original.
+  Izquierda: nombre (visible en movil). Derecha: meta + boton de idioma + boton de tema.
+  - Boton de tema: alterna Museo<->Noche via tema.ts; el icono refleja el tema vigente.
+  - Boton de idioma: enlace a la ruta hermana (es <-> en); muestra el codigo del idioma destino
+    y persiste la eleccion en localStorage['sala-lang'].
 */
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { obtenerIdioma, obtenerTextos } from '../i18n/ui';
+
+const idioma = obtenerIdioma(Astro.currentLocale);
+const t = obtenerTextos(idioma);
+const otroIdioma = idioma === 'en' ? 'es' : 'en';
+const urlOtroIdioma = getRelativeLocaleUrl(otroIdioma);
 ---
 
 <header class="lb top" data-plaque>
   <span class="lb-left"><b class="lb-name">Kevin Herazo</b></span>
   <span class="lb-right">
     <span class="lb-meta">Kevin Herazo — 2026</span>
-    <button id="themeToggle" type="button" aria-label="Cambiar tema" aria-pressed="false">
+    <a
+      id="langToggle"
+      href={urlOtroIdioma}
+      data-lang-destino={otroIdioma}
+      aria-label={t.aria.cambiarIdioma}>{t.langCodigoDestino}</a
+    >
+    <button id="themeToggle" type="button" aria-label={t.aria.cambiarTema} aria-pressed="false">
       <svg class="ic" aria-hidden="true"><use href="#ic-sun" /></svg>
     </button>
   </span>
@@ -36,5 +50,19 @@
   boton?.addEventListener('click', () => alternarTema());
   document.documentElement.addEventListener('salathemechange', (evento) => {
     sincronizarIcono((evento as CustomEvent<Tema>).detail);
+  });
+
+  // Boton de idioma: persiste la eleccion antes de navegar al idioma hermano. El detector
+  // inline del <head> respeta esta clave en las siguientes visitas.
+  const idiomaBtn = document.getElementById('langToggle');
+  idiomaBtn?.addEventListener('click', () => {
+    const destino = idiomaBtn.getAttribute('data-lang-destino');
+    if (destino === 'es' || destino === 'en') {
+      try {
+        localStorage.setItem('sala-lang', destino);
+      } catch {
+        // Sin localStorage (modo privado): el enlace navega igualmente al idioma destino.
+      }
+    }
   });
 </script>

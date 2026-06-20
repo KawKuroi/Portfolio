@@ -4,8 +4,11 @@
   Los botones (uno por escena) y la escena activa los genera navegacion.ts; oculto en <=820px.
   Estilos en global.css (chrome global), porque los botones se crean por JS.
 */
+import { obtenerIdioma, obtenerTextos } from '../i18n/ui';
+
+const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
 ---
 
-<nav class="rail" aria-label="Navegación del portafolio" data-rail>
+<nav class="rail" aria-label={t.aria.navegacion} data-rail>
   <!-- Botones generados en runtime por src/scripts/navegacion.ts -->
 </nav>

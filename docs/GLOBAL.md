@@ -9,6 +9,10 @@ Norma máxima del repositorio. Aplica a todo el código, comentarios, documentac
   `docs`, `refactor`, `BREAKING CHANGE`, etc.) van en inglés.
 - Identificadores: variables/constantes en camelCase español (`temaActual`), funciones en
   camelCase español (`fijarTema`), clases en PascalCase español.
+- **Copy del producto: bilingüe ES/EN** (español por defecto). El texto visible vive en el
+  diccionario `src/i18n/ui.ts` (no hardcodeado en componentes) y se traduce a inglés; los
+  **identificadores, claves y comentarios siguen en español**. Al añadir/cambiar texto, hacerlo
+  en el diccionario y rellenar los dos idiomas (el tipado obliga). Ver ARCHITECTURE §10.
 
 ## 2. Estilo y tono
 - **Cero emojis** en archivos, código, documentación o respuestas.

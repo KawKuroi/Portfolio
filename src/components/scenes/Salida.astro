@@ -3,14 +3,17 @@
   Escena 5 — Contacto. Centrada: frase serif italic y enlaces mono con icono.
   - El correo abre un formulario (dialog) que envia el mensaje via Web3Forms (sin backend).
   - El telefono (y el correo directo del formulario) copian al portapapeles con feedback.
-  Respaldo sin JS: el correo conserva mailto: y el telefono tel:.
+  Respaldo sin JS: el correo conserva mailto: y el telefono tel:. Copy bilingue por idioma.
 */
+import { obtenerIdioma, obtenerTextos } from '../../i18n/ui';
+
+const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
 ---
 
-<section class="scene fin" data-slate="Contacto" data-screen-label="Contacto">
+<section class="scene fin" data-slate={t.slates.contacto} data-screen-label={t.slates.contacto}>
   <div class="wrap">
-    <div class="q">Contáctame.</div>
-    <nav class="links" aria-label="Contacto">
+    <div class="q">{t.salida.frase}</div>
+    <nav class="links" aria-label={t.aria.contacto}>
       <a class="solid" href="mailto:kevinaxelhr18@gmail.com" data-form-open aria-haspopup="dialog">
         <svg class="ic" aria-hidden="true"><use href="#ic-mail" /></svg>
         kevinaxelhr18@gmail.com
@@ -36,38 +39,38 @@
         CV
       </a>
     </nav>
-    <p class="links-nota">// el correo abre un formulario para enviarme tu mensaje aquí mismo</p>
+    <p class="links-nota">{t.salida.nota}</p>
   </div>
 
   <!-- Formulario de contacto (se abre al hacer clic en el correo). -->
-  <dialog class="cform" data-form aria-label="Formulario de contacto">
+  <dialog class="cform" data-form aria-label={t.aria.formulario}>
     <form class="cform-box" data-contact-form>
-      <button type="button" class="cform-x" data-form-close aria-label="Cerrar">
+      <button type="button" class="cform-x" data-form-close aria-label={t.aria.cerrar}>
         <svg class="ic" aria-hidden="true"><use href="#ic-close" /></svg>
       </button>
-      <h3 class="cform-tt">Escríbeme</h3>
-      <p class="cform-sub">Cuéntame tu idea y te respondo al correo que dejes.</p>
+      <h3 class="cform-tt">{t.salida.form.titulo}</h3>
+      <p class="cform-sub">{t.salida.form.sub}</p>
 
       <label class="cfield">
-        <span>Nombre <small>(opcional)</small></span>
+        <span>{t.salida.form.nombre} <small>{t.salida.form.opcional}</small></span>
         <input type="text" name="name" autocomplete="name" />
       </label>
       <label class="cfield">
-        <span>Correo</span>
+        <span>{t.salida.form.correo}</span>
         <input type="email" name="email" required autocomplete="email" inputmode="email" />
       </label>
       <label class="cfield">
-        <span>Mensaje</span>
+        <span>{t.salida.form.mensaje}</span>
         <textarea name="message" rows="4" required></textarea>
       </label>
 
       <!-- Honeypot anti-spam: oculto a humanos; si llega marcado, es un bot. -->
       <input type="checkbox" name="botcheck" class="cform-hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
-      <button type="submit" class="cform-send" data-form-send>Enviar</button>
+      <button type="submit" class="cform-send" data-form-send>{t.salida.form.enviar}</button>
       <p class="cform-status" data-form-status role="status" aria-live="polite"></p>
       <p class="cform-alt">
-        ¿Prefieres el correo directo?
+        {t.salida.form.prefieres}
         <a class="cform-mail" href="mailto:kevinaxelhr18@gmail.com" data-copy="kevinaxelhr18@gmail.com">
           <span class="lbl">kevinaxelhr18@gmail.com</span>
         </a>
@@ -77,6 +80,11 @@
 </section>
 
 <script>
+  import { obtenerIdioma, obtenerTextos } from '../../i18n/ui';
+
+  // Idioma vigente (lo fija <html lang> en build) para los textos dinamicos del formulario.
+  const textos = obtenerTextos(obtenerIdioma(document.documentElement.lang));
+
   const fin = document.querySelector<HTMLElement>('.fin');
   if (fin) {
     const dlg = fin.querySelector<HTMLDialogElement>('dialog[data-form]');
@@ -105,7 +113,7 @@
           await navigator.clipboard.writeText(texto);
           if (lbl) {
             const previo = lbl.textContent;
-            lbl.textContent = '¡Copiado!';
+            lbl.textContent = textos.salida.estado.copiado;
             el.classList.add('copied');
             window.setTimeout(() => {
               lbl.textContent = previo;
@@ -135,7 +143,7 @@
       if (datos.botcheck) return; // honeypot: es un bot
 
       estado.className = 'cform-status';
-      estado.textContent = 'Enviando…';
+      estado.textContent = textos.salida.estado.enviando;
       if (enviar) enviar.disabled = true;
 
       try {
@@ -144,9 +152,9 @@
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({
             access_key: WEB3FORMS_KEY,
-            subject: 'Nuevo mensaje desde el portafolio',
-            from_name: 'Portafolio · Kevin Herazo',
-            name: (datos.name ?? '').trim() || 'Anónimo',
+            subject: textos.salida.web3.subject,
+            from_name: textos.salida.web3.fromName,
+            name: (datos.name ?? '').trim() || textos.salida.web3.anonimo,
             email: datos.email,
             message: datos.message,
           }),
@@ -154,15 +162,15 @@
         const out = (await res.json()) as { success?: boolean; message?: string };
         if (out.success) {
           estado.classList.add('ok');
-          estado.textContent = '¡Mensaje enviado! Te respondo pronto.';
+          estado.textContent = textos.salida.estado.ok;
           form.reset();
         } else {
           estado.classList.add('err');
-          estado.textContent = out.message || 'No se pudo enviar. Escríbeme directo al correo.';
+          estado.textContent = out.message || textos.salida.estado.errGeneral;
         }
       } catch {
         estado.classList.add('err');
-        estado.textContent = 'No se pudo enviar. Revisa tu conexión o escríbeme al correo.';
+        estado.textContent = textos.salida.estado.errRed;
       } finally {
         if (enviar) enviar.disabled = false;
       }

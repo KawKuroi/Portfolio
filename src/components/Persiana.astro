@@ -7,6 +7,9 @@
   chip de categoria con icono, titulo .pt serif y subtitulo .ps mono). PRD 8.
 */
 import { FAVORITOS, type Categoria } from '../data/favoritos';
+import { obtenerIdioma, obtenerTextos } from '../i18n/ui';
+
+const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
 
 // Decoracion de iconos por categoria (PRD 8.3), resuelta en build.
 const ICONO_CAT: Record<Categoria, string> = {
@@ -34,7 +37,7 @@ const ICONO_CAT: Record<Categoria, string> = {
         <figcaption class="pcap">
           <span class="pcat">
             <svg class="ic" aria-hidden="true"><use href={`#${ICONO_CAT[f.c]}`} /></svg>
-            {f.c}
+            {t.categorias[f.c]}
           </span>
           <span class="pt">{f.t}</span>
           <span class="ps">{f.s}</span>

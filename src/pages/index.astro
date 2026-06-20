@@ -1,33 +1,9 @@
 ---
 /*
-  Pagina principal: compone el chrome global (plaque, riel, hint) y las 5 escenas dentro
-  del carrete. Sitio estatico sin React (estructura rigida; solo el tema es variable).
+  Ruta en espanol (`/`), idioma por defecto del sitio. Toda la composicion vive en Pagina.astro;
+  el idioma se resuelve por Astro.currentLocale.
 */
-import Base from '../layouts/Base.astro';
-import Plaque from '../components/Plaque.astro';
-import Rail from '../components/Rail.astro';
-import Hint from '../components/Hint.astro';
-import Portada from '../components/scenes/Portada.astro';
-import Trabajo from '../components/scenes/Trabajo.astro';
-import Equipo from '../components/scenes/Equipo.astro';
-import Conoceme from '../components/scenes/Conoceme.astro';
-import Salida from '../components/scenes/Salida.astro';
+import Pagina from '../components/Pagina.astro';
 ---
 
-<Base>
-  <Plaque slot="chrome" />
-  <Rail slot="chrome" />
-  <Hint slot="chrome" />
-
-  <Portada />
-  <Trabajo />
-  <Equipo />
-  <Conoceme />
-  <Salida />
-</Base>
-
-<script>
-  // Chrome de navegacion: riel lateral, escena activa, teclado y hint de scroll.
-  import { iniciarNavegacion } from '../scripts/navegacion';
-  iniciarNavegacion();
-</script>
+<Pagina />

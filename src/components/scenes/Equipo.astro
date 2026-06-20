@@ -2,59 +2,63 @@
 /*
   Escena 3 — II · El equipo y los creditos. Grid 2 columnas (Stack | Formacion), colapsa a
   1 col en <=760px. Copy y estilado 1:1 con el diseno original (PRD 6 / Escena 3).
+  Copy bilingue por idioma vigente; marcas y nombres propios no se traducen.
 */
+import { obtenerIdioma, obtenerTextos } from '../../i18n/ui';
+
+const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
 ---
 
-<section class="scene" data-slate="El equipo" data-screen-label="El equipo">
+<section class="scene" data-slate={t.slates.equipo} data-screen-label={t.slates.equipo}>
   <div class="wrap">
     <div class="sh">
       <span class="act">II</span>
-      <h2>El <em>equipo</em> y los <em>créditos</em></h2>
+      <h2 set:html={t.equipo.tituloHtml}></h2>
       <span class="ln"></span>
-      <span class="ct">stack · formación</span>
+      <span class="ct">{t.equipo.sub}</span>
     </div>
 
     <div class="two">
       <div>
-        <div class="eh">Stack</div>
+        <div class="eh">{t.equipo.stack}</div>
         <dl class="stack">
           <div class="grp">
-            <dt><svg class="ic" aria-hidden="true"><use href="#ic-code" /></svg>Lenguajes</dt>
+            <dt><svg class="ic" aria-hidden="true"><use href="#ic-code" /></svg>{t.equipo.etiquetas.lenguajes}</dt>
             <dd>Python · Java · SQL · MongoDB</dd>
           </div>
           <div class="grp">
-            <dt><svg class="ic" aria-hidden="true"><use href="#ic-server" /></svg>Backend</dt>
+            <dt><svg class="ic" aria-hidden="true"><use href="#ic-server" /></svg>{t.equipo.etiquetas.backend}</dt>
             <dd>Spring Boot · Django · DRF · FastAPI</dd>
           </div>
           <div class="grp">
-            <dt><svg class="ic" aria-hidden="true"><use href="#ic-spark" /></svg>IA</dt>
+            <dt><svg class="ic" aria-hidden="true"><use href="#ic-spark" /></svg>{t.equipo.etiquetas.ia}</dt>
             <dd>Claude · Gemini · Agentes · Skills · MCP</dd>
           </div>
           <div class="grp">
-            <dt><svg class="ic" aria-hidden="true"><use href="#ic-chart" /></svg>Datos / ML</dt>
+            <dt><svg class="ic" aria-hidden="true"><use href="#ic-chart" /></svg>{t.equipo.etiquetas.datosMl}</dt>
             <dd>TensorFlow · Pandas · NumPy · Power BI</dd>
           </div>
           <div class="grp">
-            <dt><svg class="ic" aria-hidden="true"><use href="#ic-cloud" /></svg>Cloud</dt>
+            <dt><svg class="ic" aria-hidden="true"><use href="#ic-cloud" /></svg>{t.equipo.etiquetas.cloud}</dt>
             <dd>Google Cloud · Vercel · Supabase</dd>
           </div>
           <div class="grp">
-            <dt><svg class="ic" aria-hidden="true"><use href="#ic-github" /></svg>Control de versiones</dt>
+            <dt><svg class="ic" aria-hidden="true"><use href="#ic-github" /></svg>{t.equipo.etiquetas.versiones}</dt>
             <dd>Docker · Git · GitHub</dd>
           </div>
         </dl>
       </div>
 
       <div>
-        <div class="eh">Formación</div>
+        <div class="eh">{t.equipo.formacion}</div>
         <div class="formacion">
           <div class="ei">
             <div class="t">U. Jorge Tadeo Lozano</div>
-            <div class="s"><span>Ingeniería de Sistemas</span><span>2022 — Actual</span></div>
+            <div class="s"><span>{t.equipo.grado}</span><span>{t.equipo.presente}</span></div>
           </div>
           <div class="ei">
             <div class="t">Data Analytics</div>
-            <div class="s"><span>Google · Coursera</span><span>En curso</span></div>
+            <div class="s"><span>Google · Coursera</span><span>{t.equipo.enCurso}</span></div>
           </div>
           <div class="ei">
             <div class="t">API Design &amp; Fundamentals</div>
