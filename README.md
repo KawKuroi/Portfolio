@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="/og-image-v2.png" alt="Kevin Axel Herazo Rolón — Portafolio" width="800" />
+  <img src="public/og-image-v2.png" alt="Kevin Axel Herazo Rolón — Portafolio" width="800" />
 
   <h1>Portafolio · Kevin Axel Herazo Rolón</h1>
 
