@@ -37,10 +37,10 @@ export const FAVORITOS: Favorito[] = [
   },
   {
     c: 'Cine',
-    t: 'Interstellar',
-    s: 'Christopher Nolan · 2014',
-    img: '/assets/movies/interestellar.jpg',
-    g: 'linear-gradient(135deg, #0b1620 0%, #1f3a4d 60%, #6c8aa0 100%)',
+    t: 'Trainspotting',
+    s: 'Danny Boyle · 1996',
+    img: '/assets/movies/trainspotting.jpg',
+    g: 'linear-gradient(135deg, #2a1404 0%, #b5571a 55%, #f0992e 100%)',
   },
   {
     c: 'Cine',
