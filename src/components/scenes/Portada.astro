@@ -11,7 +11,7 @@
       <div class="title-main">
         <div class="kick">Ingeniería de Sistemas</div>
         <h1>Kevin Axel<br /><em>Herazo Rolón</em></h1>
-        <div class="role">Backend · Datos · Inteligencia Artificial — Bogotá</div>
+        <div class="role">Datos · Inteligencia Artificial · Automatizaciones — Bogotá</div>
         <div class="acts">
           <span><svg class="ic" aria-hidden="true"><use href="#ic-server" /></svg><b>I</b> — El trabajo</span>
           <span><svg class="ic" aria-hidden="true"><use href="#ic-code" /></svg><b>II</b> — El equipo</span>
@@ -65,11 +65,15 @@
 
   .role {
     font-family: var(--mono);
-    font-size: clamp(11px, 1.5vw, 15px);
+    /* En escritorio el rol va en una sola linea y se dimensiona en proporcion
+       al H1 (~0.9vw) para no superar el ancho del nombre. Movil/tablet recupera
+       el tamano original mas abajo. */
+    font-size: clamp(9px, 0.9vw, 13px);
     letter-spacing: .13em;
     text-transform: uppercase;
     color: var(--soft);
     margin-top: 26px;
+    white-space: nowrap;
   }
 
   .acts {
@@ -160,6 +164,14 @@
     h1 {
       white-space: normal;
       font-size: clamp(44px, 8vw, 76px);
+    }
+
+    /* En movil/tablet el rol recupera su tamano original y puede envolver para
+       no desbordar en pantallas estrechas; solo en escritorio (>=1025px) se
+       fuerza a una sola linea reducida al ancho del nombre. */
+    .role {
+      font-size: clamp(11px, 1.5vw, 15px);
+      white-space: normal;
     }
 
     .acts {
