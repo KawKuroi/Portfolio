@@ -1,77 +1,74 @@
 ---
 /*
-  Escena 3 — II · El equipo y los creditos. Grid 2 columnas (Stack | Formacion), colapsa a
-  1 col en <=760px. Copy y estilado 1:1 con el diseno original (PRD 6 / Escena 3).
-  Copy bilingue por idioma vigente; marcas y nombres propios no se traducen.
+  Escena 4 — IV · El equipo y los creditos. Grid 2 columnas (Stack | Formacion), colapsa a
+  1 col en <700px. Copy bilingue por idioma vigente; marcas y nombres propios no se traducen.
 */
 import { obtenerIdioma, obtenerTextos } from '../../i18n/ui';
 
 const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
+const etiquetas = t.equipo.etiquetas;
+
+const STACK = [
+  { icono: 'ic-code', etiqueta: etiquetas.lenguajes, valor: 'Python · TypeScript · Java · Kotlin · SQL' },
+  { icono: 'ic-server', etiqueta: etiquetas.backend, valor: 'FastAPI · Spring Boot · Django · DRF · Node.js' },
+  { icono: 'ic-window', etiqueta: etiquetas.frontend, valor: 'Next.js · React · Astro · Tauri · PWA' },
+  { icono: 'ic-spark', etiqueta: etiquetas.ia, valor: `Claude Code · Gemini · MCP · Skills · ${t.equipo.agentes}` },
+  { icono: 'ic-database', etiqueta: etiquetas.bases, valor: 'SQL Server · Oracle · PostgreSQL · SQLite · MongoDB' },
+  { icono: 'ic-chart', etiqueta: etiquetas.datosMl, valor: 'Pandas · NumPy · TensorFlow · Power BI · Excel' },
+  { icono: 'ic-cloud', etiqueta: etiquetas.cloud, valor: 'Google Cloud · Vercel · Supabase · Docker' },
+  { icono: 'ic-github', etiqueta: etiquetas.versiones, valor: 'Git · GitHub · GitHub Actions' },
+];
+
+const FORMACION = [
+  { titulo: 'U. Jorge Tadeo Lozano', origen: t.equipo.grado, estado: t.equipo.presente },
+  { titulo: 'Data Analytics', origen: 'Google · Coursera', estado: t.equipo.enCurso },
+  { titulo: 'API Design & Fundamentals', origen: 'Google Cloud · Apigee', estado: '✓' },
+  { titulo: 'API Development', origen: 'Google Cloud · Apigee', estado: '✓' },
+  { titulo: 'API Security · OAuth / JWT', origen: 'Google Cloud · Apigee', estado: '✓' },
+];
 ---
 
-<section class="scene" data-slate={t.slates.equipo} data-screen-label={t.slates.equipo}>
+<section class="scene" id="equipo" data-slate={t.slates.equipo}>
   <div class="wrap">
-    <div class="sh">
-      <span class="act">II</span>
-      <h2 set:html={t.equipo.tituloHtml}></h2>
+    <div class="sh" data-entra>
+      <span class="act">IV</span>
+      <h2 set:html={t.equipo.tituloHtml} />
       <span class="ln"></span>
       <span class="ct">{t.equipo.sub}</span>
     </div>
 
     <div class="two">
-      <div>
-        <div class="eh">{t.equipo.stack}</div>
+      <div data-entra style="--orden:1">
+        <h3 class="eh">{t.equipo.stack}</h3>
         <dl class="stack">
-          <div class="grp">
-            <dt><svg class="ic" aria-hidden="true"><use href="#ic-code" /></svg>{t.equipo.etiquetas.lenguajes}</dt>
-            <dd>Python · Java · SQL · MongoDB</dd>
-          </div>
-          <div class="grp">
-            <dt><svg class="ic" aria-hidden="true"><use href="#ic-server" /></svg>{t.equipo.etiquetas.backend}</dt>
-            <dd>Spring Boot · Django · DRF · FastAPI</dd>
-          </div>
-          <div class="grp">
-            <dt><svg class="ic" aria-hidden="true"><use href="#ic-spark" /></svg>{t.equipo.etiquetas.ia}</dt>
-            <dd>Claude · Gemini · Agentes · Skills · MCP</dd>
-          </div>
-          <div class="grp">
-            <dt><svg class="ic" aria-hidden="true"><use href="#ic-chart" /></svg>{t.equipo.etiquetas.datosMl}</dt>
-            <dd>TensorFlow · Pandas · NumPy · Power BI</dd>
-          </div>
-          <div class="grp">
-            <dt><svg class="ic" aria-hidden="true"><use href="#ic-cloud" /></svg>{t.equipo.etiquetas.cloud}</dt>
-            <dd>Google Cloud · Vercel · Supabase</dd>
-          </div>
-          <div class="grp">
-            <dt><svg class="ic" aria-hidden="true"><use href="#ic-github" /></svg>{t.equipo.etiquetas.versiones}</dt>
-            <dd>Docker · Git · GitHub</dd>
-          </div>
+          {
+            STACK.map((fila) => (
+              <div class="grp">
+                <dt>
+                  <svg class="ic" aria-hidden="true"><use href={`#${fila.icono}`} /></svg>
+                  {fila.etiqueta}
+                </dt>
+                <dd>{fila.valor}</dd>
+              </div>
+            ))
+          }
         </dl>
       </div>
 
-      <div>
-        <div class="eh">{t.equipo.formacion}</div>
+      <div data-entra style="--orden:2">
+        <h3 class="eh">{t.equipo.formacion}</h3>
         <div class="formacion">
-          <div class="ei">
-            <div class="t">U. Jorge Tadeo Lozano</div>
-            <div class="s"><span>{t.equipo.grado}</span><span>{t.equipo.presente}</span></div>
-          </div>
-          <div class="ei">
-            <div class="t">Data Analytics</div>
-            <div class="s"><span>Google · Coursera</span><span>{t.equipo.enCurso}</span></div>
-          </div>
-          <div class="ei">
-            <div class="t">API Design &amp; Fundamentals</div>
-            <div class="s"><span>Google Cloud · Apigee</span><span>✓</span></div>
-          </div>
-          <div class="ei">
-            <div class="t">API Development</div>
-            <div class="s"><span>Google Cloud · Apigee</span><span>✓</span></div>
-          </div>
-          <div class="ei">
-            <div class="t">API Security · OAuth / JWT</div>
-            <div class="s"><span>Google Cloud · Apigee</span><span>✓</span></div>
-          </div>
+          {
+            FORMACION.map((item) => (
+              <div class="ei">
+                <div class="t">{item.titulo}</div>
+                <div class="s">
+                  <span>{item.origen}</span>
+                  <span>{item.estado}</span>
+                </div>
+              </div>
+            ))
+          }
         </div>
       </div>
     </div>
@@ -81,45 +78,36 @@ const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
 <style>
   .two {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(30px, 5vw, 72px);
+    grid-template-columns: minmax(0, 1.22fr) minmax(0, .78fr);
+    gap: clamp(30px, 4.5vw, 72px);
   }
 
   .eh {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--teal);
-    margin-bottom: 6px;
-  }
-
-  .stack {
-    margin: 0;
+    font-weight: 400;
   }
 
   .grp {
     display: grid;
-    grid-template-columns: 150px 1fr;
+    grid-template-columns: 136px minmax(0, 1fr);
     gap: 14px;
-    padding: 10px 0;
+    padding: clamp(5px, 1.2vh, 12px) 0;
     border-top: 1px solid var(--line2);
     align-items: baseline;
   }
 
-  .grp:first-of-type {
+  .grp:first-of-type,
+  .ei:first-of-type {
     border-top: none;
   }
 
   .grp dt {
-    font-family: var(--mono);
-    font-size: 10.5px;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    color: var(--soft);
     display: flex;
     align-items: center;
     gap: 8px;
+    font-family: var(--mono);
+    font-size: var(--t-micro);
+    text-transform: uppercase;
+    color: var(--soft);
   }
 
   .grp dt .ic {
@@ -131,46 +119,53 @@ const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
 
   .grp dd {
     margin: 0;
-    font-size: 14.5px;
-    color: var(--ink);
+    font-size: var(--t-chico);
   }
 
   .ei {
-    padding: 9px 0;
+    padding: clamp(6px, 1.3vh, 13px) 0;
     border-top: 1px solid var(--line2);
-  }
-
-  .ei:first-of-type {
-    border-top: none;
   }
 
   .ei .t {
     font-family: var(--serif);
-    font-weight: 500;
-    font-size: 18px;
+    font-size: 1.3125rem;
+    line-height: 1.2;
   }
 
   .ei .s {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--soft);
-    margin-top: 4px;
     display: flex;
     justify-content: space-between;
     gap: 12px;
+    margin-top: 2px;
+    font-family: var(--mono);
+    font-size: var(--t-micro);
+    color: var(--soft);
   }
 
-  /* Telefono (<700px): Stack y Formacion en una columna; etiquetas mas estrechas.
-     En tablet (700–1024px) y escritorio se mantienen las dos columnas. */
+  /* Tablet: la etiqueta va sobre el valor para que quepan las dos columnas. */
+  @media (min-width: 700px) and (max-width: 1024px) {
+    .two {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .grp {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2px;
+    }
+  }
+
+  /* Telefono (<700px): Stack y Formacion en una columna. */
   @media (max-width: 699px) {
     .two {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       gap: 30px;
     }
 
     .grp {
-      grid-template-columns: 120px 1fr;
-      gap: 12px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2px;
+      padding: 10px 0;
     }
   }
 </style>

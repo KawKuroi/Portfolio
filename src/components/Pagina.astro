@@ -1,15 +1,18 @@
 ---
 /*
-  Composicion compartida de la pagina: chrome global (plaque, riel, hint) y las 5 escenas dentro
+  Composicion compartida de la pagina: chrome global (plaque, riel, hint) y las 7 escenas dentro
   del carrete. La usan las dos rutas del sitio bilingue (`/` es y `/en/` en); cada componente
   resuelve su idioma de Astro.currentLocale. Sitio estatico sin React (estructura rigida; los
   unicos ajustes variables son el tema y el idioma).
+  El orden de las escenas debe coincidir con src/data/escenas.ts.
 */
 import Base from '../layouts/Base.astro';
 import Plaque from './Plaque.astro';
 import Rail from './Rail.astro';
 import Hint from './Hint.astro';
 import Portada from './scenes/Portada.astro';
+import Experiencia from './scenes/Experiencia.astro';
+import InteligenciaArtificial from './scenes/InteligenciaArtificial.astro';
 import Trabajo from './scenes/Trabajo.astro';
 import Equipo from './scenes/Equipo.astro';
 import Conoceme from './scenes/Conoceme.astro';
@@ -22,6 +25,8 @@ import Salida from './scenes/Salida.astro';
   <Hint slot="chrome" />
 
   <Portada />
+  <Experiencia />
+  <InteligenciaArtificial />
   <Trabajo />
   <Equipo />
   <Conoceme />
@@ -29,7 +34,9 @@ import Salida from './scenes/Salida.astro';
 </Base>
 
 <script>
-  // Chrome de navegacion: riel lateral, escena activa, teclado y hint de scroll.
+  // Chrome de navegacion (riel, teclado, hint, escena activa) y animaciones de entrada.
   import { iniciarNavegacion } from '../scripts/navegacion';
+  import { iniciarEntradas } from '../scripts/entradas';
   iniciarNavegacion();
+  iniciarEntradas();
 </script>

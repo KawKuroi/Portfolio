@@ -1,8 +1,7 @@
 /*
-  Estilos globales base + chrome (plaque, riel, hint) y encabezado de escena compartido.
-  Valores alineados 1:1 con el diseno original (Sala - Kevin Herazo.html). El detalle propio
-  de cada escena vive en su componente (<style> scoped). El riel se genera por JS, por eso
-  sus reglas viven aqui.
+  Estilos globales base + chrome (plaque, riel, hint), piezas compartidas entre escenas
+  (encabezado, chips, indicador activo) y sistema de movimiento. El detalle propio de cada
+  escena vive en su componente (<style> scoped).
 */
 
 * {
@@ -14,19 +13,45 @@
 html {
   background: var(--wall);
   color: var(--ink);
-  font-family: var(--serif);
+  font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
 }
 
 body {
   background: var(--paper);
-  line-height: 1.6;
+  font-size: var(--t-cuerpo);
+  line-height: 1.55;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+:where(a, button, [tabindex='0']):focus-visible {
+  outline: 2px solid var(--acento-texto);
+  outline-offset: 3px;
 }
 
 img {
@@ -56,39 +81,52 @@ img {
 /* ── Carrete y escenas ── */
 .reel {
   height: 100vh;
+  height: 100dvh;
+  overflow-x: hidden;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
   scrollbar-width: none;
+}
+
+.reel:focus {
+  outline: none;
 }
 
 .reel::-webkit-scrollbar {
   display: none;
 }
 
+/* min-height y no height: con zoom o ventana baja la escena crece y se recorre, no se corta. */
 .scene {
   position: relative;
-  height: 100vh;
+  flex-shrink: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
   scroll-snap-align: start;
   scroll-snap-stop: always;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: calc(var(--bar) + clamp(16px, 3.5vh, 40px)) clamp(22px, 6vw, 90px);
+  padding: calc(var(--bar) + clamp(10px, 2.4vh, 34px)) clamp(48px, 6vw, 90px) clamp(10px, 2.4vh, 34px);
 }
 
 .wrap {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 1140px;
+  max-width: 1180px;
   margin: 0 auto;
 }
 
+/* Formulario abierto: lo de detras no se desplaza. */
+html:has(dialog[open]),
+html:has(dialog[open]) .reel {
+  overflow: hidden;
+}
+
 /* ── Movil/tablet (<=1024px): el carrete pasa a flujo vertical normal ──
-   El escritorio (>=1025px) conserva el carrete con scroll-snap. Las escenas
-   dejan de medir una pantalla completa y fluyen compactas (estilo de la
-   referencia movil); la estructura interna se reorganiza por fases. */
+   El escritorio (>=1025px) conserva el carrete con scroll-snap. Las escenas dejan de medir
+   una pantalla completa y fluyen compactas (estilo de la referencia movil). */
 @media (max-width: 1024px) {
   .reel {
     height: auto;
@@ -97,14 +135,16 @@ img {
   }
 
   .scene {
-    height: auto;
     min-height: 0;
     scroll-snap-align: none;
     scroll-snap-stop: normal;
-    scroll-margin-top: 54px;
-    /* El plaque pasa a sticky (en flujo), asi que el padding superior ya no
-       reserva --bar. Ritmo vertical compacto al estilo de la referencia. */
-    padding: 30px var(--pad) 36px;
+    scroll-margin-top: var(--barra-movil);
+    /* El plaque pasa a sticky (en flujo), asi que el padding superior ya no reserva --bar. */
+    padding: 36px var(--pad) 40px;
+  }
+
+  .scene + .scene {
+    border-top: 1px solid var(--line2);
   }
 }
 
@@ -115,7 +155,7 @@ img {
   }
 
   .scene {
-    padding: 46px var(--pad) 52px;
+    padding: 52px var(--pad) 56px;
   }
 }
 
@@ -142,16 +182,10 @@ img {
 
 .lb span {
   font-family: var(--mono);
-  font-size: 10.5px;
-  letter-spacing: .14em;
+  font-size: var(--t-micro);
+  letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--soft);
-}
-
-.lb-left b,
-.lb-left strong {
-  color: var(--ink);
-  font-weight: 700;
 }
 
 .lb a {
@@ -167,33 +201,19 @@ img {
 .lb-right {
   display: inline-flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
-/* Nombre a la izquierda: oculto en escritorio (el plaque fijo va vacio a la
-   izquierda), visible en movil/tablet donde el plaque pasa a sticky. */
+/* Nombre a la izquierda: oculto en escritorio (el plaque fijo va vacio a la izquierda),
+   visible en movil/tablet, donde ademas vuelve al inicio. */
 .lb .lb-name {
   display: none;
   font-family: var(--serif);
+  font-size: 1.25rem;
   font-style: italic;
-}
-
-/* Movil/tablet (<=1024px): plaque sticky (ocupa su espacio en el flujo),
-   nombre a la izquierda y se oculta la meta de la derecha para no duplicarlo. */
-@media (max-width: 1024px) {
-  .lb.top {
-    position: sticky;
-    height: 46px;
-    pointer-events: auto;
-  }
-
-  .lb .lb-name {
-    display: inline;
-  }
-
-  .lb .lb-meta {
-    display: none;
-  }
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
 }
 
 #themeToggle,
@@ -205,8 +225,8 @@ img {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   border: 1px solid var(--line);
   border-radius: 50%;
@@ -214,7 +234,8 @@ img {
   transition: color .25s, border-color .25s;
 }
 
-#themeToggle:hover {
+#themeToggle:hover,
+#langToggle:hover {
   color: var(--ink);
   border-color: var(--ink);
 }
@@ -226,51 +247,65 @@ img {
   stroke-width: 1.7;
 }
 
-#themeToggle:focus-visible,
-#langToggle:focus-visible {
-  outline: 2px solid var(--teal);
-  outline-offset: 2px;
-}
-
 /* Boton de idioma: gemelo del de tema, con el codigo del idioma destino (EN/ES) en mono. */
 #langToggle {
   font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: .04em;
-  color: var(--teal);
-  text-decoration: none;
+  font-size: var(--t-micro);
+  color: var(--acento-texto);
 }
 
-#langToggle:hover {
-  border-color: var(--ink);
+/* Movil/tablet: plaque sticky (ocupa su espacio en el flujo) y controles de 44px. */
+@media (max-width: 1024px) {
+  .lb.top {
+    position: sticky;
+    height: var(--barra-movil);
+    padding: 0 var(--pad);
+    pointer-events: auto;
+  }
+
+  .lb .lb-name {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .lb .lb-meta {
+    display: none;
+  }
+
+  .lb-right {
+    gap: 8px;
+  }
+
+  #themeToggle,
+  #langToggle {
+    width: 44px;
+    height: 44px;
+  }
 }
 
-/* ── Riel lateral (generado por navegacion.ts) ── */
+/* ── Riel lateral (Rail.astro; el activo lo marca navegacion.ts) ── */
 .rail {
   position: fixed;
-  right: clamp(12px, 2.4vw, 26px);
+  right: clamp(10px, 2vw, 26px);
   top: 50%;
   transform: translateY(-50%);
   z-index: 85;
   display: flex;
   flex-direction: column;
-  gap: 13px;
   align-items: flex-end;
+  pointer-events: none;
 }
 
+/* La zona pulsable es solo el punto: la etiqueta flota encima sin robar clics al contenido. */
 .rail-dot {
-  appearance: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 9px;
+  position: relative;
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 30px;
   color: var(--faint);
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
   transition: color .3s;
 }
 
@@ -278,16 +313,25 @@ img {
   width: 8px;
   height: 8px;
   border: 1px solid currentColor;
-  border-radius: 50%;
-  transition: all .3s;
+  border-radius: 4px;
+  transition: height .35s var(--ease), background-color .3s, border-color .3s;
 }
 
 .rail-label {
+  position: absolute;
+  right: 100%;
+  padding: 4px 9px;
+  background: var(--paper);
+  border: 1px solid var(--line2);
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  white-space: nowrap;
   opacity: 0;
   transform: translateX(6px);
-  white-space: nowrap;
   pointer-events: none;
-  transition: all .3s;
+  transition: opacity .3s, transform .3s;
 }
 
 .rail-dot:hover {
@@ -301,54 +345,41 @@ img {
 }
 
 .rail-dot.on {
-  color: var(--teal);
+  color: var(--acento-texto);
 }
 
 .rail-dot.on .rail-pip {
+  height: 22px;
   background: var(--teal);
   border-color: var(--teal);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal) 18%, transparent);
 }
 
-.rail-dot:focus-visible {
-  outline: 2px solid var(--teal);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-@media (max-width: 1024px) {
-  .rail {
-    display: none;
-  }
-}
-
-/* ── Hint de scroll (chip oscuro arriba a la derecha) ── */
+/* ── Hint de scroll (chip oscuro abajo al centro, no tapa el retrato) ── */
 .hint {
   position: fixed;
-  top: calc(var(--bar) + 18px);
-  right: clamp(16px, 4vw, 40px);
+  bottom: 14px;
+  left: 50%;
   z-index: 86;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 13px;
+  padding: 8px 13px;
   background: color-mix(in srgb, var(--ink) 92%, transparent);
   color: var(--paper);
   border-radius: 9px;
   box-shadow: 0 8px 26px rgba(0, 0, 0, .22);
   font-family: var(--mono);
-  font-size: 10.5px;
-  letter-spacing: .06em;
+  font-size: var(--t-micro);
   white-space: nowrap;
   opacity: 0;
-  transform: translateY(-8px);
+  transform: translate(-50%, 8px);
   pointer-events: none;
   transition: opacity .55s var(--ease), transform .55s var(--ease);
 }
 
 .hint.show {
   opacity: 1;
-  transform: none;
+  transform: translate(-50%, 0);
 }
 
 .hint .keys {
@@ -358,7 +389,7 @@ img {
 
 .hint kbd {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: var(--t-micro);
   line-height: 1;
   min-width: 19px;
   height: 19px;
@@ -373,32 +404,33 @@ img {
 }
 
 @media (max-width: 1024px) {
+  .rail,
   .hint {
     display: none;
   }
 }
 
-/* ── Encabezado de escena, compartido (El trabajo / El equipo / Conóceme) ── */
+/* ── Encabezado de escena, compartido por los cinco actos ── */
 .sh {
   display: flex;
   align-items: baseline;
-  gap: 16px;
-  margin-bottom: clamp(18px, 3vh, 36px);
   flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: clamp(14px, 3vh, 38px);
 }
 
 .sh .act {
+  min-width: 1.2em;
   font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--teal);
+  font-size: var(--t-etiqueta);
+  letter-spacing: .1em;
+  color: var(--acento-texto);
 }
 
 .sh h2 {
   font-family: var(--serif);
-  font-weight: 500;
-  font-size: clamp(26px, 4vw, 50px);
+  font-weight: 400;
+  font-size: clamp(2.125rem, 1.2rem + 2.6vw, 3.625rem);
   letter-spacing: -.01em;
   line-height: 1;
 }
@@ -417,18 +449,131 @@ img {
 
 .sh .ct {
   font-family: var(--mono);
-  font-size: 10.5px;
-  letter-spacing: .08em;
+  font-size: var(--t-micro);
+  letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--faint);
 }
 
-/* Respeto a usuarios que prefieren menos movimiento */
+@media (max-width: 699px) {
+  /* Numero y titulo arriba; la meta, en su propia linea. */
+  .sh {
+    column-gap: 12px;
+  }
+
+  .sh h2 {
+    flex: 1;
+  }
+
+  .sh .ln {
+    display: none;
+  }
+
+  .sh .ct {
+    flex-basis: 100%;
+  }
+}
+
+/* ── Piezas compartidas ── */
+.eh {
+  margin-bottom: 8px;
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--acento-texto);
+}
+
+.chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chips li {
+  padding: 3px 9px;
+  border: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  color: var(--soft);
+}
+
+/* Punto "activo": el pulso se repite tres veces y para. */
+.vivo {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4f9a6c;
+}
+
+.vivo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: inherit;
+  opacity: 0;
+}
+
+/* ── Movimiento ──
+   Todo lo espacial es opt-in. Solo se animan opacity/transform/translate, salvo los acordeones. */
+@media (prefers-reduced-motion: no-preference) {
+  .reel,
+  html {
+    scroll-behavior: smooth;
+  }
+
+  .vivo::after {
+    animation: pulso 1.6s var(--ease) .8s 3;
+  }
+
+  [data-entra].entro {
+    animation: entrar .85s var(--ease) backwards;
+    animation-delay: calc(var(--orden, 0) * 85ms);
+  }
+
+  /* En flujo movil cada bloque entra al llegar: sin retardo escalonado. */
+  @media (max-width: 1024px) {
+    [data-entra].entro {
+      animation-delay: 0s;
+    }
+  }
+
+  /* Fundido del cambio de tema (startViewTransition en Plaque.astro). No se activa entre
+     documentos: choca con la redireccion de idioma del <head>. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: .3s;
+  }
+}
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    translate: 0 18px;
+  }
+}
+
+@keyframes pulso {
+  from {
+    opacity: .6;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.8);
+  }
+}
+
+/* Movimiento reducido: se conservan los fundidos y cambios de color, no los desplazamientos. */
 @media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: .001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .001ms !important;
-    scroll-behavior: auto !important;
+  *,
+  *::before,
+  *::after {
+    transition-property: color, background-color, border-color, opacity !important;
   }
 }

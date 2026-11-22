@@ -1,13 +1,15 @@
 ---
 /*
-  Layout base del portafolio. Define el documento, carga la tipografia fija (Libre Baskerville,
-  preset Clasica), resuelve el tema e idioma antes del primer pintado (ajustes variables: tema
+  Layout base del portafolio. Define el documento, carga la tipografia (Fonts API de Astro,
+  autoalojada), resuelve el tema e idioma antes del primer pintado (ajustes variables: tema
   claro Museo / oscuro Noche; idioma es/en) y monta el sprite de iconos y el carrete con snap
-  vertical. Estructura rigida: disposicion Galeria, acento aguamarino y tipografia Clasica fijos.
+  vertical. Estructura rigida: disposicion Galeria, acento aguamarino y tipografia editorial fijos.
 */
+import { Font } from 'astro:assets';
 import '../styles/tokens.css';
 import '../styles/global.css';
 import IconSprite from '../components/IconSprite.astro';
+import { EMPRESA } from '../data/experiencia';
 import { obtenerIdioma, obtenerTextos } from '../i18n/ui';
 
 interface Props {
@@ -34,7 +36,7 @@ const RUTA_EN = '/en/';
 const {
   titulo = t.htmlTitle,
   descripcion = t.metaDescription,
-  imagen = '/og-image-v2.png',
+  imagen = '/og-image-v3.png',
   canonical = idioma === 'en' ? RUTA_EN : RUTA_ES,
 } = Astro.props;
 
@@ -56,6 +58,11 @@ const datosEstructurados = {
       url: `${SITIO}/`,
       image: urlImagen,
       jobTitle: t.jobTitle,
+      worksFor: { '@type': 'Organization', name: EMPRESA },
+      affiliation: {
+        '@type': 'CollegeOrUniversity',
+        name: 'Universidad de Bogotá Jorge Tadeo Lozano',
+      },
       description: descripcion,
       knowsAbout: t.knowsAbout,
       sameAs: [
@@ -140,7 +147,8 @@ const datosEstructurados = {
                 : 'es';
           var actual = document.documentElement.lang || 'es';
           if (deseado !== actual) {
-            location.replace(deseado === 'en' ? '/en/' : '/');
+            // Conserva query y ancla: un enlace a /#experiencia debe llegar a esa escena.
+            location.replace((deseado === 'en' ? '/en/' : '/') + location.search + location.hash);
           }
         } catch (e) {
           /* sin localStorage/navigator: se queda en el idioma servido */
@@ -161,25 +169,26 @@ const datosEstructurados = {
           document.documentElement.style.setProperty('--clay', '#2aa198');
           document.documentElement.style.setProperty('--teal', '#2aa198');
           window.__salaTheme = tema;
+          // El color de la barra del navegador sigue al tema elegido, no solo al del sistema.
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+            meta.setAttribute('content', tema === 'Noche' ? '#16130e' : '#fbfaf7');
+          });
         } catch (e) {
           document.documentElement.setAttribute('data-tema', 'Museo');
         }
       })();
     </script>
 
-    <!-- Tipografia fija (preset Clasica): solo Libre Baskerville. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
-    />
+    <!-- Tipografia autoalojada: se precarga solo lo que se ve en la portada. -->
+    <Font cssVariable="--fuente-titular" preload />
+    <Font cssVariable="--fuente-texto" preload />
+    <Font cssVariable="--fuente-etiqueta" />
   </head>
   <body>
     <IconSprite />
     <!-- Chrome global (fijo): plaque, riel, hint. Fuera del carrete. -->
     <slot name="chrome" />
-    <main class="reel">
+    <main class="reel" tabindex="-1">
       <slot />
     </main>
   </body>

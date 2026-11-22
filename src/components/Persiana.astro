@@ -2,13 +2,22 @@
 /*
   Persiana (acordeon de caratulas) de la escena Conoceme. Las 20 franjas se renderizan en
   build desde FAVORITOS (fallback estatico que degrada con gracia sin JS); el script
-  src/scripts/persiana.ts aporta el acordeon y el autoplay. Cada franja: fondo gradiente
-  (.pph), caratula (.pimg, lazy + no-referrer), lomo vertical (.pspine) y caption (.pcap:
-  chip de categoria con icono, titulo .pt serif y subtitulo .ps mono). PRD 8.
+  src/scripts/persiana.ts aporta el acordeon, los gestos, el filtro y el autoplay. Cada franja:
+  fondo gradiente (.pph), caratula (.pimg), lomo vertical (.pspine) y caption (.pcap). PRD 8.
+
+  RENDIMIENTO: se sirven las variantes WebP de scripts/optimizar-caratulas.mjs. En escritorio
+  la imagen tiene el ancho fijo de una franja abierta (cqw) y la franja solo la recorta: no se
+  reescalan 20 imagenes por fotograma. El oscurecido es una capa con opacity, no un filter.
 */
 import { FAVORITOS, type Categoria } from '../data/favoritos';
 import { obtenerIdioma, obtenerTextos } from '../i18n/ui';
 
+interface Props {
+  /** Categoria visible al arrancar en movil/tablet. */
+  filtro?: Categoria;
+}
+
+const { filtro } = Astro.props;
 const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
 
 // Decoracion de iconos por categoria (PRD 8.3), resuelta en build.
@@ -18,19 +27,34 @@ const ICONO_CAT: Record<Categoria, string> = {
   Libros: 'ic-book',
   Música: 'ic-music',
 };
+
+/** /assets/movies/akira.jpg -> /assets/caratulas/movies/akira-<ancho>.webp */
+const variante = (ruta: string, ancho: number): string =>
+  ruta.replace(/^\/assets\/([^/]+)\/(.+)\.\w+$/, `/assets/caratulas/$1/$2-${ancho}.webp`);
 ---
 
-<div class="persiana" data-speed="2600" data-open="0">
+<div
+  class="persiana"
+  data-speed="2600"
+  data-open="0"
+  data-filtro={filtro ?? 'all'}
+  tabindex="0"
+  role="group"
+  aria-label={t.aria.persiana}
+>
   {
     FAVORITOS.map((f, i) => (
       <figure class:list={['pslat', { open: i === 0, wide: f.wide }]} data-cat={f.c}>
         <span class="pph" style={`background:${f.g}`} aria-hidden="true" />
         <img
           class="pimg"
-          src={f.img}
+          src={variante(f.img, 900)}
+          srcset={`${variante(f.img, 480)} 480w, ${variante(f.img, 900)} 900w`}
+          sizes="(max-width: 1024px) 100vw, 440px"
           alt={`${f.t} — ${f.s}`}
           loading="lazy"
-          referrerpolicy="no-referrer"
+          decoding="async"
+          draggable="false"
           onerror="this.style.display='none'"
         />
         <span class="pspine" aria-hidden="true">{f.t}</span>
@@ -42,6 +66,7 @@ const ICONO_CAT: Record<Categoria, string> = {
           <span class="pt">{f.t}</span>
           <span class="ps">{f.s}</span>
         </figcaption>
+        <span class="pavance" aria-hidden="true" />
       </figure>
     ))
   }
@@ -54,18 +79,23 @@ const ICONO_CAT: Record<Categoria, string> = {
 
 <style>
   .persiana {
-    --p-cine: var(--clay);
-    --p-juegos: var(--amber);
-    --p-libros: var(--teal);
-    --p-musica: #4f6fc0;
+    /* Fondos del chip de categoria: 4.5:1 con texto blanco. */
+    --p-cine: #1b746d;
+    --p-juegos: #8a5f16;
+    --p-libros: #1b746d;
+    --p-musica: #4460ad;
     --p-grow: 8;
+    container-type: inline-size;
     flex: 1 1 auto;
     min-height: 0;
     display: flex;
-    gap: 0;
     margin: 0;
     overflow: hidden;
     border: 1px solid var(--marco);
+    contain: layout paint;
+    /* El arrastre lateral es de la persiana; el vertical sigue siendo scroll. */
+    touch-action: pan-y pinch-zoom;
+    user-select: none;
   }
 
   .pslat {
@@ -74,12 +104,29 @@ const ICONO_CAT: Record<Categoria, string> = {
     min-width: 0;
     margin: 0;
     overflow: hidden;
+    contain: layout paint;
     cursor: pointer;
-    /* Costura oscura entre franjas pegadas (igual a la referencia): delinea las caratulas
-       sin dejar el hueco claro que se leia como borde. */
-    outline: 1px solid rgba(6, 8, 11, .5);
-    filter: brightness(.58);
-    transition: flex-grow .6s var(--ease), filter .6s var(--ease);
+    transition: flex-grow .7s var(--ease);
+  }
+
+  /* Costura oscura entre franjas pegadas (como la referencia). */
+  .pslat + .pslat {
+    border-left: 1px solid rgba(6, 8, 11, .5);
+  }
+
+  /* Oscurecido de las franjas cerradas. */
+  .pslat::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #000;
+    opacity: .42;
+    pointer-events: none;
+    transition: opacity .6s var(--ease);
+  }
+
+  .pslat.open::after {
+    opacity: 0;
   }
 
   .pslat.wide {
@@ -101,7 +148,6 @@ const ICONO_CAT: Record<Categoria, string> = {
 
   .pslat.open {
     flex-grow: var(--p-grow, 8);
-    filter: brightness(1);
   }
 
   .pph {
@@ -109,31 +155,37 @@ const ICONO_CAT: Record<Categoria, string> = {
     inset: 0;
   }
 
+  /* 30cqw = ancho de una franja abierta (8 partes de ~27), con margen de redondeo. */
   .pimg {
     position: absolute;
-    inset: 0;
-    width: 100%;
+    top: 0;
+    left: 50%;
+    width: 30cqw;
+    max-width: none;
     height: 100%;
     object-fit: cover;
+    transform: translateX(-50%);
   }
 
   /* Lomo vertical: visible solo cuando la franja esta cerrada. */
   .pspine {
     position: absolute;
     inset: 0;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 12px 0;
     writing-mode: vertical-rl;
     transform: rotate(180deg);
-    font-size: 13px;
-    letter-spacing: .04em;
+    font-family: var(--serif);
+    font-size: 1rem;
+    letter-spacing: .03em;
     white-space: nowrap;
     overflow: hidden;
     /* Va siempre sobre la carátula/gradiente oscuro: texto claro fijo en ambos temas. */
     color: #fbfaf7;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, .7);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, .8);
     background: linear-gradient(to top, rgba(0, 0, 0, .5), transparent);
     transition: opacity .4s var(--ease);
   }
@@ -148,22 +200,26 @@ const ICONO_CAT: Record<Categoria, string> = {
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: 1;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    padding: 16px;
+    gap: 5px;
+    padding: 40px 16px 16px;
     /* La caption va sobre un gradiente oscuro: texto claro fijo en ambos temas
        (en Noche, var(--paper) era casi negro y el título quedaba invisible). */
     color: #fbfaf7;
-    background: linear-gradient(to top, rgba(0, 0, 0, .82) 12%, transparent);
+    background: linear-gradient(to top, rgba(0, 0, 0, .85) 30%, transparent);
     opacity: 0;
     transform: translateY(8px);
+    pointer-events: none;
     transition: opacity .4s var(--ease), transform .4s var(--ease);
   }
 
   .pslat.open .pcap {
     opacity: 1;
     transform: none;
+    /* Espera a que la franja tenga ancho para no recomponer el texto a la vista. */
+    transition-delay: .2s;
   }
 
   .pcat {
@@ -171,31 +227,53 @@ const ICONO_CAT: Record<Categoria, string> = {
     align-items: center;
     gap: 6px;
     align-self: flex-start;
-    padding: 3px 9px;
+    padding: 2px 9px;
     font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: .14em;
+    font-size: var(--t-micro);
+    letter-spacing: .08em;
     text-transform: uppercase;
     color: #fff;
     background: var(--cat);
     border-radius: 999px;
   }
 
-  .pcat .ic {
-    font-size: 13px;
-  }
-
   .pt {
-    font-size: clamp(18px, 2vw, 24px);
+    font-family: var(--serif);
+    font-size: clamp(1.375rem, 1rem + .9vw, 1.875rem);
     font-style: italic;
     line-height: 1.1;
   }
 
   .ps {
     font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: .04em;
-    color: rgba(255, 255, 255, .8);
+    font-size: var(--t-micro);
+    color: rgba(255, 255, 255, .85);
+  }
+
+  /* Avance del autoplay: deja claro cuando corre y cuando esta en reposo. */
+  .pavance {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    height: 3px;
+    background: var(--teal);
+    transform: scaleX(0);
+    transform-origin: left;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .persiana[data-avanza] .pslat.open .pavance {
+      animation: avanzar var(--avance, 2600ms) linear forwards;
+    }
+  }
+
+  @keyframes avanzar {
+    to {
+      transform: scaleX(1);
+    }
   }
 
   /* Movil/tablet (<=1024px): columnas -> filas; lomo horizontal. */
@@ -203,18 +281,35 @@ const ICONO_CAT: Record<Categoria, string> = {
     .persiana {
       flex-direction: column;
       height: auto;
-      margin: 18px 0;
+      container-type: normal;
+      contain: none;
+      touch-action: auto;
     }
 
     .pslat,
     .pslat.wide {
       flex: none;
       height: 64px;
-      filter: brightness(1);
+      transition: height .42s var(--ease);
     }
 
     .pslat.open {
       height: 280px;
+    }
+
+    .pslat + .pslat {
+      border-left: none;
+      border-top: 1px solid rgba(6, 8, 11, .5);
+    }
+
+    .pslat::after {
+      opacity: .22;
+    }
+
+    .pimg {
+      inset: 0;
+      width: 100%;
+      transform: none;
     }
 
     .pspine {
@@ -222,14 +317,19 @@ const ICONO_CAT: Record<Categoria, string> = {
       transform: none;
       justify-content: flex-start;
       padding: 0 16px;
+      font-size: 1.125rem;
+      background: linear-gradient(to right, rgba(0, 0, 0, .6), transparent 80%);
     }
-  }
 
-  @media (prefers-reduced-motion: reduce) {
-    .pslat,
-    .pcap,
-    .pspine {
-      transition: none;
+    .pavance {
+      display: none;
+    }
+
+    .persiana[data-filtro='Cine'] .pslat:not([data-cat='Cine']),
+    .persiana[data-filtro='Juegos'] .pslat:not([data-cat='Juegos']),
+    .persiana[data-filtro='Libros'] .pslat:not([data-cat='Libros']),
+    .persiana[data-filtro='Música'] .pslat:not([data-cat='Música']) {
+      display: none;
     }
   }
 </style>

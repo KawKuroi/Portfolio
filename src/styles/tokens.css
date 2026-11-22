@@ -1,65 +1,84 @@
 /*
   Sistema de diseno — tokens base y temas.
-  Configuracion rigida (sin panel de Tweaks): disposicion Galeria, acento aguamarino
-  #2aa198 y tipografia Clasica (Libre Baskerville). Lo unico variable es el tema:
-  Museo (claro, por defecto en escritorio) o Noche (oscuro).
+  Configuracion rigida (sin panel de Tweaks): disposicion Galeria, acento aguamarino #2aa198
+  y tipografia editorial (Newsreader / Hanken Grotesk / IBM Plex Mono). Lo unico variable es
+  el tema: Museo (claro) o Noche (oscuro).
+
+  CONTRASTE: --soft, --faint y --acento-texto cumplen 4.5:1 sobre --paper en ambos temas.
+  --teal no lo cumple en Museo: solo para titulares grandes, iconos y trazos. Cualquier texto
+  pequeno en color de acento usa --acento-texto.
 */
 
 :root {
+  color-scheme: light;
+
   /* Superficies y tinta (valores base = tema Museo claro) */
   --paper: #fbfaf7;
   --wall: #f1efe8;
   --ink: #14120d;
-  --soft: #6b6457;
-  --faint: #a39c8d;
+  --soft: #554e43;
+  --faint: #6c6559;
 
   /* Acentos. El aguamarino es el acento real por defecto. */
   --clay: #2aa198;
   --teal: #2aa198;
+  --acento-texto: #1b746d;
   --amber: #c08a2e;
-  /* Acentos editoriales de respaldo (no usados por defecto): clay #b5503a, teal #3f8f87 */
 
   /* Hairlines */
-  --line: rgba(20, 18, 13, .16);
-  --line2: rgba(20, 18, 13, .075);
+  --line: rgba(20, 18, 13, .2);
+  --line2: rgba(20, 18, 13, .1);
 
   /* Color de marco (retrato, capturas, persiana, dialogo). Separa el concepto "borde de
      marco" del color de tinta (--ink): asi en Noche el marco no sale blanco. Oscuro en ambos
      temas. */
   --marco: var(--ink);
 
-  /* Tipografia fija (preset "Clasica") = todo Libre Baskerville. */
-  --serif: 'Libre Baskerville', Georgia, serif;
-  --sans: 'Libre Baskerville', Georgia, serif;
-  --mono: 'Libre Baskerville', Georgia, serif;
+  /* Tipografia: las variables --fuente-* las genera la Fonts API de Astro (astro.config.mjs)
+     con respaldos de metricas ajustadas.
+       --serif: titulares y frases.  --sans: lectura.  --mono: etiquetas, fechas y chips. */
+  --serif: var(--fuente-titular);
+  --sans: var(--fuente-texto);
+  --mono: var(--fuente-etiqueta);
+
+  /* Escala en rem (respeta el tamano de fuente del navegador). Nada baja de 12px. */
+  --t-micro: .75rem;
+  --t-etiqueta: .8125rem;
+  --t-chico: .875rem;
+  --t-cuerpo: clamp(.9375rem, .88rem + .22vw, 1.0625rem);
 
   /* Movimiento y medidas */
   --ease: cubic-bezier(.22, 1, .36, 1);
-  --bar: clamp(30px, 5vh, 52px); /* alto del plaque superior (escritorio) */
+  --bar: clamp(38px, 6vh, 54px); /* alto del plaque superior (escritorio) */
+  --barra-movil: 56px; /* alto del plaque sticky (<=1024px) */
   --pad: 20px; /* padding lateral en movil/tablet (<=1024px); escritorio usa su propio clamp */
 }
 
 /* Tema Museo (claro) — explicito para el conmutador */
 :root[data-tema='Museo'] {
+  color-scheme: light;
   --paper: #fbfaf7;
   --wall: #f1efe8;
   --ink: #14120d;
-  --soft: #6b6457;
-  --faint: #a39c8d;
-  --line: rgba(20, 18, 13, .16);
-  --line2: rgba(20, 18, 13, .075);
+  --soft: #554e43;
+  --faint: #6c6559;
+  --acento-texto: #1b746d;
+  --line: rgba(20, 18, 13, .2);
+  --line2: rgba(20, 18, 13, .1);
   --marco: var(--ink);
 }
 
 /* Tema Noche (oscuro) */
 :root[data-tema='Noche'] {
+  color-scheme: dark;
   --paper: #16130e;
   --wall: #1d1812;
   --ink: #ece4d4;
-  --soft: #a89c87;
-  --faint: #736b5b;
-  --line: rgba(236, 228, 212, .22);
-  --line2: rgba(236, 228, 212, .10);
+  --soft: #b5aa96;
+  --faint: #978d7b;
+  --acento-texto: #35b3aa;
+  --line: rgba(236, 228, 212, .24);
+  --line2: rgba(236, 228, 212, .12);
   /* Marco oscuro y sutil (tono de tinta del tema claro): evita el borde blanco que daba --ink. */
   --marco: rgba(20, 18, 13, .55);
 }
@@ -71,13 +90,15 @@
 */
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema]) {
+    color-scheme: dark;
     --paper: #16130e;
     --wall: #1d1812;
     --ink: #ece4d4;
-    --soft: #a89c87;
-    --faint: #736b5b;
-    --line: rgba(236, 228, 212, .22);
-    --line2: rgba(236, 228, 212, .10);
+    --soft: #b5aa96;
+    --faint: #978d7b;
+    --acento-texto: #35b3aa;
+    --line: rgba(236, 228, 212, .24);
+    --line2: rgba(236, 228, 212, .12);
     --marco: rgba(20, 18, 13, .55);
   }
 }

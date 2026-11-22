@@ -1,28 +1,27 @@
 ---
 /*
-  Escena 2 — I · El trabajo. Disposicion fija: Galeria (la unica). Render en build desde
-  PROYECTOS; un script minimo cambia la obra activa y la placa. Estilado 1:1 con el diseno
-  original (PRD 7.2). Datos en src/data/proyectos.ts. Copy bilingue por idioma vigente.
+  Escena 3 — III · El trabajo. Disposicion fija: Galeria (la unica). Capturas y placas se
+  renderizan en build desde PROYECTOS y comparten celda: el script solo cambia la clase activa,
+  no envia datos al cliente y la altura no salta al cambiar de obra (PRD 7.2).
 */
 import { PROYECTOS } from '../../data/proyectos';
 import { obtenerIdioma, obtenerTextos } from '../../i18n/ui';
 
 const idioma = obtenerIdioma(Astro.currentLocale);
 const t = obtenerTextos(idioma);
-const inicial = PROYECTOS[0];
 const numero = (i: number): string => String(i + 1).padStart(2, '0');
 ---
 
-<section class="scene scene-trabajo" data-slate={t.slates.trabajo} data-screen-label={t.slates.trabajo}>
+<section class="scene scene-trabajo" id="trabajo" data-slate={t.slates.trabajo}>
   <div class="wrap">
-    <div class="sh">
-      <span class="act">I</span>
+    <div class="sh" data-entra>
+      <span class="act">III</span>
       <h2 set:html={t.trabajo.tituloHtml}></h2>
       <span class="ln"></span>
       <span class="ct">{PROYECTOS.length} {t.trabajo.proyectos}</span>
     </div>
 
-    <div id="twGaleria" class="tw-galeria">
+    <div id="twGaleria" class="tw-galeria" data-entra style="--orden:1">
       <div class="twg-list">
         {
           PROYECTOS.map((proyecto, i) => (
@@ -60,30 +59,34 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
           }
         </div>
 
-        <div class="twg-plate" aria-live="polite">
-          <div class="pt" data-plate-titulo>{inicial.titulo[idioma]}</div>
-          <p class="pd" data-plate-desc>{inicial.descripcion[idioma]}</p>
-          <div class="pm">
-            <span data-plate-anio>{inicial.anio[idioma]}</span>
-            <span class="st" data-plate-estado>{inicial.estado[idioma]}</span>
-            <a
-              class="go demo"
-              data-plate-demo
-              href={inicial.demo}
-              target="_blank"
-              rel="noopener"
-              hidden={!inicial.demo}
-              ><span class="dot" aria-hidden="true"></span>{t.trabajo.verEnLinea}</a
-            >
-            <a class="go" data-plate-repo href={inicial.repo} target="_blank" rel="noopener">{t.trabajo.repo}</a>
-          </div>
+        <div class="twg-plates">
+          {
+            PROYECTOS.map((proyecto, i) => (
+              <div class:list={['twg-plate', { on: i === 0 }]}>
+                <h3 class="pt">{proyecto.titulo[idioma]}</h3>
+                <p class="pd">{proyecto.descripcion[idioma]}</p>
+                <div class="pm">
+                  <span class="st">{proyecto.estado[idioma]}</span>
+                  {proyecto.demo && (
+                    <a class="go demo" href={proyecto.demo} target="_blank" rel="noopener">
+                      <span class="vivo" aria-hidden="true" />
+                      {t.trabajo.verEnLinea}
+                    </a>
+                  )}
+                  <a class="go" href={proyecto.repo} target="_blank" rel="noopener">
+                    {t.trabajo.repoFlecha}
+                  </a>
+                </div>
+              </div>
+            ))
+          }
         </div>
       </div>
     </div>
 
     {/* Acordeon indice (movil/tablet <=1024px): reemplaza la galeria maestro-detalle.
         DOM dual: la galeria de escritorio queda intacta; esto se muestra solo en <=1024px. */}
-    <div class="tw-acc">
+    <div class="tw-acc" data-entra>
       {
         PROYECTOS.map((proyecto, i) => (
           <div class:list={['twa-item', { open: i === 0 }]}>
@@ -117,7 +120,7 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
                     <span class="st">{proyecto.estado[idioma]}</span>
                     {proyecto.demo && (
                       <a class="go demo" href={proyecto.demo} target="_blank" rel="noopener">
-                        <span class="dot" aria-hidden="true" />{t.trabajo.verEnLinea}
+                        <span class="vivo" aria-hidden="true" />{t.trabajo.verEnLinea}
                       </a>
                     )}
                     <a class="go" href={proyecto.repo} target="_blank" rel="noopener">{t.trabajo.repoFlecha}</a>
@@ -133,71 +136,36 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
 </section>
 
 <script>
-  import { PROYECTOS } from '../../data/proyectos';
-  import { obtenerIdioma } from '../../i18n/ui';
+  import { anclar } from '../../scripts/anclaje';
 
-  // Idioma vigente (lo fija <html lang> en build) para volcar la placa en el idioma correcto.
-  const idioma = obtenerIdioma(document.documentElement.lang);
-
+  // Galeria de escritorio: marca la obra, la captura y la placa activas.
   const galeria = document.getElementById('twGaleria');
   if (galeria) {
     const items = Array.from(galeria.querySelectorAll<HTMLButtonElement>('.twg-item'));
-    const slides = Array.from(galeria.querySelectorAll<HTMLElement>('.ph'));
-    const plate = galeria.querySelector<HTMLElement>('.twg-plate');
-    const titulo = galeria.querySelector('[data-plate-titulo]');
-    const desc = galeria.querySelector('[data-plate-desc]');
-    const anio = galeria.querySelector('[data-plate-anio]');
-    const estado = galeria.querySelector('[data-plate-estado]');
-    const repo = galeria.querySelector<HTMLAnchorElement>('[data-plate-repo]');
-    const demo = galeria.querySelector<HTMLAnchorElement>('[data-plate-demo]');
+    const capturas = Array.from(galeria.querySelectorAll<HTMLElement>('.ph'));
+    const placas = Array.from(galeria.querySelectorAll<HTMLElement>('.twg-plate'));
 
-    // Seleccion fija por clic: marca el boton/obra activos y vuelca la placa.
     const seleccionar = (i: number): void => {
-      const proyecto = PROYECTOS[i];
-      if (!proyecto) return;
       items.forEach((boton, j) => {
-        const activo = j === i;
-        boton.classList.toggle('on', activo);
-        boton.setAttribute('aria-pressed', String(activo));
+        boton.classList.toggle('on', j === i);
+        boton.setAttribute('aria-pressed', String(j === i));
       });
-      slides.forEach((slide, j) => slide.classList.toggle('on', j === i));
-      if (titulo) titulo.textContent = proyecto.titulo[idioma];
-      if (desc) desc.textContent = proyecto.descripcion[idioma];
-      if (anio) anio.textContent = proyecto.anio[idioma];
-      if (estado) estado.textContent = proyecto.estado[idioma];
-      if (repo) repo.href = proyecto.repo;
-      // Enlace al demo con indicador "en línea": solo si el proyecto está publicado.
-      if (demo) {
-        if (proyecto.demo) {
-          demo.href = proyecto.demo;
-          demo.hidden = false;
-        } else {
-          demo.removeAttribute('href');
-          demo.hidden = true;
-        }
-      }
-      // Replay de la animacion de entrada de la placa.
-      if (plate) {
-        plate.classList.remove('fade');
-        void plate.offsetWidth;
-        plate.classList.add('fade');
-      }
+      capturas.forEach((captura, j) => captura.classList.toggle('on', j === i));
+      placas.forEach((placa, j) => placa.classList.toggle('on', j === i));
     };
 
     items.forEach((boton, i) => boton.addEventListener('click', () => seleccionar(i)));
   }
-</script>
 
-<script>
-  // Acordeon indice de El trabajo (movil/tablet <=1024px). Comportamiento de un solo panel
-  // abierto a la vez: al abrir uno, los demas se colapsan; pulsar el abierto lo cierra
-  // (en todo momento hay como mucho un proyecto abierto, o ninguno). El primero arranca
-  // abierto desde el render.
+  // Acordeon indice (movil/tablet <=1024px). Un solo panel abierto a la vez: al abrir uno, los
+  // demas se colapsan; pulsar el abierto lo cierra. La cabecera pulsada se queda bajo el dedo
+  // aunque se colapse un panel que estaba encima.
   const itemsTrabajo = Array.from(document.querySelectorAll<HTMLElement>('.tw-acc .twa-item'));
   itemsTrabajo.forEach((item) => {
     const cabecera = item.querySelector<HTMLButtonElement>('.twa-head');
     cabecera?.addEventListener('click', () => {
       const yaAbierto = item.classList.contains('open');
+      anclar(cabecera);
       itemsTrabajo.forEach((otro) => {
         const abrir = otro === item && !yaAbierto;
         otro.classList.toggle('open', abrir);
@@ -211,17 +179,17 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
   /* La escena crece con su contenido (PRD 7.2). */
   .scene.scene-trabajo {
     height: auto;
-    min-height: 100vh;
   }
 
   .tw-galeria {
     display: grid;
-    grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
     gap: clamp(26px, 4vw, 58px);
     align-items: center;
   }
 
   .twg-list {
+    padding-right: 14px;
     display: flex;
     flex-direction: column;
   }
@@ -240,9 +208,9 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
     grid-template-columns: auto 1fr auto;
     gap: clamp(12px, 1.6vw, 20px);
     align-items: center;
-    padding: clamp(12px, 1.9vh, 19px) 0;
+    padding: clamp(6px, 1.6vh, 17px) 0;
     border-top: 1px solid var(--line2);
-    transition: padding-left .35s var(--ease);
+    transition: translate .35s var(--ease);
   }
 
   .twg-item:first-child {
@@ -252,7 +220,7 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
   .twg-item::before {
     content: "";
     position: absolute;
-    left: 0;
+    left: -12px;
     top: 50%;
     width: 3px;
     height: 58%;
@@ -268,11 +236,11 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
   }
 
   .twg-item:hover {
-    padding-left: 8px;
+    translate: 6px 0;
   }
 
   .twg-item.on {
-    padding-left: 18px;
+    translate: 14px 0;
   }
 
   .twg-num {
@@ -288,7 +256,7 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
   }
 
   .twg-item.on .twg-num {
-    color: var(--teal);
+    color: var(--acento-texto);
   }
 
   .twg-tx {
@@ -301,7 +269,7 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
   .twg-tt {
     font-family: var(--serif);
     font-weight: 500;
-    font-size: clamp(16px, 1.95vw, 24px);
+    font-size: clamp(1.1875rem, .8rem + .75vw, 1.625rem);
     line-height: 1.08;
     letter-spacing: -.01em;
     color: var(--soft);
@@ -315,7 +283,7 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
 
   .twg-tg {
     font-family: var(--mono);
-    font-size: 9.5px;
+    font-size: var(--t-micro);
     letter-spacing: .02em;
     color: var(--faint);
     white-space: nowrap;
@@ -330,7 +298,7 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
 
   .twg-yr {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: var(--t-micro);
     color: var(--faint);
     white-space: nowrap;
     align-self: center;
@@ -338,12 +306,12 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
   }
 
   .twg-item.on .twg-yr {
-    color: var(--teal);
+    color: var(--acento-texto);
   }
 
   .twg-hint {
     font-family: var(--mono);
-    font-size: 9.5px;
+    font-size: var(--t-micro);
     letter-spacing: .05em;
     color: var(--faint);
     margin-top: 14px;
@@ -357,7 +325,8 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
 
   .twg-frame {
     position: relative;
-    aspect-ratio: 3 / 2;
+    /* El alto sale del viewport: placa y enlaces deben caber sin scroll. */
+    height: clamp(120px, min(100dvh - 370px, 30vw), 440px);
     border: 1px solid var(--marco);
     background: var(--wall);
     overflow: hidden;
@@ -382,6 +351,7 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top;
     display: block;
   }
 
@@ -397,108 +367,76 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
     display: none;
   }
 
+  /* Placas apiladas en la misma celda: la mas alta fija la altura. */
+  .twg-plates {
+    display: grid;
+    margin-top: clamp(10px, 2vh, 20px);
+  }
+
   .twg-plate {
-    margin-top: clamp(13px, 2vh, 20px);
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    visibility: hidden;
+    opacity: 0;
+    translate: 0 8px;
+    transition: opacity .2s, translate .2s, visibility 0s .2s;
+  }
+
+  .twg-plate.on {
+    visibility: visible;
+    opacity: 1;
+    translate: none;
+    transition: opacity .45s var(--ease) .1s, translate .45s var(--ease) .1s, visibility 0s;
   }
 
   .twg-plate .pt {
     font-family: var(--serif);
+    font-weight: 400;
     font-style: italic;
-    font-size: clamp(19px, 2.3vw, 28px);
+    font-size: clamp(1.375rem, 1rem + 1vw, 1.875rem);
     line-height: 1.05;
   }
 
   .twg-plate .pd {
-    font-size: 14px;
+    max-width: 66ch;
+    margin-top: 6px;
+    font-size: var(--t-chico);
+    line-height: 1.5;
     color: var(--soft);
-    line-height: 1.58;
-    margin-top: 9px;
-    max-width: 58ch;
     text-wrap: pretty;
   }
 
   .twg-plate .pm {
     display: flex;
-    align-items: baseline;
-    gap: clamp(14px, 2vw, 22px);
-    margin-top: 13px;
-  }
-
-  .twg-plate .pm span {
-    font-family: var(--mono);
-    font-size: 10.5px;
-    color: var(--faint);
-    letter-spacing: .04em;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0 clamp(14px, 2vw, 22px);
+    margin-top: 4px;
   }
 
   .twg-plate .pm .st {
     font-family: var(--serif);
     font-style: italic;
-    font-size: clamp(15px, 1.7vw, 20px);
-    color: var(--ink);
+    font-size: 1.1875rem;
   }
 
   .twg-plate .pm .go {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    color: var(--teal);
-    border-bottom: 1px solid var(--teal);
-    padding-bottom: 2px;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
+    min-height: 34px;
+    font-family: var(--mono);
+    font-size: var(--t-micro);
+    text-transform: uppercase;
+    color: var(--acento-texto);
+    text-decoration: underline;
+    text-underline-offset: 5px;
     transition: opacity .2s;
   }
 
-  /* "Ver en línea" solo en proyectos con demo: el JS marca [hidden] al cambiar de obra,
-     pero display:inline-flex anula el display:none nativo de [hidden]. Esta regla lo
-     restituye para que el enlace desaparezca en proyectos sin publicar. */
-  .twg-plate .pm .go[hidden] {
-    display: none;
-  }
-
   .twg-plate .pm .go:hover {
-    opacity: .6;
-  }
-
-  /* Indicador "en línea": punto verde con pulso junto a "Ver en línea"
-     (solo en proyectos publicados). */
-  .twg-plate .pm .go.demo .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #5b9c74;
-    box-shadow: 0 0 0 0 rgba(91, 156, 116, .5);
-    animation: livePulse 2.2s var(--ease) infinite;
-  }
-
-  @keyframes livePulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(91, 156, 116, .5);
-    }
-    70% {
-      box-shadow: 0 0 0 6px rgba(91, 156, 116, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(91, 156, 116, 0);
-    }
-  }
-
-  .twg-plate.fade {
-    animation: twFade .5s var(--ease);
-  }
-
-  @keyframes twFade {
-    from {
-      opacity: 0;
-      transform: translateY(7px);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
+    opacity: .7;
   }
 
   /* ════════ Acordeon indice (movil/tablet) ════════
@@ -538,7 +476,7 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
   }
 
   .twa-item.open .twa-no {
-    color: var(--teal);
+    color: var(--acento-texto);
   }
 
   .twa-tx {
@@ -551,14 +489,14 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
   .twa-tt {
     font-family: var(--serif);
     font-weight: 500;
-    font-size: 17px;
+    font-size: 1.3125rem;
     line-height: 1.12;
     letter-spacing: -.01em;
   }
 
   .twa-tg {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: var(--t-micro);
     color: var(--faint);
     white-space: nowrap;
     overflow: hidden;
@@ -567,7 +505,7 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
 
   .twa-yr {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: var(--t-micro);
     color: var(--faint);
     white-space: nowrap;
   }
@@ -589,16 +527,23 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
     display: grid;
     grid-template-rows: 0fr;
     overflow: hidden;
-    transition: grid-template-rows .4s var(--ease);
+    /* Cerrado: sus enlaces salen del orden de tabulacion. */
+    visibility: hidden;
+    transition: grid-template-rows .4s var(--ease), visibility .4s;
   }
 
   .twa-item.open .twa-panel {
     grid-template-rows: 1fr;
-    padding-bottom: 18px;
+    visibility: visible;
   }
 
   .twa-panel > * {
     min-height: 0; /* permite que el contenido colapse a 0 al cerrar */
+    overflow: hidden;
+  }
+
+  .twa-txt {
+    padding-bottom: 10px;
   }
 
   .twa-frame {
@@ -607,7 +552,6 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
     border: 1px solid var(--marco);
     overflow: hidden;
     background: var(--wall);
-    box-shadow: 0 14px 34px rgba(0, 0, 0, .13);
     margin-bottom: 13px;
   }
 
@@ -615,6 +559,7 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top;
     display: block;
   }
 
@@ -631,7 +576,7 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
   }
 
   .twa-desc {
-    font-size: 14px;
+    font-size: var(--t-chico);
     color: var(--soft);
     line-height: 1.6;
     text-wrap: pretty;
@@ -639,52 +584,37 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
 
   .twa-meta {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     flex-wrap: wrap;
-    gap: 16px;
-    margin-top: 13px;
+    gap: 0 18px;
+    margin-top: 6px;
   }
 
   .twa-meta .st {
     font-family: var(--serif);
     font-style: italic;
-    font-size: 16px;
+    font-size: 1.1875rem;
     color: var(--ink);
   }
 
   .twa-meta .go {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    color: var(--teal);
-    border-bottom: 1px solid var(--teal);
-    padding-bottom: 2px;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    transition: opacity .2s;
-  }
-
-  .twa-meta .go:hover {
-    opacity: .6;
-  }
-
-  .twa-meta .go.demo .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #5b9c74;
-    box-shadow: 0 0 0 0 rgba(91, 156, 116, .5);
-    animation: livePulse 2.2s var(--ease) infinite;
+    gap: 8px;
+    min-height: 44px;
+    font-family: var(--mono);
+    font-size: var(--t-micro);
+    text-transform: uppercase;
+    color: var(--acento-texto);
+    text-decoration: underline;
+    text-underline-offset: 5px;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .twg-frame .ph {
-      transition: opacity .3s;
-    }
-    .twg-frame .ph.on {
+    .twg-frame .ph,
+    .twg-plate {
       transform: none;
+      translate: none;
     }
   }
 
@@ -693,6 +623,10 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
        maestro-detalle por el acordeon indice. */
     .scene.scene-trabajo {
       min-height: 0;
+    }
+
+    .twa-tg {
+      white-space: normal;
     }
 
     .tw-galeria {

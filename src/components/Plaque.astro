@@ -16,7 +16,7 @@ const urlOtroIdioma = getRelativeLocaleUrl(otroIdioma);
 ---
 
 <header class="lb top" data-plaque>
-  <span class="lb-left"><b class="lb-name">Kevin Herazo</b></span>
+  <span class="lb-left"><a class="lb-name" href="#portada">Kevin Herazo</a></span>
   <span class="lb-right">
     <span class="lb-meta">Kevin Herazo — 2026</span>
     <button id="themeToggle" type="button" aria-label={t.aria.cambiarTema} aria-pressed="false">
@@ -47,7 +47,20 @@ const urlOtroIdioma = getRelativeLocaleUrl(otroIdioma);
   };
 
   sincronizarIcono(temaActual());
-  boton?.addEventListener('click', () => alternarTema());
+  boton?.addEventListener('click', () => {
+    // Fundido entre temas donde hay View Transitions; sin soporte o con movimiento reducido,
+    // el cambio es inmediato.
+    const reducir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducir || typeof document.startViewTransition !== 'function') {
+      alternarTema();
+      return;
+    }
+    const transicion = document.startViewTransition(() => {
+      alternarTema();
+    });
+    // Un segundo clic cancela la transicion anterior: no es un error.
+    transicion.ready.catch(() => undefined);
+  });
   document.documentElement.addEventListener('salathemechange', (evento) => {
     sincronizarIcono((evento as CustomEvent<Tema>).detail);
   });
@@ -57,6 +70,11 @@ const urlOtroIdioma = getRelativeLocaleUrl(otroIdioma);
   const idiomaBtn = document.getElementById('langToggle');
   idiomaBtn?.addEventListener('click', () => {
     const destino = idiomaBtn.getAttribute('data-lang-destino');
+    // Cambiar de idioma conserva la escena que se estaba leyendo.
+    const ancla = document.querySelector('.rail-dot.on')?.getAttribute('href');
+    if (ancla && idiomaBtn instanceof HTMLAnchorElement) {
+      idiomaBtn.hash = ancla === '#portada' ? '' : ancla;
+    }
     if (destino === 'es' || destino === 'en') {
       try {
         localStorage.setItem('sala-lang', destino);

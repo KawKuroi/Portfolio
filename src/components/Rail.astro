@@ -1,14 +1,27 @@
 ---
 /*
   Riel lateral de navegacion (.rail), fijo a la derecha, centrado vertical, z-index 85.
-  Los botones (uno por escena) y la escena activa los genera navegacion.ts; oculto en <=820px.
-  Estilos en global.css (chrome global), porque los botones se crean por JS.
+  Se renderiza en build desde ESCENAS (enlaces reales, funcionan sin JS); navegacion.ts marca
+  el activo. Oculto en <=1024px. Estilos en global.css (chrome global).
 */
+import { ESCENAS } from '../data/escenas';
 import { obtenerIdioma, obtenerTextos } from '../i18n/ui';
 
 const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
 ---
 
 <nav class="rail" aria-label={t.aria.navegacion} data-rail>
-  <!-- Botones generados en runtime por src/scripts/navegacion.ts -->
+  {
+    ESCENAS.map((escena, i) => (
+      <a
+        class:list={['rail-dot', { on: i === 0 }]}
+        href={`#${escena.clave}`}
+        aria-label={`${t.aria.irA}${t.slates[escena.clave]}`}
+        aria-current={i === 0 ? 'true' : undefined}
+      >
+        <span class="rail-label" aria-hidden="true">{t.slates[escena.clave]}</span>
+        <span class="rail-pip" aria-hidden="true" />
+      </a>
+    ))
+  }
 </nav>

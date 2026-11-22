@@ -1,5 +1,5 @@
 /*
-  Datos de "El trabajo" (escena I). Orden de exhibicion: Noti (en progreso, en linea) primero,
+  Datos de "El trabajo" (escena I). Orden de exhibicion: Ethos (MCP) y Noti, ambos en linea,
   luego Traductor, Football y Turismo. Las rutas de imagen apuntan a /assets/projects/*.webp
   (normalizadas). Si una falta, el onerror del render muestra un placeholder rayado "captura".
 
@@ -38,18 +38,39 @@ export interface Proyecto {
 
 export const PROYECTOS: Proyecto[] = [
   {
-    titulo: { es: 'Noti — PWA de notificaciones', en: 'Noti — Notifications PWA' },
+    titulo: { es: 'Ethos — Contexto para IA', en: 'Ethos — Context for AI' },
+    icono: 'ic-plug',
+    tags: {
+      es: 'MCP · FastAPI · Next.js · Supabase · OAuth 2.1',
+      en: 'MCP · FastAPI · Next.js · Supabase · OAuth 2.1',
+    },
+    chips: ['MCP', 'FastAPI', 'Next.js', 'Supabase', 'OAuth 2.1'],
+    anio: { es: 'Jul 2026', en: 'Jul 2026' },
+    estado: { es: 'v0.2', en: 'v0.2' },
+    repo: 'https://github.com/KawKuroi/Ethos',
+    demo: 'https://ethos-steel.vercel.app/',
+    img: '/assets/projects/ethos.webp',
+    descripcion: {
+      es: 'Reúne tu historial de juegos, música, cine, anime y libros y lo entrega a cualquier IA mediante un servidor MCP con OAuth 2.1 y consultas acotadas. Incluye panel de estadísticas y cobertura de pruebas exigida en CI.',
+      en: 'Brings together your games, music, film, anime and book history and serves it to any AI through an MCP server with OAuth 2.1 and scoped queries. Includes a stats dashboard and test coverage enforced in CI.',
+    },
+  },
+  {
+    titulo: { es: 'Noti — Recordatorios con IA', en: 'Noti — AI-powered reminders' },
     icono: 'ic-server',
-    tags: { es: 'TypeScript · PWA · TMDB · Push API', en: 'TypeScript · PWA · TMDB · Push API' },
-    chips: ['TypeScript', 'PWA', 'TMDB', 'Push API'],
-    anio: { es: 'May 2026', en: 'May 2026' },
+    tags: {
+      es: 'Next.js · TypeScript · AI SDK · Supabase · Tauri',
+      en: 'Next.js · TypeScript · AI SDK · Supabase · Tauri',
+    },
+    chips: ['Next.js', 'TypeScript', 'AI SDK', 'Supabase', 'Tauri'],
+    anio: { es: 'Jun 2026', en: 'Jun 2026' },
     estado: { es: 'En progreso', en: 'In progress' },
     repo: 'https://github.com/KawKuroi/Noti',
     demo: 'https://noti-seven-peach.vercel.app/',
     img: '/assets/projects/noti.webp',
     descripcion: {
-      es: 'App web progresiva que avisa de estrenos de cine y series con datos de TMDB. Notificaciones push nativas, instalable y con soporte offline. En desarrollo activo: la sigo ampliando con nuevas categorías y vistas.',
-      en: 'Progressive web app that alerts you to film and series releases using TMDB data. Native push notifications, installable and offline-ready. In active development: I keep extending it with new categories and views.',
+      es: 'PWA y apps nativas de recordatorios con notificaciones push y un asistente de IA por texto o voz. Agenda lanzamientos consultando fuentes verificadas, para no inventar fechas.',
+      en: 'PWA and native reminder apps with push notifications and an AI assistant by text or voice. It schedules releases from verified sources, so it never makes up dates.',
     },
   },
   {
@@ -65,8 +86,8 @@ export const PROYECTOS: Proyecto[] = [
     repo: 'https://github.com/KawKuroi/Sign_Language_Translator',
     img: '/assets/projects/traductor.webp',
     descripcion: {
-      es: 'Reconoce señas en tiempo real y las traduce a texto. Arquitectura de microservicios: Spring Boot orquesta la API y un servicio FastAPI sirve el modelo de visión, todo empaquetado en Docker. 97% de precisión en validación.',
-      en: 'Recognises sign language in real time and translates it to text. Microservices architecture: Spring Boot orchestrates the API and a FastAPI service serves the vision model, all packaged in Docker. 97% accuracy in validation.',
+      es: 'Reconoce el alfabeto de señas ASL (A–Y, sin letras con movimiento) en tiempo real. Arquitectura de microservicios: Spring Boot orquesta la API y un servicio FastAPI sirve el modelo de visión, todo empaquetado en Docker. 97% de precisión en validación.',
+      en: 'Recognises the ASL fingerspelling alphabet (A–Y, motion letters excluded) in real time. Microservices architecture: Spring Boot orchestrates the API and a FastAPI service serves the vision model, all packaged in Docker. 97% accuracy in validation.',
     },
   },
   {

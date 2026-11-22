@@ -29,6 +29,9 @@ const CLAVE = 'sala-theme';
 /** Acento real fijo del sitio (aguamarino). */
 const ACENTO = '#2aa198';
 
+/** Fondo de cada tema, para la barra del navegador (meta theme-color). */
+const FONDOS: Record<Tema, string> = { Museo: '#fbfaf7', Noche: '#16130e' };
+
 declare global {
   interface Window {
     __salaTheme?: Tema;
@@ -51,6 +54,9 @@ function aplicar(tema: Tema): void {
   raiz.style.setProperty('--clay', ACENTO);
   raiz.style.setProperty('--teal', ACENTO);
   window.__salaTheme = tema;
+  document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+    meta.setAttribute('content', FONDOS[tema]);
+  });
   raiz.dispatchEvent(new CustomEvent<Tema>('salathemechange', { detail: tema }));
 }
 

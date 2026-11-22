@@ -1,9 +1,10 @@
 ---
 /*
-  Escena 4 — III · Conoceme. Persiana (acordeon) con 20 piezas favoritas.
-  - Escritorio (>=1025px): persiana horizontal estirada con autoplay (intacta, PRD 8).
-  - Movil/tablet (<=1024px): persiana vertical (acordeon) precedida por chips de filtro por
-    categoria (Todo / Cine / Juegos / Libros / Musica). Sin autoplay.
+  Escena 5 — V · Conoceme. Persiana (acordeon) con 20 piezas favoritas.
+  - Escritorio (>=1025px): persiana horizontal estirada con autoplay y boton de pausa.
+  - Movil/tablet (<=1024px): persiana vertical precedida por chips de categoria. Arranca en
+    Cine (5 piezas) para no interponer 20 filas antes del contacto; "Todo" las muestra todas.
+  El comportamiento (filtro incluido) vive en src/scripts/persiana.ts.
 */
 import Persiana from '../Persiana.astro';
 import { type Categoria } from '../../data/favoritos';
@@ -14,6 +15,7 @@ const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
 // Chips de filtro (solo movil/tablet). La clave (data-f) se mantiene en espanol para casar con
 // data-cat de la persiana; solo se traduce la etiqueta visible. Mismo icono por categoria.
 const CATEGORIAS: Categoria[] = ['Cine', 'Juegos', 'Libros', 'Música'];
+const INICIAL: Categoria = 'Cine';
 const ICONO_CAT: Record<Categoria, string> = {
   Cine: 'ic-film',
   Juegos: 'ic-game',
@@ -22,86 +24,65 @@ const ICONO_CAT: Record<Categoria, string> = {
 };
 ---
 
-<section class="scene act-persiana" data-slate={t.slates.conoceme} data-screen-label={t.slates.conoceme}>
+<section class="scene act-persiana" id="conoceme" data-slate={t.slates.conoceme}>
   <div class="wrap">
-    <div class="sh">
-      <span class="act">III</span>
-      <h2 set:html={t.conoceme.tituloHtml}></h2>
+    <div class="sh" data-entra>
+      <span class="act">V</span>
+      <h2 set:html={t.conoceme.tituloHtml} />
       <span class="ln"></span>
       <span class="ct">{t.conoceme.sub}</span>
     </div>
 
     {/* Filtro por categoria: visible solo en movil/tablet (<=1024px). */}
     <div class="cf-filter" role="group" aria-label={t.aria.filtro}>
-      <button class="cf-chip on" type="button" data-f="all" aria-pressed="true">{t.conoceme.todo}</button>
       {
         CATEGORIAS.map((c) => (
-          <button class="cf-chip" type="button" data-f={c} aria-pressed="false">
+          <button
+            class:list={['cf-chip', { on: c === INICIAL }]}
+            type="button"
+            data-f={c}
+            aria-pressed={c === INICIAL}
+          >
             <svg class="ic" aria-hidden="true"><use href={`#${ICONO_CAT[c]}`} /></svg>
             {t.categorias[c]}
           </button>
         ))
       }
+      <button class="cf-chip" type="button" data-f="all" aria-pressed="false">{t.conoceme.todo}</button>
     </div>
 
-    <Persiana />
-    <p class="note">{t.conoceme.nota}</p>
+    <Persiana filtro={INICIAL} />
+
+    <div class="pie">
+      <p class="note nota-puntero">{t.conoceme.nota}</p>
+      <p class="note nota-tactil">{t.conoceme.notaTactil}</p>
+      <button
+        class="pausa"
+        type="button"
+        data-pausa
+        data-pausar={t.conoceme.pausar}
+        data-reproducir={t.conoceme.reproducir}
+      >
+        <svg class="ic" aria-hidden="true"><use href="#ic-pause" /></svg>
+        <span>{t.conoceme.pausar}</span>
+      </button>
+    </div>
+
+    <noscript>
+      <style is:inline>
+        .persiana .pslat { display: block !important; }
+        .cf-filter, .pausa { display: none !important; }
+      </style>
+    </noscript>
   </div>
 </section>
-
-<script>
-  // Filtro por categoria de Conoceme (solo movil/tablet). Muestra/oculta las franjas de la
-  // persiana segun el chip activo y abre la primera visible. El acordeon y (en escritorio) el
-  // autoplay los gestiona persiana.ts; aqui solo se toca la visibilidad.
-  const seccion = document.querySelector<HTMLElement>('.act-persiana');
-  if (seccion) {
-    const chips = Array.from(seccion.querySelectorAll<HTMLButtonElement>('.cf-chip'));
-    const franjas = Array.from(seccion.querySelectorAll<HTMLElement>('.pslat'));
-
-    const filtrar = (filtro: string): void => {
-      let primeraVisible: HTMLElement | null = null;
-      franjas.forEach((franja) => {
-        const visible = filtro === 'all' || franja.dataset.cat === filtro;
-        franja.style.display = visible ? '' : 'none';
-        if (visible && !primeraVisible) primeraVisible = franja;
-      });
-      // Abre la primera franja visible y cierra el resto (las ocultas no estorban).
-      franjas.forEach((franja) => franja.classList.toggle('open', franja === primeraVisible));
-    };
-
-    chips.forEach((chip) => {
-      chip.addEventListener('click', () => {
-        chips.forEach((c) => {
-          const activo = c === chip;
-          c.classList.toggle('on', activo);
-          c.setAttribute('aria-pressed', String(activo));
-        });
-        filtrar(chip.dataset.f ?? 'all');
-      });
-    });
-
-    // Al pasar a escritorio, deshace cualquier filtro (limpia el display en linea y vuelve a
-    // "Todo") para no dejar franjas ocultas en la persiana horizontal.
-    const escritorio = window.matchMedia('(min-width: 1025px)');
-    const restablecer = (): void => {
-      if (!escritorio.matches) return;
-      franjas.forEach((franja) => {
-        franja.style.display = '';
-      });
-      chips.forEach((c) => {
-        const todo = c.dataset.f === 'all';
-        c.classList.toggle('on', todo);
-        c.setAttribute('aria-pressed', String(todo));
-      });
-    };
-    escritorio.addEventListener('change', restablecer);
-  }
-</script>
 
 <style>
   /* La escena estira su contenido; la persiana ocupa el alto disponible. */
   .scene.act-persiana {
     justify-content: stretch;
+    height: 100vh;
+    height: 100dvh;
   }
 
   .act-persiana .wrap {
@@ -109,7 +90,7 @@ const ICONO_CAT: Record<Categoria, string> = {
     display: flex;
     flex-direction: column;
     min-height: 0;
-    gap: clamp(12px, 2.2vh, 22px);
+    gap: clamp(10px, 2vh, 20px);
   }
 
   .act-persiana .sh {
@@ -117,43 +98,74 @@ const ICONO_CAT: Record<Categoria, string> = {
     flex: 0 0 auto;
   }
 
-  .note {
+  .pie {
     flex: 0 0 auto;
-    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 24px;
+  }
+
+  .note {
     max-width: 80ch;
     font-family: var(--mono);
-    font-size: 10.5px;
-    letter-spacing: .06em;
+    font-size: var(--t-micro);
     line-height: 1.6;
     color: var(--soft);
   }
 
-  /* ── Chips de filtro: ocultos en escritorio; fila desplazable en movil/tablet ── */
+  .nota-tactil {
+    display: none;
+  }
+
+  .pausa {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 34px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: none;
+    color: var(--soft);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: var(--t-micro);
+    transition: color .25s, border-color .25s;
+  }
+
+  .pausa:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+
+  /* ── Chips de filtro: ocultos en escritorio ── */
   .cf-filter {
     display: none;
   }
 
   .cf-chip {
-    flex: 0 0 auto;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
+    min-height: 44px;
+    padding: 0 14px;
     appearance: none;
     cursor: pointer;
     font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: .04em;
-    padding: 8px 14px;
+    font-size: var(--t-micro);
     border: 1px solid var(--line);
     border-radius: 999px;
     background: none;
     color: var(--soft);
-    transition: background .25s, color .25s, border-color .25s;
+    transition: background-color .25s, color .25s, border-color .25s;
   }
 
   .cf-chip .ic {
-    width: 13px;
-    height: 13px;
+    width: 14px;
+    height: 14px;
     color: var(--teal);
   }
 
@@ -167,12 +179,11 @@ const ICONO_CAT: Record<Categoria, string> = {
     color: var(--paper);
   }
 
-  .cf-chip:focus-visible {
-    outline: 2px solid var(--teal);
-    outline-offset: 2px;
-  }
-
   @media (max-width: 1024px) {
+    .scene.act-persiana {
+      height: auto;
+    }
+
     .act-persiana .wrap {
       display: block;
     }
@@ -181,17 +192,25 @@ const ICONO_CAT: Record<Categoria, string> = {
       margin-bottom: 18px;
     }
 
+    /* Se envuelven en vez de desplazarse de lado: ninguna categoria queda escondida. */
     .cf-filter {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      margin: 0 calc(-1 * var(--pad)) 16px;
-      padding: 0 var(--pad);
+      margin-bottom: 16px;
     }
 
-    .cf-filter::-webkit-scrollbar {
+    .pie {
+      margin-top: 14px;
+    }
+
+    .nota-puntero,
+    .pausa {
       display: none;
+    }
+
+    .nota-tactil {
+      display: block;
     }
   }
 </style>
