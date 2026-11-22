@@ -5,14 +5,16 @@ al histórico. Referencias: [PRD.md](./PRD.md), [ARCHITECTURE.md](./ARCHITECTURE
 
 ## Fase activa
 
-Ninguna. La **reestructuración responsive móvil/tablet** (fases M0–M4) está **completa** — ver
-el detalle en el histórico. El **escritorio (≥1025px) quedó intacto**; la nueva estructura
-aplica **≤1024px** (la referencia divide internamente <700px teléfono / ≥700px tablet).
-
-**Pendiente del usuario (no bloquea):** autorizar el push a `main` para publicar los cambios en
-Vercel (<https://portfolio-topaz-nu-46.vercel.app/>).
+Ninguna. Última completada: **auditoría, scroll y contenido** (2026-11-22).
 
 ## Histórico de fases completadas
+
+### Auditoría, scroll y contenido (2026-11-22)
+
+- [x] **Scroll y gestos:** rueda, trackpad, táctil ancho, flechas y autoplay de la persiana.
+- [x] **Contenido:** La experiencia, IA aplicada, Ethos, Noti corregido y stack al día.
+- [x] **Diseño:** tipografía editorial, contraste AA, móvil revisado y animaciones opt-in.
+- [x] **Rendimiento:** carátulas WebP, fuentes autoalojadas y menos JS en cliente.
 
 ### Internacionalización ES/EN (2026-06-20)
 

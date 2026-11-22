@@ -1,25 +1,22 @@
 # CURRENT — Estado del proyecto
 
 ## Fase activa
-- **Activo:** Ninguna. La iniciativa **Reestructuración responsive móvil/tablet** (fases M0–M4)
-  está **completa** (ver [ROADMAP.md](./ROADMAP.md)). El **escritorio (≥1025px) quedó intacto**;
-  la nueva estructura (flujo vertical, índice de actos, acordeón de El trabajo, filtros de
-  Conóceme, Equipo/Contacto en columna) aplica **≤1024px** (con refinamiento de tablet ≥700px).
-  **Pendiente:** autorizar el push a `main` para publicar en Vercel.
-- **Estado general:** Las 5 fases + SEO + ajustes de contenido + responsive móvil/tablet cerradas;
-  ahora el sitio es **bilingüe ES/EN** (i18n nativo de Astro, ver Historial 2026-06-20). Construido en
-  Astro (0 JS de framework), desplegado en Vercel (estático desde CDN). Fotos reales ya
-  integradas (retrato + 4 capturas en `.webp`). El formulario de contacto está **activo**
-  (access key de Web3Forms ya pegada en `Salida.astro`). Verificado: `astro check`/`build`
-  limpios. Última auditoría **Lighthouse móvil: Performance 99 · Accessibility 95 · Best
-  Practices 96 · SEO 100** (previa a integrar las fotos; conviene re-auditar tras el deploy).
+- **Activo:** ninguna. La auditoría del 2026-11-22 está cerrada.
+- **Estado general:** 7 escenas, bilingüe ES/EN, Astro estático en Vercel (cada push a `main`
+  publica), 0 JS de framework.
 
-## Pendiente del usuario (no bloquea el build)
-- (Opcional) Sustituir el retrato por un headshot editorial: la foto actual es una toma nocturna
-  casual y se nota más ahora que la imagen es más grande.
-- Autorizar el push de la iniciativa responsive cuando esté lista para publicar.
+## Pendiente del usuario
+- Ver [por-revisar.md](./por-revisar.md).
 
 ## Historial
+- **2026-11-22** — Auditoría, corrección de scroll y actualización de contenido.
+  **Scroll:** la rueda, el trackpad suave y el táctil ancho no avanzaban por el snap; las flechas
+  seguidas se perdían; la persiana se detenía con el cursor quieto o tras un toque (ARCHITECTURE
+  §11). **Contenido:** escenas nuevas La experiencia e IA aplicada, Ethos en El trabajo, Noti
+  corregido, stack al día, JSON-LD y tarjeta social v3. **Diseño:** tipografía editorial,
+  contraste AA, mínimo 12px, objetivos táctiles de 44px, móvil revisado. **Rendimiento:** carátulas
+  WebP y fuentes propias (Lighthouse local móvil 98/100/100/100). Verificado con `astro check`,
+  `astro build` y pruebas en Chrome headless; sin probar en Safari, Firefox ni dispositivos físicos.
 - **2026-06-20** — Internacionalización a inglés (sitio bilingüe ES/EN). Se añade i18n con el
   **enrutado nativo de Astro**: dos páginas estáticas, `/` (es, por defecto) y `/en/` (en), que
   comparten la composición `Pagina.astro`. Todo el copy se extrae a un **diccionario tipado**

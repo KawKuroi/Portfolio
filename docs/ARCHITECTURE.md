@@ -10,7 +10,7 @@ aquí va el "cómo".
   en el navegador (lo más lento posible para el visitante).
 - **Vite va incluido en Astro.** No se instala ni configura Vite por separado; Astro lo usa
   para dev server (HMR), bundling y optimización de assets.
-- **Sin React ni framework de UI.** La estructura es rígida (Galería · aguamarino · Clásica);
+- **Sin React ni framework de UI.** La estructura es rígida (Galería · aguamarino · tipografía editorial);
   el único ajuste variable es el tema. No hay panel de Tweaks, así que no se envía JS de
   framework.
 - **Objetivo:** Lighthouse Performance ≥95; 0 JS de framework (solo scripts vanilla puntuales).
@@ -20,20 +20,24 @@ aquí va el "cómo".
 ```
 src/
 ├─ layouts/Base.astro          # documento, SEO/meta (OG/Twitter/JSON-LD), fuentes, tema, .reel + slots
-├─ pages/index.astro           # compone chrome (slot "chrome") + las 5 escenas
+├─ pages/index.astro           # compone chrome (slot "chrome") + las 7 escenas
 ├─ components/
 │  ├─ IconSprite.astro         # sprite SVG con los <symbol> ic-*
 │  ├─ Plaque.astro             # barra superior fija + boton de tema
-│  ├─ Rail.astro               # riel lateral (poblado por navegacion.ts)
+│  ├─ Rail.astro               # riel lateral (render en build desde ESCENAS)
 │  ├─ Hint.astro               # hint de scroll
 │  ├─ Persiana.astro           # mount + fallback estatico desde FAVORITOS
-│  └─ scenes/                  # Portada, Trabajo, Equipo, Conoceme, Salida
+│  └─ scenes/                  # Portada, Experiencia, InteligenciaArtificial, Trabajo, Equipo, Conoceme, Salida
 ├─ data/
+│  ├─ escenas.ts              # orden, acto e icono de cada escena
+│  ├─ experiencia.ts          # practica e IA aplicada (leer nota de confidencialidad)
 │  ├─ proyectos.ts             # PROYECTOS (tipado Proyecto)
 │  └─ favoritos.ts             # FAVORITOS (tipado Favorito, 20 piezas)
 ├─ scripts/
 │  ├─ tema.ts                  # API de tema (setSalaTheme, eventos)
-│  ├─ navegacion.ts            # riel, teclado, hint, escena activa
+│  ├─ navegacion.ts            # riel, teclado, rueda, tactil ancho, hint, escena activa
+│  ├─ entradas.ts              # animaciones de entrada (opt-in)
+│  ├─ anclaje.ts               # cabecera de acordeon bajo el dedo
 │  └─ persiana.ts              # acordeon + autoplay de la persiana
 └─ styles/
    ├─ tokens.css               # variables :root + temas Museo/Noche
@@ -79,7 +83,8 @@ scripts/
 - Subcarpetas: `me/`, `projects/`, `movies/`, `books/`, `videogames/`, `music/`, más el CV.
 - Toda `<img>` de contenido lleva `onerror` que degrada a placeholder/gradiente; la maqueta
   nunca se rompe por un asset faltante.
-- Imágenes de la persiana: `loading="lazy"` + `referrerpolicy="no-referrer"`.
+- Imágenes de la persiana: variantes WebP en `caratulas/` (480/900), generadas con
+  `node scripts/optimizar-caratulas.mjs`. Los originales no se sirven en la página.
 
 ## 6. Datos
 
@@ -92,7 +97,7 @@ El sitio tiene **dos modos** separados por un corte en **1024px**:
 
 - **Escritorio (≥1025px):** carrete con `scroll-snap` vertical (`.reel` a `100vh`), escenas
   de pantalla completa centradas, riel lateral y hint de teclado visibles, plaque **fija**.
-  Esta experiencia está **congelada** (el usuario la quiere intacta); no se toca.
+  Cada escena debe caber desde 1280x560; si no cabe (zoom, ventana baja) crece y se recorre.
 - **Móvil/Tablet (≤1024px):** el carrete pasa a **flujo vertical normal** (`.reel` a
   `height:auto`, sin snap), las escenas miden su contenido (sin `100vh`) con padding compacto
   (`--pad`), el riel y el hint se ocultan y el plaque pasa a **sticky** (en flujo, con el
@@ -142,7 +147,7 @@ fases (ver [ROADMAP.md](./ROADMAP.md)).
 - **Iconos:** `.ico` (PNG embebido 16/32/48) y PNG 16/32 para buscadores, SVG para
   navegadores modernos, `apple-touch-icon` 180 para iOS y `site.webmanifest` (iconos
   192/512 `any maskable`) para Android.
-- **Tarjeta social:** `og-image-v2.png` 1200x630 (proporción 1.91:1) con la estética del
+- **Tarjeta social:** `og-image-v3.png` 1200x630 (proporción 1.91:1) con la estética del
   portafolio. El sufijo versionado (`-v2`) invalida la caché de los scrapers al cambiar la
   tarjeta: súbelo (v3…) y actualiza `imagen` en `Base.astro`. Tanto la tarjeta como los
   iconos se generan con `scripts/gen-seo-assets.mjs`
@@ -182,3 +187,24 @@ Sitio **bilingüe ES/EN** con el i18n **nativo de Astro**, sin librerías ni JS 
 - **SEO:** `<html lang>` por página, `title`/`description`/JSON-LD (`inLanguage`, `jobTitle`,
   `knowsAbout`) y `og:locale` (+ `og:locale:alternate`) por idioma, `hreflang` (es/en/x-default)
   en el `<head>` y ambas URLs en `sitemap.xml`.
+
+## 11. Scroll, gestos y autoplay (no simplificar sin volver a probar)
+
+- **Rueda/trackpad (>=1025px):** `navegacion.ts` convierte un gesto en una escena. Con
+  `scroll-snap: mandatory` el navegador devuelve al origen cualquier desplazamiento menor de
+  media pantalla, así que dejarlo nativo hace que la página parezca congelada.
+- **Táctil ancho:** misma regla al soltar el dedo.
+- **Teclado:** las pulsaciones se acumulan sobre el destino pendiente, no sobre la escena visible.
+  Con un `<dialog>` abierto no se navega. En <=1024px no se intercepta nada.
+- **Persiana:** no usar `mouseenter` ni un estado "hover". Solo cuenta el movimiento real del
+  ratón y toda interacción termina en un reposo que reanuda el autoplay. Todo pasa por
+  `programar()`.
+- **Movimiento:** lo espacial es opt-in (`prefers-reduced-motion: no-preference`). El contenido
+  nunca arranca oculto a la espera de JS.
+
+## 12. Tipografía
+
+Fonts API nativa de Astro (`astro.config.mjs` + `<Font>` en `Base.astro`): Newsreader
+(titulares), Hanken Grotesk (lectura) e IBM Plex Mono (etiquetas). Se descargan en build y se
+sirven desde el propio sitio. Newsreader va estática en 400: la variable pesa el doble y
+retrasaba el LCP móvil. Ningún texto baja de 12px; los campos de formulario, de 16px (zoom iOS).

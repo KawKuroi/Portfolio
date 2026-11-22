@@ -17,8 +17,8 @@ para el visitante. Esta versión migra a **Astro**:
 - Todo el sitio se compila de antemano (AOT): HTML + CSS estáticos, **0 JS de framework**.
 - **Astro ya usa Vite** por debajo; no se añade ni configura Vite por separado.
 - **Sin React ni panel de Tweaks.** La estructura es rígida y no la cambia el visitante:
-  disposición **Galería**, acento **aguamarino `#2aa198`** y tipografía **Clásica** (Libre
-  Baskerville) son fijos. El único ajuste variable es el tema.
+  disposición **Galería**, acento **aguamarino `#2aa198`** y tipografía **editorial** (ver §3)
+  son fijos. El único ajuste variable es el tema.
 - **Se elimina** el requisito de CDN con `integrity` pineado (era propio del enfoque
   standalone).
 - **Dos temas**: Museo (claro) y Noche (oscuro). Se elimina el tema *Papel*. El visitante
@@ -44,7 +44,7 @@ una "sala":
 
 Incluye: barra superior tipo *plaque* de galería, riel de navegación lateral con puntos,
 *hint* de scroll, conmutador de tema claro/oscuro y navegación por teclado. La estructura es
-fija (Galería · aguamarino · Clásica); no hay panel de personalización.
+fija (Galería · aguamarino · tipografía editorial); no hay panel de personalización.
 
 **Idioma:** sitio **bilingüe ES/EN** (español por defecto). Todo el copy visible vive en el
 diccionario `src/i18n/ui.ts` y se sirve prerenderizado en dos rutas: `/` (es) y `/en/` (en).
@@ -72,7 +72,7 @@ portfolio/
 │     └─ music/   in_rainbows.jpg mm_food.jpg data.jpg dtmf.jpg artaud.jpg
 ├─ src/
 │  ├─ layouts/Base.astro       # documento, fuentes, tema anti-parpadeo, sprite, carrete
-│  ├─ pages/index.astro        # compone chrome + 5 escenas
+│  ├─ pages/index.astro        # compone chrome + 7 escenas
 │  ├─ components/
 │  │  ├─ Plaque.astro Rail.astro Hint.astro IconSprite.astro
 │  │  ├─ Persiana.astro
@@ -92,17 +92,12 @@ portfolio/
 
 ---
 
-## 3. Tipografía (Google Fonts)
+## 3. Tipografía
 
-La tipografía es **fija**: preset "Clásica" = todo **Libre Baskerville** (serifa). Se carga
-una sola familia con un único `<link>`:
-
-`Libre Baskerville` (ital 400/700).
-
-Variables de fuente (`:root`): `--serif`, `--sans`, `--mono` — las tres apuntan a Libre
-Baskerville. No hay cambio de tipografía en runtime (cargar una sola familia mejora la carga).
-
----
+Fija, sin cambio en runtime: **Newsreader** (titulares y frases), **Hanken Grotesk** (lectura)
+e **IBM Plex Mono** (etiquetas, fechas, chips). Autoalojada con la Fonts API de Astro (ver
+ARCHITECTURE §12). Sustituye al preset "Clásica" (todo Libre Baskerville), poco legible en
+cuerpos pequeños.
 
 ## 4. Sistema de diseño (tokens) — `src/styles/tokens.css`
 
@@ -112,7 +107,7 @@ Baskerville. No hay cambio de tipografía en runtime (cargar una sola familia me
 --clay / --teal  = #2aa198 (aguamarino, acento real por defecto)
 --amber = #c08a2e
 --line / --line2                                    /* hairlines */
---serif / --sans / --mono = Libre Baskerville (ver §3)
+--serif / --sans / --mono = Newsreader / Hanken Grotesk / IBM Plex Mono (ver §3)
 --ease = cubic-bezier(.22,1,.36,1);  --bar = clamp(30px,5vh,52px)  /* alto del plaque */
 ```
 > El acento es **fijo**: aguamarino `#2aa198` (`--clay` y `--teal` apuntan a él). Los
@@ -171,13 +166,17 @@ Aparece a ~1.3s, se va al primer scroll/tecla o a ~6.2s. Texto:
 - **Móvil (≤820px):** se desactiva el snap; `.reel`/`.scene` pasan a flujo normal.
 
 ### 5.5 Navegación (`src/scripts/navegacion.ts`)
-- `IntersectionObserver` (threshold .55) marca la escena activa → punto activo en el riel.
+- La escena que cruza la línea media marca el punto activo del riel (ver ARCHITECTURE §11).
 - Teclado: `↑/←/PageUp` retrocede, `↓/→/PageDown` avanza, `Home`/`End` extremos. Ignora si
   el foco está en input/textarea/select/contenteditable o con meta/ctrl/alt.
 
 ---
 
 ## 6. Contenido por escena
+
+> Orden vigente (2026-11-22): Portada · I La experiencia · II IA aplicada · III El trabajo ·
+> IV El equipo · V Conóceme · Contacto. El copy vigente vive en `src/i18n/ui.ts` y
+> `src/data/`; si difiere del detalle de abajo, manda el código.
 
 Cada `<section class="scene">` lleva `data-slate="<etiqueta riel>"` y
 `data-screen-label="<idem>"`. "El trabajo" se muestra siempre en disposición Galería (fija).
@@ -295,15 +294,10 @@ ceguera — José Saramago · 1995. → `/assets/books/*.jpg`.
 > `img`). Se autoran en `favoritos.ts` (el `favs.js` original no se conserva).
 
 ### 8.2 Componente persiana — `src/scripts/persiana.ts`
-- Construye cada `.persiana` desde `FAVORITOS`. Cada pieza = `figure.pslat` con fondo
-  gradiente (`.pph`), `img` (lazy, no-referrer), lomo vertical (`.pspine`) y caption (`.pcap`:
-  chip de categoría `.pcat`, título `.pt` serif, sub `.ps` mono).
-- **Acordeón:** la franja abierta (`.open`) crece (`flex-grow:var(--p-grow,8)`), se aclara y
-  muestra el caption; las demás quedan oscurecidas (brightness .58). Lomo visible solo cerrada.
-- **Autoplay:** avanza cada `data-speed` ms (2600). Se pausa al hover, al ocultar pestaña
-  (`visibilitychange`) y fuera de viewport (`IntersectionObserver`). `data-open` = índice inicial.
-- Color de categoría: lee `--p-cine/--p-juegos/--p-libros/--p-musica` del mount.
-- Móvil (≤820px): columnas → filas; lomo horizontal.
+
+Acordeón con autoplay de 2,6 s en escritorio: se abre al mover el ratón, tocar, arrastrar de
+lado o con flechas, y se reanuda tras 5 s de reposo. Botón de pausa. En móvil es vertical, sin
+autoplay y con filtro por categoría (arranca en Cine). Invariantes en ARCHITECTURE §11.
 
 ### 8.3 Decoración de iconos
 Tras construir la persiana, reemplaza el punto del chip `.pcat` por el line-icon de su
@@ -318,7 +312,7 @@ categoría (`Cine→ic-film, Juegos→ic-game, Libros→ic-book, Música→ic-mu
 `localStorage['sala-theme']`. Sin elección manual, el tema sigue a `prefers-color-scheme`.
 
 No hay panel de Tweaks: la disposición (Galería), el acento (aguamarino `#2aa198`) y la
-tipografía (Clásica) son fijos.
+tipografía (editorial) son fijos.
 
 **Conmutador de idioma.** A la derecha del botón de tema, un botón redondo gemelo
 (`#langToggle`) muestra el código del idioma destino (`EN` en la página ES, `ES` en la EN) y
@@ -363,7 +357,7 @@ Todos los binarios viven en `public/assets/` (único almacén; no se buscan en o
    abre, iconos por categoría.
 5. Tema sigue al dispositivo, botón sol/luna alterna Museo↔Noche, persistencia en
    localStorage, sin parpadeo inicial.
-6. Estructura rígida: disposición Galería, acento aguamarino `#2aa198` y tipografía Clásica
+6. Estructura rígida: disposición Galería, acento aguamarino `#2aa198` y tipografía editorial
    fijos; sin panel de personalización. Tokens y temas de §4 idénticos.
 7. Todo en español, sin emojis, degradación elegante de imágenes.
 8. **Rendimiento:** build estático de Astro; 0 JS de framework; objetivo Lighthouse ≥95 en

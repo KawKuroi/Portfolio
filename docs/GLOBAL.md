@@ -21,7 +21,7 @@ Norma máxima del repositorio. Aplica a todo el código, comentarios, documentac
 
 ## 3. Stack y dependencias
 - Stack: **Astro** (Vite incluido) + CSS/JS vanilla. **Sin React ni framework de UI** (0 JS
-  de framework). Estructura rígida: Galería · aguamarino · Clásica; solo el tema es variable.
+  de framework). Estructura rígida: Galería · aguamarino · tipografía editorial; solo el tema es variable.
 - No añadir bibliotecas externas sin justificación; preferir vanilla. Si surge una necesidad
   real, parar y consultar antes de instalar.
 - TypeScript en modo `strict`; prohibido `any` en código nuevo.
@@ -44,6 +44,11 @@ Norma máxima del repositorio. Aplica a todo el código, comentarios, documentac
 ## 7. Seguridad
 - Sin secretos, claves ni tokens hardcodeados en el repo. Variables sensibles vía `.env`
   (ignorado por git).
+
+## 7.1 Confidencialidad (repo y sitio públicos)
+- De la práctica empresarial solo se publica el tipo de trabajo y tecnologías genéricas.
+- Nunca, ni en código, copy, docs, commits o capturas: nombres de sistemas internos,
+  servidores, rutas, personas, tickets, cifras de operación ni hallazgos de seguridad.
 
 ## 8. Documentación
 - `/docs` es la fuente de verdad: PRD (qué), ARCHITECTURE (cómo), ROADMAP (plan), CURRENT
