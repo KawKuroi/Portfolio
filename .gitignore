@@ -25,3 +25,6 @@ Thumbs.db
 
 # verificacion visual (local)
 .captures/
+
+# skills de agentes instaladas localmente (se reinstalan desde su repo)
+.claude/skills/
