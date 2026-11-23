@@ -610,10 +610,15 @@ const numero = (i: number): string => String(i + 1).padStart(2, '0');
     text-underline-offset: 5px;
   }
 
+  /* Reglas separadas a proposito: Lightning CSS (minificador de Vite 8) fusiona `translate`
+     dentro de `transform` cuando conviven en una regla y se pierde el reset de `translate`.
+     La captura solo usa `transform` (scale) y la placa solo `translate`. */
   @media (prefers-reduced-motion: reduce) {
-    .twg-frame .ph,
-    .twg-plate {
+    .twg-frame .ph {
       transform: none;
+    }
+
+    .twg-plate {
       translate: none;
     }
   }

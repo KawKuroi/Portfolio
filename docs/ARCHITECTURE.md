@@ -9,7 +9,8 @@ aquí va el "cómo".
   vanilla y mínimo. Reemplaza el enfoque original de React + Babel-standalone transpilando
   en el navegador (lo más lento posible para el visitante).
 - **Vite va incluido en Astro.** No se instala ni configura Vite por separado; Astro lo usa
-  para dev server (HMR), bundling y optimización de assets.
+  para dev server (HMR), bundling y optimización de assets. Versión actual: Astro 7 (Vite 8 con
+  Rolldown, compilador en Rust). Requiere Node `>=22.23.4`; el CLI aborta con una versión menor.
 - **Sin React ni framework de UI.** La estructura es rígida (Galería · aguamarino · tipografía editorial);
   el único ajuste variable es el tema. No hay panel de Tweaks, así que no se envía JS de
   framework.
@@ -116,6 +117,20 @@ fases (ver [ROADMAP.md](./ROADMAP.md)).
 
 - `npm run dev` (Vite/Astro), `npm run build` → `dist/` estático, `npm run preview`.
 - `npm run check` (astro check) para tipos y diagnósticos.
+
+### Ajustes de salida (no quitar sin comparar el build)
+
+- **`compressHTML: true`.** Astro 7 cambió el valor por defecto a `'jsx'`, que elimina el espacio
+  entre elementos en línea separados por un salto de línea ("usa↑↓para"). `true` mantiene la
+  salida de Astro 6.
+- **`vite.build.cssTarget`** = Chrome 107, Edge 107, Firefox 104, Safari 16, iOS 16 (los
+  objetivos de Vite 7). Vite 8 minifica con Lightning CSS y, con su objetivo por defecto (Safari
+  16.4), reescribe `max-width` a sintaxis de rango (`width<=1024px`, que Safari 16.0–16.3 ignora)
+  y quita el respaldo `100vh` de `100dvh`. `ios16` va aparte: sin él se borra
+  `-webkit-text-size-adjust`.
+- **Lightning CSS fusiona `translate`/`scale`/`rotate` dentro de `transform`** cuando conviven en
+  una misma regla, y así se pierde el reset de la propiedad individual. No mezclarlas en una regla
+  (ver el bloque de movimiento reducido de `Trabajo.astro`).
 
 ### Hosting: Vercel (plan Hobby, gratuito)
 

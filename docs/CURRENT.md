@@ -9,6 +9,16 @@
 - Ver [por-revisar.md](./por-revisar.md).
 
 ## Historial
+- **2026-11-22** — Dependencias: Astro 6.4.7 → 7.4.13 (Vite 8, Rolldown, compilador en Rust) y
+  `@astrojs/check` 0.9.12. `npm audit` pasa de 17 avisos (1 crítico) a 0 sin añadir dependencias.
+  Para que el salto no cambie nada visible: `compressHTML: true` (el nuevo `'jsx'` se comía
+  espacios entre elementos en línea), `vite.build.cssTarget` con los objetivos de Vite 7 más
+  `ios16` (Lightning CSS reescribía las media queries a sintaxis de rango y quitaba
+  `-webkit-text-size-adjust`) y el reset de movimiento reducido de El trabajo partido en dos
+  reglas (Lightning CSS fusionaba `translate` en `transform`). Verificado: `astro check` 0/0/0,
+  `astro build`, HTML y texto idénticos a Astro 6, 30 capturas (7 escenas × 2 temas × 2 idiomas
+  y móvil) iguales píxel a píxel, rueda de 100px por CDP, flechas, persiana, Fonts API y
+  `optimizar-caratulas.mjs` (variantes idénticas). Requiere Node >=22.23.4 en el build.
 - **2026-11-22** — Auditoría, corrección de scroll y actualización de contenido.
   **Scroll:** la rueda, el trackpad suave y el táctil ancho no avanzaban por el snap; las flechas
   seguidas se perdían; la persiana se detenía con el cursor quieto o tras un toque (ARCHITECTURE
