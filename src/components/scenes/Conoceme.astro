@@ -1,27 +1,14 @@
 ---
 /*
-  Escena 5 — V · Conoceme. Persiana (acordeon) con 20 piezas favoritas.
-  - Escritorio (>=1025px): persiana horizontal estirada con autoplay y boton de pausa.
-  - Movil/tablet (<=1024px): persiana vertical precedida por chips de categoria. Arranca en
-    Cine (5 piezas) para no interponer 20 filas antes del contacto; "Todo" las muestra todas.
-  El comportamiento (filtro incluido) vive en src/scripts/persiana.ts.
+  Escena 5 — V · Conoceme. Persiana con 20 piezas favoritas.
+  - Escritorio (>=1025px): acordeon horizontal con autoplay y boton de pausa.
+  - Movil/tablet (<=1024px): carrusel de caratulas que se desliza de lado (mostrar mas, leer
+    menos). El comportamiento vive en src/scripts/persiana.ts.
 */
 import Persiana from '../Persiana.astro';
-import { type Categoria } from '../../data/favoritos';
 import { obtenerIdioma, obtenerTextos } from '../../i18n/ui';
 
 const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
-
-// Chips de filtro (solo movil/tablet). La clave (data-f) se mantiene en espanol para casar con
-// data-cat de la persiana; solo se traduce la etiqueta visible. Mismo icono por categoria.
-const CATEGORIAS: Categoria[] = ['Cine', 'Juegos', 'Libros', 'Música'];
-const INICIAL: Categoria = 'Cine';
-const ICONO_CAT: Record<Categoria, string> = {
-  Cine: 'ic-film',
-  Juegos: 'ic-game',
-  Libros: 'ic-book',
-  Música: 'ic-music',
-};
 ---
 
 <section class="scene act-persiana" id="conoceme" data-slate={t.slates.conoceme}>
@@ -33,25 +20,7 @@ const ICONO_CAT: Record<Categoria, string> = {
       <span class="ct">{t.conoceme.sub}</span>
     </div>
 
-    {/* Filtro por categoria: visible solo en movil/tablet (<=1024px). */}
-    <div class="cf-filter" role="group" aria-label={t.aria.filtro}>
-      {
-        CATEGORIAS.map((c) => (
-          <button
-            class:list={['cf-chip', { on: c === INICIAL }]}
-            type="button"
-            data-f={c}
-            aria-pressed={c === INICIAL}
-          >
-            <svg class="ic" aria-hidden="true"><use href={`#${ICONO_CAT[c]}`} /></svg>
-            {t.categorias[c]}
-          </button>
-        ))
-      }
-      <button class="cf-chip" type="button" data-f="all" aria-pressed="false">{t.conoceme.todo}</button>
-    </div>
-
-    <Persiana filtro={INICIAL} />
+    <Persiana />
 
     <div class="pie">
       <p class="note nota-puntero">{t.conoceme.nota}</p>
@@ -67,13 +36,6 @@ const ICONO_CAT: Record<Categoria, string> = {
         <span>{t.conoceme.pausar}</span>
       </button>
     </div>
-
-    <noscript>
-      <style is:inline>
-        .persiana .pslat { display: block !important; }
-        .cf-filter, .pausa { display: none !important; }
-      </style>
-    </noscript>
   </div>
 </section>
 
@@ -108,8 +70,7 @@ const ICONO_CAT: Record<Categoria, string> = {
 
   .note {
     max-width: 80ch;
-    font-family: var(--mono);
-    font-size: var(--t-micro);
+    font-size: var(--t-etiqueta);
     line-height: 1.6;
     color: var(--soft);
   }
@@ -130,53 +91,14 @@ const ICONO_CAT: Record<Categoria, string> = {
     background: none;
     color: var(--soft);
     cursor: pointer;
-    font-family: var(--mono);
     font-size: var(--t-micro);
+    font-weight: 600;
     transition: color .25s, border-color .25s;
   }
 
   .pausa:hover {
     color: var(--ink);
     border-color: var(--ink);
-  }
-
-  /* ── Chips de filtro: ocultos en escritorio ── */
-  .cf-filter {
-    display: none;
-  }
-
-  .cf-chip {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    min-height: 44px;
-    padding: 0 14px;
-    appearance: none;
-    cursor: pointer;
-    font-family: var(--mono);
-    font-size: var(--t-micro);
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: none;
-    color: var(--soft);
-    transition: background-color .25s, color .25s, border-color .25s;
-  }
-
-  .cf-chip .ic {
-    width: 14px;
-    height: 14px;
-    color: var(--teal);
-  }
-
-  .cf-chip.on {
-    background: var(--ink);
-    color: var(--paper);
-    border-color: var(--ink);
-  }
-
-  .cf-chip.on .ic {
-    color: var(--paper);
   }
 
   @media (max-width: 1024px) {
@@ -192,16 +114,8 @@ const ICONO_CAT: Record<Categoria, string> = {
       margin-bottom: 18px;
     }
 
-    /* Se envuelven en vez de desplazarse de lado: ninguna categoria queda escondida. */
-    .cf-filter {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
     .pie {
-      margin-top: 14px;
+      margin-top: 12px;
     }
 
     .nota-puntero,

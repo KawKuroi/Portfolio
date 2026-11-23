@@ -12,14 +12,14 @@ const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
 
 <nav class="rail" aria-label={t.aria.navegacion} data-rail>
   {
-    ESCENAS.map((escena, i) => (
+    ESCENAS.map((clave, i) => (
       <a
         class:list={['rail-dot', { on: i === 0 }]}
-        href={`#${escena.clave}`}
-        aria-label={`${t.aria.irA}${t.slates[escena.clave]}`}
+        href={`#${clave}`}
+        aria-label={`${t.aria.irA}${t.slates[clave]}`}
         aria-current={i === 0 ? 'true' : undefined}
       >
-        <span class="rail-label" aria-hidden="true">{t.slates[escena.clave]}</span>
+        <span class="rail-label" aria-hidden="true">{t.slates[clave]}</span>
         <span class="rail-pip" aria-hidden="true" />
       </a>
     ))

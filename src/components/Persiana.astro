@@ -1,23 +1,19 @@
 ---
 /*
   Persiana (acordeon de caratulas) de la escena Conoceme. Las 20 franjas se renderizan en
-  build desde FAVORITOS (fallback estatico que degrada con gracia sin JS); el script
-  src/scripts/persiana.ts aporta el acordeon, los gestos, el filtro y el autoplay. Cada franja:
-  fondo gradiente (.pph), caratula (.pimg), lomo vertical (.pspine) y caption (.pcap). PRD 8.
+  build desde FAVORITOS; src/scripts/persiana.ts aporta el acordeon, los gestos y el autoplay.
+  Cada franja: fondo gradiente (.pph), caratula (.pimg), lomo vertical (.pspine) y caption.
 
-  RENDIMIENTO: se sirven las variantes WebP de scripts/optimizar-caratulas.mjs. En escritorio
-  la imagen tiene el ancho fijo de una franja abierta (cqw) y la franja solo la recorta: no se
-  reescalan 20 imagenes por fotograma. El oscurecido es una capa con opacity, no un filter.
+  RENDIMIENTO: variantes WebP de scripts/optimizar-caratulas.mjs. En escritorio la imagen tiene
+  el ancho fijo de una franja abierta (cqw) y la franja solo la recorta: no se reescalan 20
+  imagenes por fotograma. El oscurecido es una capa con opacity, no un filter.
+  COSTURAS: las franjas van separadas por 1px de hueco sobre fondo oscuro fijo. Un borde
+  semitransparente dejaba ver el fondo de la pagina y las lineas cambiaban de blanco a negro.
+  En movil/tablet la misma lista es un carrusel horizontal de caratulas.
 */
 import { FAVORITOS, type Categoria } from '../data/favoritos';
 import { obtenerIdioma, obtenerTextos } from '../i18n/ui';
 
-interface Props {
-  /** Categoria visible al arrancar en movil/tablet. */
-  filtro?: Categoria;
-}
-
-const { filtro } = Astro.props;
 const t = obtenerTextos(obtenerIdioma(Astro.currentLocale));
 
 // Decoracion de iconos por categoria (PRD 8.3), resuelta en build.
@@ -33,15 +29,7 @@ const variante = (ruta: string, ancho: number): string =>
   ruta.replace(/^\/assets\/([^/]+)\/(.+)\.\w+$/, `/assets/caratulas/$1/$2-${ancho}.webp`);
 ---
 
-<div
-  class="persiana"
-  data-speed="2600"
-  data-open="0"
-  data-filtro={filtro ?? 'all'}
-  tabindex="0"
-  role="group"
-  aria-label={t.aria.persiana}
->
+<div class="persiana" data-speed="2600" data-open="0" tabindex="0" role="group" aria-label={t.aria.persiana}>
   {
     FAVORITOS.map((f, i) => (
       <figure class:list={['pslat', { open: i === 0, wide: f.wide }]} data-cat={f.c}>
@@ -50,8 +38,8 @@ const variante = (ruta: string, ancho: number): string =>
           class="pimg"
           src={variante(f.img, 900)}
           srcset={`${variante(f.img, 480)} 480w, ${variante(f.img, 900)} 900w`}
-          sizes="(max-width: 1024px) 100vw, 440px"
-          alt={`${f.t} — ${f.s}`}
+          sizes="(max-width: 1024px) 50vw, 440px"
+          alt={`${f.t}, ${f.s}`}
           loading="lazy"
           decoding="async"
           draggable="false"
@@ -89,8 +77,10 @@ const variante = (ruta: string, ancho: number): string =>
     flex: 1 1 auto;
     min-height: 0;
     display: flex;
+    gap: 1px;
     margin: 0;
     overflow: hidden;
+    background: #0b0c0e;
     border: 1px solid var(--marco);
     contain: layout paint;
     /* El arrastre lateral es de la persiana; el vertical sigue siendo scroll. */
@@ -106,12 +96,8 @@ const variante = (ruta: string, ancho: number): string =>
     overflow: hidden;
     contain: layout paint;
     cursor: pointer;
-    transition: flex-grow .7s var(--ease);
-  }
-
-  /* Costura oscura entre franjas pegadas (como la referencia). */
-  .pslat + .pslat {
-    border-left: 1px solid rgba(6, 8, 11, .5);
+    background: #0b0c0e;
+    transition: flex-grow .75s var(--ease);
   }
 
   /* Oscurecido de las franjas cerradas. */
@@ -122,7 +108,7 @@ const variante = (ruta: string, ancho: number): string =>
     background: #000;
     opacity: .42;
     pointer-events: none;
-    transition: opacity .6s var(--ease);
+    transition: opacity .75s var(--ease);
   }
 
   .pslat.open::after {
@@ -183,7 +169,6 @@ const variante = (ruta: string, ancho: number): string =>
     letter-spacing: .03em;
     white-space: nowrap;
     overflow: hidden;
-    /* Va siempre sobre la carátula/gradiente oscuro: texto claro fijo en ambos temas. */
     color: #fbfaf7;
     text-shadow: 0 1px 6px rgba(0, 0, 0, .8);
     background: linear-gradient(to top, rgba(0, 0, 0, .5), transparent);
@@ -205,21 +190,17 @@ const variante = (ruta: string, ancho: number): string =>
     flex-direction: column;
     gap: 5px;
     padding: 40px 16px 16px;
-    /* La caption va sobre un gradiente oscuro: texto claro fijo en ambos temas
-       (en Noche, var(--paper) era casi negro y el título quedaba invisible). */
     color: #fbfaf7;
     background: linear-gradient(to top, rgba(0, 0, 0, .85) 30%, transparent);
     opacity: 0;
-    transform: translateY(8px);
     pointer-events: none;
-    transition: opacity .4s var(--ease), transform .4s var(--ease);
+    transition: opacity .3s var(--ease);
   }
 
   .pslat.open .pcap {
     opacity: 1;
-    transform: none;
-    /* Espera a que la franja tenga ancho para no recomponer el texto a la vista. */
-    transition-delay: .2s;
+    /* Aparece cuando la franja ya tiene ancho, sin recomponer el texto a la vista. */
+    transition: opacity .45s var(--ease) .3s;
   }
 
   .pcat {
@@ -228,9 +209,9 @@ const variante = (ruta: string, ancho: number): string =>
     gap: 6px;
     align-self: flex-start;
     padding: 2px 9px;
-    font-family: var(--mono);
     font-size: var(--t-micro);
-    letter-spacing: .08em;
+    font-weight: 600;
+    letter-spacing: .06em;
     text-transform: uppercase;
     color: #fff;
     background: var(--cat);
@@ -245,7 +226,6 @@ const variante = (ruta: string, ancho: number): string =>
   }
 
   .ps {
-    font-family: var(--mono);
     font-size: var(--t-micro);
     color: rgba(255, 255, 255, .85);
   }
@@ -276,59 +256,69 @@ const variante = (ruta: string, ancho: number): string =>
     }
   }
 
-  /* Movil/tablet (<=1024px): columnas -> filas; lomo horizontal. */
+  /* ── Movil/tablet (<=1024px): carrusel horizontal de caratulas ── */
   @media (max-width: 1024px) {
     .persiana {
-      flex-direction: column;
-      height: auto;
       container-type: normal;
       contain: none;
+      gap: 10px;
+      margin: 0 calc(-1 * var(--pad));
+      padding: 0 var(--pad) 6px;
+      border: none;
+      background: none;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--pad);
+      scrollbar-width: none;
       touch-action: auto;
     }
 
+    .persiana::-webkit-scrollbar {
+      display: none;
+    }
+
     .pslat,
-    .pslat.wide {
-      flex: none;
-      height: 64px;
-      transition: height .42s var(--ease);
-    }
-
+    .pslat.wide,
     .pslat.open {
-      height: 280px;
+      flex: 0 0 clamp(150px, 42vw, 210px);
+      aspect-ratio: 2 / 3;
+      scroll-snap-align: start;
+      contain: none;
+      cursor: default;
+      transition: none;
     }
 
-    .pslat + .pslat {
-      border-left: none;
-      border-top: 1px solid rgba(6, 8, 11, .5);
-    }
-
-    .pslat::after {
-      opacity: .22;
-    }
-
-    .pimg {
-      inset: 0;
-      width: 100%;
-      transform: none;
-    }
-
-    .pspine {
-      writing-mode: horizontal-tb;
-      transform: none;
-      justify-content: flex-start;
-      padding: 0 16px;
-      font-size: 1.125rem;
-      background: linear-gradient(to right, rgba(0, 0, 0, .6), transparent 80%);
-    }
-
+    .pslat::after,
+    .pspine,
     .pavance {
       display: none;
     }
 
-    .persiana[data-filtro='Cine'] .pslat:not([data-cat='Cine']),
-    .persiana[data-filtro='Juegos'] .pslat:not([data-cat='Juegos']),
-    .persiana[data-filtro='Libros'] .pslat:not([data-cat='Libros']),
-    .persiana[data-filtro='Música'] .pslat:not([data-cat='Música']) {
+    .pimg {
+      left: 0;
+      width: 100%;
+      transform: none;
+    }
+
+    .pcap,
+    .pslat.open .pcap {
+      gap: 3px;
+      padding: 36px 10px 10px;
+      opacity: 1;
+      transition: none;
+    }
+
+    .pcat {
+      padding: 1px 7px;
+    }
+
+    .pt {
+      font-size: 1.0625rem;
+    }
+
+    .ps {
       display: none;
     }
   }

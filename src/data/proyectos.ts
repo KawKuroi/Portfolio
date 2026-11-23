@@ -1,11 +1,10 @@
 /*
-  Datos de "El trabajo" (escena I). Orden de exhibicion: Ethos (MCP) y Noti, ambos en linea,
-  luego Traductor, Football y Turismo. Las rutas de imagen apuntan a /assets/projects/*.webp
-  (normalizadas). Si una falta, el onerror del render muestra un placeholder rayado "captura".
+  Datos de "El trabajo" (escena III). Orden de exhibicion: Ethos, Noti, Traductor, Football y
+  Turismo. Las capturas (1500x1000) viven en /assets/projects/*.webp. Cada proyecto se muestra
+  con un unico boton a su repositorio de GitHub (sin demos en vivo, por decision del usuario).
 
-  i18n: los campos de copy (titulo, tags, anio, estado, descripcion) son bilingues
-  (Record<Idioma, string>); el render y los scripts eligen el idioma vigente. El resto de campos
-  (icono, chips, repo, demo, img) son neutros. Nombres propios/marcas no se traducen.
+  i18n: titulo, anio y descripcion son bilingues; tags (nombres de tecnologias), repo e img son
+  neutros.
 */
 
 import type { Idioma } from '../i18n/ui';
@@ -14,111 +13,73 @@ import type { Idioma } from '../i18n/ui';
 type Bilingue = Record<Idioma, string>;
 
 export interface Proyecto {
-  /** Titulo del proyecto. */
   titulo: Bilingue;
-  /** Id del icono del sprite SVG (sin el #). */
-  icono: string;
-  /** Tecnologias como cadena separada por " · ". */
-  tags: Bilingue;
-  /** Tecnologias como lista (chips en la disposicion Detalle). */
-  chips: string[];
-  /** Anio o fecha mostrada. */
+  /** Tecnologias principales (se muestran separadas por comas). */
+  tags: readonly string[];
+  /** Mes y anio. */
   anio: Bilingue;
-  /** Estado corto (97%, En progreso, Diario, Lead...). */
-  estado: Bilingue;
-  /** URL del repositorio. */
+  /** URL del repositorio en GitHub. */
   repo: string;
-  /** URL de la version publicada en linea (opcional; marca el proyecto como "en linea"). */
-  demo?: string;
   /** Ruta de la captura. */
   img: string;
-  /** Descripcion larga. */
+  /** Descripcion corta (una o dos frases). */
   descripcion: Bilingue;
 }
 
-export const PROYECTOS: Proyecto[] = [
+export const PROYECTOS: readonly Proyecto[] = [
   {
-    titulo: { es: 'Ethos — Contexto para IA', en: 'Ethos — Context for AI' },
-    icono: 'ic-plug',
-    tags: {
-      es: 'MCP · FastAPI · Next.js · Supabase · OAuth 2.1',
-      en: 'MCP · FastAPI · Next.js · Supabase · OAuth 2.1',
-    },
-    chips: ['MCP', 'FastAPI', 'Next.js', 'Supabase', 'OAuth 2.1'],
+    titulo: { es: 'Ethos', en: 'Ethos' },
+    tags: ['MCP', 'FastAPI', 'Next.js', 'Supabase', 'OAuth 2.1'],
     anio: { es: 'Jul 2026', en: 'Jul 2026' },
-    estado: { es: 'v0.2', en: 'v0.2' },
     repo: 'https://github.com/KawKuroi/Ethos',
-    demo: 'https://ethos-steel.vercel.app/',
     img: '/assets/projects/ethos.webp',
     descripcion: {
-      es: 'Reúne tu historial de juegos, música, cine, anime y libros y lo entrega a cualquier IA mediante un servidor MCP con OAuth 2.1 y consultas acotadas. Incluye panel de estadísticas y cobertura de pruebas exigida en CI.',
-      en: 'Brings together your games, music, film, anime and book history and serves it to any AI through an MCP server with OAuth 2.1 and scoped queries. Includes a stats dashboard and test coverage enforced in CI.',
+      es: 'Reúne tu historial de juegos, música, cine, anime y libros y se lo entrega a cualquier IA mediante un servidor MCP con OAuth 2.1. Incluye panel de estadísticas y pruebas exigidas en CI.',
+      en: 'Brings together your games, music, film, anime and book history and serves it to any AI through an MCP server with OAuth 2.1. Includes a stats dashboard and tests enforced in CI.',
     },
   },
   {
-    titulo: { es: 'Noti — Recordatorios con IA', en: 'Noti — AI-powered reminders' },
-    icono: 'ic-server',
-    tags: {
-      es: 'Next.js · TypeScript · AI SDK · Supabase · Tauri',
-      en: 'Next.js · TypeScript · AI SDK · Supabase · Tauri',
-    },
-    chips: ['Next.js', 'TypeScript', 'AI SDK', 'Supabase', 'Tauri'],
+    titulo: { es: 'Noti', en: 'Noti' },
+    tags: ['Next.js', 'TypeScript', 'AI SDK', 'Supabase', 'Tauri'],
     anio: { es: 'Jun 2026', en: 'Jun 2026' },
-    estado: { es: 'En progreso', en: 'In progress' },
     repo: 'https://github.com/KawKuroi/Noti',
-    demo: 'https://noti-seven-peach.vercel.app/',
     img: '/assets/projects/noti.webp',
     descripcion: {
-      es: 'PWA y apps nativas de recordatorios con notificaciones push y un asistente de IA por texto o voz. Agenda lanzamientos consultando fuentes verificadas, para no inventar fechas.',
-      en: 'PWA and native reminder apps with push notifications and an AI assistant by text or voice. It schedules releases from verified sources, so it never makes up dates.',
+      es: 'Recordatorios con notificaciones push y un asistente de IA por texto o voz que agenda lanzamientos desde fuentes verificadas. PWA y apps nativas.',
+      en: 'Reminders with push notifications and an AI assistant by text or voice that schedules releases from verified sources. PWA and native apps.',
     },
   },
   {
     titulo: { es: 'Traductor de Lenguaje de Señas', en: 'Sign Language Translator' },
-    icono: 'ic-spark',
-    tags: {
-      es: 'Spring Boot · FastAPI · IA · Docker · Microservicios',
-      en: 'Spring Boot · FastAPI · AI · Docker · Microservices',
-    },
-    chips: ['Spring Boot', 'FastAPI', 'IA', 'Docker', 'Microservicios'],
+    tags: ['Spring Boot', 'FastAPI', 'MediaPipe', 'Docker'],
     anio: { es: 'Abr 2026', en: 'Apr 2026' },
-    estado: { es: '97%', en: '97%' },
     repo: 'https://github.com/KawKuroi/Sign_Language_Translator',
     img: '/assets/projects/traductor.webp',
     descripcion: {
-      es: 'Reconoce el alfabeto de señas ASL (A–Y, sin letras con movimiento) en tiempo real. Arquitectura de microservicios: Spring Boot orquesta la API y un servicio FastAPI sirve el modelo de visión, todo empaquetado en Docker. 97% de precisión en validación.',
-      en: 'Recognises the ASL fingerspelling alphabet (A–Y, motion letters excluded) in real time. Microservices architecture: Spring Boot orchestrates the API and a FastAPI service serves the vision model, all packaged in Docker. 97% accuracy in validation.',
+      es: 'Reconoce en tiempo real el alfabeto de señas ASL desde la cámara, con 97 % de precisión. Microservicios con Spring Boot, FastAPI y Docker.',
+      en: 'Recognises the ASL fingerspelling alphabet from the camera in real time, with 97% accuracy. Microservices with Spring Boot, FastAPI and Docker.',
     },
   },
   {
     titulo: { es: 'Football Notificator', en: 'Football Notificator' },
-    icono: 'ic-code',
-    tags: {
-      es: 'Python · Web Scraping · Automatización',
-      en: 'Python · Web Scraping · Automation',
-    },
-    chips: ['Python', 'Web Scraping', 'Automatización'],
+    tags: ['Python', 'Web Scraping', 'Google Forms'],
     anio: { es: 'May 2026', en: 'May 2026' },
-    estado: { es: 'Diario', en: 'Daily' },
     repo: 'https://github.com/KawKuroi/Football_notificator',
     img: '/assets/projects/futbol.webp',
     descripcion: {
-      es: 'Bot que rastrea resultados y horarios por web scraping y envía una notificación automática cada día. Pensado para no perderse un partido del equipo.',
-      en: "Bot that tracks scores and fixtures via web scraping and sends an automatic notification every day. Made so you never miss your team's match.",
+      es: 'Bot que rastrea resultados y horarios y avisa cada día a cada usuario sobre los partidos de sus equipos.',
+      en: "Bot that tracks scores and fixtures and alerts each user every day about their teams' matches.",
     },
   },
   {
     titulo: { es: 'App de Turismo', en: 'Tourism App' },
-    icono: 'ic-cloud',
-    tags: { es: 'Kotlin · Firebase · NoSQL · Jetpack', en: 'Kotlin · Firebase · NoSQL · Jetpack' },
-    chips: ['Kotlin', 'Firebase', 'NoSQL', 'Jetpack'],
+    tags: ['Kotlin', 'Firebase', 'Jetpack'],
     anio: { es: 'Nov 2024', en: 'Nov 2024' },
-    estado: { es: 'Lead', en: 'Lead' },
     repo: 'https://github.com/JeRamirez25/appTurismo',
     img: '/assets/projects/turismo.webp',
     descripcion: {
-      es: 'App Android para descubrir sitios turísticos: mapa, fichas de lugares y favoritos sincronizados en Firebase. Lideré el equipo técnico; construida con Jetpack y base de datos NoSQL.',
-      en: 'Android app to discover tourist spots: map, place cards and favourites synced in Firebase. I led the technical team; built with Jetpack and a NoSQL database.',
+      es: 'App Android para descubrir lugares y armar rutas, con favoritos sincronizados en Firebase. Lideré el equipo técnico.',
+      en: 'Android app to discover places and build routes, with favourites synced in Firebase. I led the technical team.',
     },
   },
 ];

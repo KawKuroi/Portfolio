@@ -1,7 +1,7 @@
 /*
   Sistema de diseno — tokens base y temas.
   Configuracion rigida (sin panel de Tweaks): disposicion Galeria, acento aguamarino #2aa198
-  y tipografia editorial (Newsreader / Hanken Grotesk / IBM Plex Mono). Lo unico variable es
+  y tipografia editorial (Newsreader / Hanken Grotesk). Lo unico variable es
   el tema: Museo (claro) o Noche (oscuro).
 
   CONTRASTE: --soft, --faint y --acento-texto cumplen 4.5:1 sobre --paper en ambos temas.
@@ -36,10 +36,12 @@
 
   /* Tipografia: las variables --fuente-* las genera la Fonts API de Astro (astro.config.mjs)
      con respaldos de metricas ajustadas.
-       --serif: titulares y frases.  --sans: lectura.  --mono: etiquetas, fechas y chips. */
+       --serif: titulares y frases.  --sans: lectura.
+     --mono: etiquetas, fechas y chips. NO es monoespaciada (preferencia del usuario, igual que
+     su sistema de diseno): la misma sans con cifras tabulares, mayusculas y tracking. */
   --serif: var(--fuente-titular);
   --sans: var(--fuente-texto);
-  --mono: var(--fuente-etiqueta);
+  --mono: var(--fuente-texto);
 
   /* Escala en rem (respeta el tamano de fuente del navegador). Nada baja de 12px. */
   --t-micro: .75rem;

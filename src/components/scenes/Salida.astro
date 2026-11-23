@@ -226,8 +226,7 @@ const textosCliente = JSON.stringify({ estado: t.salida.estado, web3: t.salida.w
   .links-nota {
     font-family: var(--mono);
     font-size: var(--t-micro);
-    letter-spacing: .04em;
-    color: var(--faint);
+    color: var(--soft);
     text-align: center;
     margin-top: 14px;
   }
@@ -479,15 +478,22 @@ const textosCliente = JSON.stringify({ estado: t.salida.estado, web3: t.salida.w
 
   /* Telefono (<700px): enlaces en columna a ancho completo. En tablet (700–1024px) y
      escritorio siguen en fila centrada con wrap (como la referencia). */
+  /* Telefono: rejilla de dos columnas; el correo ocupa la fila entera. */
   @media (max-width: 699px) {
     .links {
-      flex-direction: column;
-      align-items: stretch;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
     }
 
     .links a {
       justify-content: center;
-      min-height: 48px;
+      min-height: 52px;
+      padding: 0 10px;
+    }
+
+    .links a.solid {
+      grid-column: 1 / -1;
     }
   }
 </style>

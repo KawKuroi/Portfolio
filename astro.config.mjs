@@ -31,15 +31,6 @@ export default defineConfig({
       subsets: ['latin'],
       fallbacks: ['Arial', 'sans-serif'],
     },
-    {
-      provider: fontProviders.google(),
-      name: 'IBM Plex Mono',
-      cssVariable: '--fuente-etiqueta',
-      weights: [400],
-      styles: ['normal'],
-      subsets: ['latin'],
-      fallbacks: ['Consolas', 'monospace'],
-    },
   ],
   i18n: {
     defaultLocale: 'es',

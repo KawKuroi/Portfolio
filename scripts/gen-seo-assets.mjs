@@ -2,7 +2,7 @@
   Generador de assets de SEO/marca a partir de public/favicon.svg (marca "K").
   Produce, en public/: favicon.ico (16/32/48 con PNG embebido), favicon-16x16.png,
   favicon-32x32.png, apple-touch-icon.png (180), icon-192.png, icon-512.png (manifest)
-  y og-image-v3.png (1200x630, tarjeta social, autocontenida).
+  y og-image-v4.png (1200x630, tarjeta social, autocontenida).
 
   Herramienta puntual: `sharp` NO está en package.json (deps mínimas). Para regenerar:
   `npm i sharp --no-save && node scripts/gen-seo-assets.mjs`.
@@ -64,7 +64,7 @@ function ogSvg() {
   <text x="92" y="300" font-family="Georgia, 'Times New Roman', serif" font-size="92" fill="#ece4d4">Kevin Axel</text>
   <text x="92" y="392" font-family="Georgia, 'Times New Roman', serif" font-size="92" fill="#ece4d4">Herazo Rol&#243;n</text>
   <rect x="96" y="428" width="120" height="5" fill="#2aa198"/>
-  <text x="96" y="492" font-family="Georgia, 'Times New Roman', serif" font-size="32" font-style="italic" fill="#a89c87">Automatizaci&#243;n &#183; Datos &#183; IA aplicada</text>
+  <text x="96" y="492" font-family="Georgia, 'Times New Roman', serif" font-size="32" font-style="italic" fill="#a89c87">Automatizaci&#243;n e inteligencia artificial</text>
   <text x="96" y="556" font-family="Georgia, 'Times New Roman', serif" font-size="22" letter-spacing="2" fill="#6b6457">portfolio-topaz-nu-46.vercel.app</text>
 </svg>`;
 }
@@ -79,7 +79,7 @@ const tasks = [
   ['icon-512.png', () => renderMark(512, { flatten: true })],
   // Nombre versionado: al cambiar la tarjeta, súbelo (v3, v4…) para invalidar la caché
   // de los scrapers sociales, que cachean por URL. Debe coincidir con `imagen` en Base.astro.
-  ['og-image-v3.png', () => sharp(Buffer.from(ogSvg())).png().toBuffer()],
+  ['og-image-v4.png', () => sharp(Buffer.from(ogSvg())).png().toBuffer()],
 ];
 
 for (const [name, fn] of tasks) {

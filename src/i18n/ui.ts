@@ -3,18 +3,15 @@
 
   Unica fuente de verdad del copy bilingue (espanol/ingles). El sitio se prerenderiza en dos
   rutas estaticas: `/` (es, por defecto) y `/en/` (en). Cada componente .astro lee su idioma de
-  `Astro.currentLocale` y toma sus textos de `obtenerTextos(idioma)`; los scripts de cliente leen
-  el idioma de `document.documentElement.lang` y usan este mismo modulo.
+  `Astro.currentLocale` y toma sus textos de `obtenerTextos(idioma)`.
 
   COMO ANADIR/CAMBIAR TEXTO:
     1) Anade la clave a la interfaz `Textos`.
     2) Rellenala en `UI.es` y `UI.en`.
-  El tipado es estricto: si falta una clave en un idioma, es error de compilacion. Asi una
-  traduccion olvidada nunca llega a produccion.
+  El tipado es estricto: si falta una clave en un idioma, es error de compilacion.
 
-  NOTA: solo se internacionaliza el COPY del producto. Los identificadores y comentarios del
-  codigo siguen en espanol (ver GLOBAL.md). Nombres propios (persona, peliculas/libros/juegos/
-  discos, marcas tecnicas) no se traducen.
+  ESTILO DEL COPY (preferencia del usuario): frases cortas y concretas, sin rayas ni guiones,
+  sin puntos medios como separador y sin notas que empiecen por "//".
 */
 
 import type { Categoria } from '../data/favoritos';
@@ -44,9 +41,10 @@ export interface Textos {
     navegacion: string;
     /** Prefijo del aria de cada punto del riel ("Ir a " / "Go to "). */
     irA: string;
-    filtro: string;
-    indice: string;
+    /** Boton del menu de secciones (movil). */
+    menu: string;
     persiana: string;
+    carrusel: string;
     contacto: string;
     formulario: string;
     cerrar: string;
@@ -58,16 +56,13 @@ export interface Textos {
   // ── Hint de scroll ──
   hint: { desliza: string; recorrer: string };
 
-  /** Rotulos del riel, del indice de portada y de data-slate (uno por escena). */
+  /** Rotulos del riel, del menu movil y de data-slate (uno por escena). */
   slates: Record<ClaveEscena, string>;
 
   // ── Portada ──
   portada: {
     kick: string;
-    /** Va seguido del nombre de la empresa. */
-    ahora: string;
     resumen: string;
-    rol: string;
     retratoAlt: string;
     retratoPlaceholder: string;
   };
@@ -84,7 +79,7 @@ export interface Textos {
     proyectoEtiqueta: string;
     proyecto: string;
     descripcion: string;
-    confidencial: string;
+    iaEtiqueta: string;
   };
 
   // ── IA aplicada ──
@@ -104,11 +99,9 @@ export interface Textos {
     tituloHtml: string;
     /** Palabra "proyectos"/"projects" para el conteo "N proyectos". */
     proyectos: string;
-    pista: string;
     /** Prefijo del alt de las capturas ("Captura de " / "Screenshot of "). */
     capturaAlt: string;
-    verEnLinea: string;
-    repoFlecha: string;
+    github: string;
   };
 
   // ── El equipo ──
@@ -116,14 +109,16 @@ export interface Textos {
     tituloHtml: string;
     sub: string;
     stack: string;
-    /** Fila IA del stack: lo unico de la lista que se traduce. */
+    /** Palabras del stack que se traducen. */
     agentes: string;
+    eventosWindows: string;
     formacion: string;
     etiquetas: {
       lenguajes: string;
       backend: string;
       frontend: string;
       ia: string;
+      automatizacion: string;
       bases: string;
       datosMl: string;
       cloud: string;
@@ -139,7 +134,6 @@ export interface Textos {
   conoceme: {
     tituloHtml: string;
     sub: string;
-    todo: string;
     nota: string;
     notaTactil: string;
     pausar: string;
@@ -176,17 +170,18 @@ export interface Textos {
 
 export const UI: Record<Idioma, Textos> = {
   es: {
-    htmlTitle: 'Kevin Axel Herazo Rolón — Portafolio',
+    htmlTitle: 'Portafolio de Kevin Axel Herazo Rolón',
     metaDescription:
-      'Kevin Axel Herazo Rolón, practicante de Tecnología en Makro Supermayorista. Automatización de procesos, datos e IA aplicada con MCP, skills y agentes.',
+      'Kevin Axel Herazo Rolón, practicante de Tecnología en Makro Supermayorista. Automatización de procesos e inteligencia artificial aplicada: agentes, servidores MCP, Copilot Studio y Power Automate.',
     jobTitle: 'Practicante de Tecnología',
     knowsAbout: [
       'Automatización de procesos',
+      'Agentes de IA',
+      'Model Context Protocol',
+      'Copilot Studio',
+      'Power Automate',
       'Backend',
       'Ingeniería de datos',
-      'Inteligencia artificial',
-      'Model Context Protocol',
-      'Agentes de IA',
     ],
     ogLocale: 'es_ES',
     ogLocaleAlt: 'en_US',
@@ -196,9 +191,9 @@ export const UI: Record<Idioma, Textos> = {
       cambiarIdioma: 'Switch to English',
       navegacion: 'Navegación del portafolio',
       irA: 'Ir a ',
-      filtro: 'Filtrar por categoría',
-      indice: 'Índice',
-      persiana: 'Piezas favoritas; usa las flechas izquierda y derecha',
+      menu: 'Secciones',
+      persiana: 'Piezas favoritas. Usa las flechas izquierda y derecha',
+      carrusel: 'Desliza para ver más',
       contacto: 'Contacto',
       formulario: 'Formulario de contacto',
       cerrar: 'Cerrar',
@@ -209,7 +204,7 @@ export const UI: Record<Idioma, Textos> = {
     hint: { desliza: 'Desliza o usa', recorrer: 'para recorrer el portafolio' },
 
     slates: {
-      portada: 'Portada',
+      portada: 'Inicio',
       experiencia: 'La experiencia',
       ia: 'IA aplicada',
       trabajo: 'El trabajo',
@@ -219,11 +214,9 @@ export const UI: Record<Idioma, Textos> = {
     },
 
     portada: {
-      kick: 'Ingeniería de Sistemas · Bogotá',
-      ahora: 'Practicante de Tecnología en',
+      kick: 'Ingeniería de Sistemas en Bogotá',
       resumen:
-        'Convierto procesos manuales en automatizaciones confiables y construyo herramientas con IA: servidores MCP, skills y agentes.',
-      rol: 'Automatización · Datos · Inteligencia artificial',
+        'Automatizo procesos y construyo con inteligencia artificial: agentes, servidores MCP, chatbots y flujos que llegan a producción.',
       retratoAlt: 'Kevin Axel Herazo Rolón',
       retratoPlaceholder: 'retrato',
     },
@@ -231,23 +224,23 @@ export const UI: Record<Idioma, Textos> = {
     experiencia: {
       tituloHtml: 'La <em>experiencia</em>',
       sub: 'práctica empresarial',
-      periodo: '2026 — Actual · Bogotá',
+      periodo: 'Desde 2026 en Bogotá',
       cargo: 'Practicante de Tecnología, Soporte a Operaciones',
       resumen:
-        'Doy soporte a la operación diaria (monitoreo, diagnóstico y documentación de incidentes) y automatizo los procesos repetitivos del área.',
+        'Automatizo los procesos del área con Python, Power Automate y Copilot Studio, y llevo la IA al trabajo diario del equipo.',
       herramientas: 'Herramientas de la práctica',
       proyectoEtiqueta: 'Proyecto principal',
       proyecto: 'Centro de Automatizaciones',
       descripcion:
-        'Diseño y desarrollo de una plataforma propia para que los informes operativos que se hacían a mano se ejecuten de forma programada, trazable y verificable.',
-      confidencial: '// detalles internos omitidos por confidencialidad',
+        'Plataforma propia, alojada en un servidor local, que automatiza la operación del área: entrega reportes, abre casos de soporte y conecta los sistemas de la empresa.',
+      iaEtiqueta: 'Proyectos con IA',
     },
 
     ia: {
       tituloHtml: 'IA <em>aplicada</em>',
-      sub: 'mcp · skills · agentes',
+      sub: 'agentes, MCP y automatización',
       intro:
-        'Construyo las herramientas que usan los modelos, les doy el contexto justo y verifico lo que producen.',
+        'Construyo con IA de principio a fin, desde agentes y servidores MCP hasta chatbots y automatizaciones en producción. Sigo cada lanzamiento y lo pruebo en proyectos reales.',
       flujoTitulo: 'Cómo trabajo con agentes',
       flujo: ['Contexto', 'Plan', 'Implementación', 'Verificación', 'Aprobación humana'],
       herramientas: 'Herramientas de IA',
@@ -256,39 +249,38 @@ export const UI: Record<Idioma, Textos> = {
     trabajo: {
       tituloHtml: 'El <em>trabajo</em>',
       proyectos: 'proyectos',
-      pista: '// clic en una obra para verla en grande',
       capturaAlt: 'Captura de ',
-      verEnLinea: 'Ver en línea',
-      repoFlecha: 'Repo →',
+      github: 'Ver en GitHub',
     },
 
     equipo: {
       tituloHtml: 'El <em>equipo</em> y los <em>créditos</em>',
-      sub: 'stack · formación',
+      sub: 'stack y formación',
       stack: 'Stack',
-      agentes: 'Agentes',
+      agentes: 'agentes',
+      eventosWindows: 'eventos de Windows',
       formacion: 'Formación',
       etiquetas: {
         lenguajes: 'Lenguajes',
         backend: 'Backend',
         frontend: 'Frontend',
         ia: 'IA',
+        automatizacion: 'Automatización',
         bases: 'Bases de datos',
-        datosMl: 'Datos / ML',
+        datosMl: 'Datos y ML',
         cloud: 'Cloud',
         versiones: 'Versiones',
       },
       grado: 'Ingeniería de Sistemas',
-      presente: '2022 — Actual',
+      presente: 'Desde 2022',
       enCurso: 'En curso',
     },
 
     conoceme: {
       tituloHtml: '<em>Conóceme</em>',
-      sub: '20 piezas · cine · juegos · libros · música',
-      todo: 'Todo',
-      nota: '// aquí están las piezas que me formaron el gusto —composición, ritmo y color. Pasa el cursor sobre una franja para abrirla.',
-      notaTactil: '// las piezas que me formaron el gusto. Toca una franja para abrirla.',
+      sub: '20 piezas favoritas',
+      nota: 'Las piezas que formaron mi gusto. Pasa el cursor sobre una franja para abrirla.',
+      notaTactil: 'Las piezas que formaron mi gusto. Desliza para ver las 20.',
       pausar: 'Pausar',
       reproducir: 'Reproducir',
     },
@@ -302,7 +294,7 @@ export const UI: Record<Idioma, Textos> = {
 
     salida: {
       frase: 'Contáctame.',
-      nota: '// el correo abre un formulario para enviarme tu mensaje aquí mismo',
+      nota: 'El correo abre un formulario para escribirme desde aquí.',
       form: {
         titulo: 'Escríbeme',
         sub: 'Cuéntame tu idea y te respondo al correo que dejes.',
@@ -322,24 +314,25 @@ export const UI: Record<Idioma, Textos> = {
       },
       web3: {
         subject: 'Nuevo mensaje desde el portafolio',
-        fromName: 'Portafolio · Kevin Herazo',
+        fromName: 'Portafolio de Kevin Herazo',
         anonimo: 'Anónimo',
       },
     },
   },
 
   en: {
-    htmlTitle: 'Kevin Axel Herazo Rolón — Portfolio',
+    htmlTitle: "Kevin Axel Herazo Rolón's portfolio",
     metaDescription:
-      'Kevin Axel Herazo Rolón, Technology Intern at Makro Supermayorista. Process automation, data and applied AI with MCP, skills and agents.',
+      'Kevin Axel Herazo Rolón, Technology Intern at Makro Supermayorista. Process automation and applied artificial intelligence: agents, MCP servers, Copilot Studio and Power Automate.',
     jobTitle: 'Technology Intern',
     knowsAbout: [
       'Process automation',
+      'AI agents',
+      'Model Context Protocol',
+      'Copilot Studio',
+      'Power Automate',
       'Backend',
       'Data engineering',
-      'Artificial intelligence',
-      'Model Context Protocol',
-      'AI agents',
     ],
     ogLocale: 'en_US',
     ogLocaleAlt: 'es_ES',
@@ -349,9 +342,9 @@ export const UI: Record<Idioma, Textos> = {
       cambiarIdioma: 'Cambiar a español',
       navegacion: 'Portfolio navigation',
       irA: 'Go to ',
-      filtro: 'Filter by category',
-      indice: 'Contents',
-      persiana: 'Favourite pieces; use the left and right arrows',
+      menu: 'Sections',
+      persiana: 'Favourite pieces. Use the left and right arrows',
+      carrusel: 'Swipe to see more',
       contacto: 'Contact',
       formulario: 'Contact form',
       cerrar: 'Close',
@@ -362,7 +355,7 @@ export const UI: Record<Idioma, Textos> = {
     hint: { desliza: 'Swipe or use', recorrer: 'to move through the portfolio' },
 
     slates: {
-      portada: 'Cover',
+      portada: 'Home',
       experiencia: 'Experience',
       ia: 'Applied AI',
       trabajo: 'The work',
@@ -372,11 +365,9 @@ export const UI: Record<Idioma, Textos> = {
     },
 
     portada: {
-      kick: 'Systems Engineering · Bogotá',
-      ahora: 'Technology Intern at',
+      kick: 'Systems Engineering in Bogotá',
       resumen:
-        'I turn manual processes into reliable automations and build tools with AI: MCP servers, skills and agents.',
-      rol: 'Automation · Data · Artificial intelligence',
+        'I automate processes and build with artificial intelligence: agents, MCP servers, chatbots and flows that reach production.',
       retratoAlt: 'Kevin Axel Herazo Rolón',
       retratoPlaceholder: 'portrait',
     },
@@ -384,23 +375,23 @@ export const UI: Record<Idioma, Textos> = {
     experiencia: {
       tituloHtml: 'The <em>experience</em>',
       sub: 'internship',
-      periodo: '2026 — Present · Bogotá',
+      periodo: 'Since 2026 in Bogotá',
       cargo: 'Technology Intern, Operations Support',
       resumen:
-        'I support daily operations (monitoring, incident diagnosis and documentation) and automate the repetitive processes of the department.',
+        "I automate the department's processes with Python, Power Automate and Copilot Studio, and bring AI into the team's daily work.",
       herramientas: 'Internship tools',
       proyectoEtiqueta: 'Main project',
       proyecto: 'Automation Hub',
       descripcion:
-        'Design and development of an in-house platform so that operational reports once produced by hand run on schedule, traceably and verifiably.',
-      confidencial: '// internal details omitted for confidentiality',
+        "In-house platform, hosted on a local server, that automates the department's operations: it delivers reports, opens support cases and connects the company's systems.",
+      iaEtiqueta: 'AI projects',
     },
 
     ia: {
       tituloHtml: 'Applied <em>AI</em>',
-      sub: 'mcp · skills · agents',
+      sub: 'agents, MCP and automation',
       intro:
-        'I build the tools models use, give them just the right context and verify what they produce.',
+        'I build with AI end to end, from agents and MCP servers to chatbots and automations in production. I follow every release and test it on real projects.',
       flujoTitulo: 'How I work with agents',
       flujo: ['Context', 'Plan', 'Implementation', 'Verification', 'Human approval'],
       herramientas: 'AI tools',
@@ -409,39 +400,38 @@ export const UI: Record<Idioma, Textos> = {
     trabajo: {
       tituloHtml: 'The <em>work</em>',
       proyectos: 'projects',
-      pista: '// click a piece to see it large',
       capturaAlt: 'Screenshot of ',
-      verEnLinea: 'View live',
-      repoFlecha: 'Repo →',
+      github: 'View on GitHub',
     },
 
     equipo: {
-      tituloHtml: 'The <em>team</em> &amp; <em>credits</em>',
-      sub: 'stack · education',
+      tituloHtml: 'The <em>team</em> and <em>credits</em>',
+      sub: 'stack and education',
       stack: 'Stack',
-      agentes: 'Agents',
+      agentes: 'agents',
+      eventosWindows: 'Windows events',
       formacion: 'Education',
       etiquetas: {
         lenguajes: 'Languages',
         backend: 'Backend',
         frontend: 'Frontend',
         ia: 'AI',
+        automatizacion: 'Automation',
         bases: 'Databases',
-        datosMl: 'Data / ML',
+        datosMl: 'Data and ML',
         cloud: 'Cloud',
         versiones: 'Versioning',
       },
       grado: 'Systems Engineering',
-      presente: '2022 — Present',
+      presente: 'Since 2022',
       enCurso: 'In progress',
     },
 
     conoceme: {
       tituloHtml: '<em>About me</em>',
-      sub: '20 pieces · film · games · books · music',
-      todo: 'All',
-      nota: '// these are the pieces that shaped my taste —composition, rhythm and colour. Hover over a strip to open it.',
-      notaTactil: '// the pieces that shaped my taste. Tap a strip to open it.',
+      sub: '20 favourite pieces',
+      nota: 'The pieces that shaped my taste. Hover over a strip to open it.',
+      notaTactil: 'The pieces that shaped my taste. Swipe to see all 20.',
       pausar: 'Pause',
       reproducir: 'Play',
     },
@@ -455,7 +445,7 @@ export const UI: Record<Idioma, Textos> = {
 
     salida: {
       frase: "Let's talk.",
-      nota: '// the email opens a form to send me your message right here',
+      nota: 'The email opens a form to write to me from here.',
       form: {
         titulo: 'Write to me',
         sub: "Tell me your idea and I'll reply to the email you leave.",
@@ -475,7 +465,7 @@ export const UI: Record<Idioma, Textos> = {
       },
       web3: {
         subject: 'New message from the portfolio',
-        fromName: 'Portfolio · Kevin Herazo',
+        fromName: "Kevin Herazo's portfolio",
         anonimo: 'Anonymous',
       },
     },

@@ -1,12 +1,14 @@
 ---
 /*
   Plaque superior fija (.lb.top), z-index 80. Estilos en global.css (chrome global).
-  Izquierda: nombre (visible en movil). Derecha: meta + boton de tema + boton de idioma.
+  Izquierda: nombre (visible en movil). Derecha: meta + tema + idioma + menu (solo movil).
   - Boton de tema: alterna Museo<->Noche via tema.ts; el icono refleja el tema vigente.
-  - Boton de idioma: enlace a la ruta hermana (es <-> en); muestra el codigo del idioma destino
-    y persiste la eleccion en localStorage['sala-lang'].
+  - Boton de idioma: enlace a la ruta hermana (es <-> en); persiste la eleccion en
+    localStorage['sala-lang'] y conserva la escena que se estaba leyendo.
+  - Menu de secciones (<=1024px): popover nativo (cierre con Escape o tocando fuera).
 */
 import { getRelativeLocaleUrl } from 'astro:i18n';
+import { ESCENAS } from '../data/escenas';
 import { obtenerIdioma, obtenerTextos } from '../i18n/ui';
 
 const idioma = obtenerIdioma(Astro.currentLocale);
@@ -18,7 +20,7 @@ const urlOtroIdioma = getRelativeLocaleUrl(otroIdioma);
 <header class="lb top" data-plaque>
   <span class="lb-left"><a class="lb-name" href="#portada">Kevin Herazo</a></span>
   <span class="lb-right">
-    <span class="lb-meta">Kevin Herazo — 2026</span>
+    <span class="lb-meta">Kevin Herazo 2026</span>
     <button id="themeToggle" type="button" aria-label={t.aria.cambiarTema} aria-pressed="false">
       <svg class="ic" aria-hidden="true"><use href="#ic-sun" /></svg>
     </button>
@@ -28,8 +30,23 @@ const urlOtroIdioma = getRelativeLocaleUrl(otroIdioma);
       data-lang-destino={otroIdioma}
       aria-label={t.aria.cambiarIdioma}>{t.langCodigoDestino}</a
     >
+    <button id="menuToggle" type="button" popovertarget="menuSecciones" aria-label={t.aria.menu}>
+      <svg class="ic" aria-hidden="true"><use href="#ic-menu" /></svg>
+    </button>
   </span>
 </header>
+
+<nav id="menuSecciones" class="menu-secciones" popover="auto" aria-label={t.aria.menu}>
+  <ol>
+    {
+      ESCENAS.map((clave) => (
+        <li>
+          <a href={`#${clave}`}>{t.slates[clave]}</a>
+        </li>
+      ))
+    }
+  </ol>
+</nav>
 
 <script>
   import { iniciarTema, alternarTema, temaActual, type Tema } from '../scripts/tema';
@@ -65,13 +82,32 @@ const urlOtroIdioma = getRelativeLocaleUrl(otroIdioma);
     sincronizarIcono((evento as CustomEvent<Tema>).detail);
   });
 
+  // Menu de secciones: al elegir una, se cierra y el ancla hace el resto.
+  const menu = document.getElementById('menuSecciones');
+  menu?.querySelectorAll('a').forEach((enlace) => {
+    enlace.addEventListener('click', () => {
+      if (menu.matches(':popover-open')) menu.hidePopover();
+    });
+  });
+
+  /** Ancla de la escena visible (en movil no hay riel: se calcula por posicion). */
+  const anclaActual = (): string | null => {
+    const riel = document.querySelector('.rail-dot.on')?.getAttribute('href');
+    if (riel && getComputedStyle(document.querySelector('.rail') ?? document.body).display !== 'none') return riel;
+    const linea = window.innerHeight / 2;
+    const escena = Array.from(document.querySelectorAll<HTMLElement>('.scene[id]')).find(
+      (e) => e.getBoundingClientRect().bottom > linea,
+    );
+    return escena ? `#${escena.id}` : null;
+  };
+
   // Boton de idioma: persiste la eleccion antes de navegar al idioma hermano. El detector
   // inline del <head> respeta esta clave en las siguientes visitas.
   const idiomaBtn = document.getElementById('langToggle');
   idiomaBtn?.addEventListener('click', () => {
     const destino = idiomaBtn.getAttribute('data-lang-destino');
     // Cambiar de idioma conserva la escena que se estaba leyendo.
-    const ancla = document.querySelector('.rail-dot.on')?.getAttribute('href');
+    const ancla = anclaActual();
     if (ancla && idiomaBtn instanceof HTMLAnchorElement) {
       idiomaBtn.hash = ancla === '#portada' ? '' : ancla;
     }

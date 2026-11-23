@@ -1,10 +1,11 @@
 ---
 /*
-  Escena 1 — I · La experiencia. Practica empresarial actual: rol y herramientas a la
-  izquierda, proyecto principal a la derecha. Datos en src/data/experiencia.ts (leer alli
-  la nota de confidencialidad antes de editar).
+  Escena 1 — I · La experiencia. Practica empresarial actual: rol y herramientas a la izquierda;
+  el Centro de Automatizaciones y los proyectos con IA a la derecha. En telefono las tarjetas
+  muestran solo icono y titulo (mostrar mas, leer menos). Datos en src/data/experiencia.ts
+  (leer alli la nota de confidencialidad antes de editar).
 */
-import { EMPRESA, APORTES_PRACTICA, HERRAMIENTAS_PRACTICA } from '../../data/experiencia';
+import { EMPRESA, APORTES_PRACTICA, HERRAMIENTAS_PRACTICA, IA_PRACTICA } from '../../data/experiencia';
 import { obtenerIdioma, obtenerTextos } from '../../i18n/ui';
 
 const idioma = obtenerIdioma(Astro.currentLocale);
@@ -27,28 +28,38 @@ const t = obtenerTextos(idioma);
         <p class="exp-cargo">{t.experiencia.cargo}</p>
         <p class="exp-resumen">{t.experiencia.resumen}</p>
         <ul class="chips" aria-label={t.experiencia.herramientas}>
-          {HERRAMIENTAS_PRACTICA.map((herramienta) => <li>{herramienta}</li>)}
+          {HERRAMIENTAS_PRACTICA[idioma].map((herramienta) => <li>{herramienta}</li>)}
         </ul>
       </div>
 
-      <div class="exp-proyecto" data-entra style="--orden:2">
+      <div class="exp-proyectos" data-entra style="--orden:2">
         <p class="eh">{t.experiencia.proyectoEtiqueta}</p>
         <h3 class="exp-nombre">{t.experiencia.proyecto}</h3>
         <p class="exp-desc">{t.experiencia.descripcion}</p>
-        <ul class="aportes">
+        <ul class="tarjetas aportes">
           {
             APORTES_PRACTICA.map((aporte) => (
               <li>
-                <h4>
-                  <svg class="ic" aria-hidden="true"><use href={`#${aporte.icono}`} /></svg>
-                  {aporte.titulo[idioma]}
-                </h4>
+                <svg class="ic" aria-hidden="true"><use href={`#${aporte.icono}`} /></svg>
+                <h4>{aporte.titulo[idioma]}</h4>
                 <p>{aporte.texto[idioma]}</p>
               </li>
             ))
           }
         </ul>
-        <p class="exp-nota">{t.experiencia.confidencial}</p>
+
+        <p class="eh eh-ia">{t.experiencia.iaEtiqueta}</p>
+        <ul class="tarjetas ia-practica">
+          {
+            IA_PRACTICA.map((proyecto) => (
+              <li>
+                <svg class="ic" aria-hidden="true"><use href={`#${proyecto.icono}`} /></svg>
+                <h4>{proyecto.titulo[idioma]}</h4>
+                <p>{proyecto.texto[idioma]}</p>
+              </li>
+            ))
+          }
+        </ul>
       </div>
     </div>
   </div>
@@ -57,8 +68,8 @@ const t = obtenerTextos(idioma);
 <style>
   .exp {
     display: grid;
-    grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
-    gap: clamp(28px, 5vw, 72px);
+    grid-template-columns: minmax(0, .74fr) minmax(0, 1.26fr);
+    gap: clamp(28px, 4.5vw, 68px);
     align-items: start;
   }
 
@@ -92,17 +103,17 @@ const t = obtenerTextos(idioma);
   }
 
   .exp-resumen {
-    margin-top: clamp(12px, 2.4vh, 22px);
-    max-width: 46ch;
+    margin-top: clamp(10px, 2vh, 20px);
+    max-width: 44ch;
     color: var(--soft);
     text-wrap: pretty;
   }
 
   .chips {
-    margin-top: clamp(12px, 2.4vh, 22px);
+    margin-top: clamp(10px, 2vh, 20px);
   }
 
-  .exp-proyecto {
+  .exp-proyectos {
     padding-left: clamp(22px, 3vw, 40px);
     border-left: 1px solid var(--line);
   }
@@ -116,67 +127,121 @@ const t = obtenerTextos(idioma);
   }
 
   .exp-desc {
-    margin-top: 8px;
-    max-width: 62ch;
+    max-width: 66ch;
+    margin-top: 6px;
+    font-size: var(--t-chico);
+    color: var(--soft);
     text-wrap: pretty;
   }
 
-  .aportes {
+  .tarjetas {
     list-style: none;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 26px;
-    margin-top: clamp(10px, 2.2vh, 22px);
+    gap: 1px;
+    margin-top: clamp(10px, 1.8vh, 18px);
+    background: var(--line2);
+    border: 1px solid var(--line2);
   }
 
-  .aportes li {
-    padding: clamp(8px, 1.5vh, 14px) 0;
-    border-top: 1px solid var(--line2);
+  .aportes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .aportes h4 {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: var(--t-chico);
-    font-weight: 600;
+  .ia-practica {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .aportes .ic {
+  /* Ventanas bajas: las tarjetas del Centro se quedan en icono y titulo para que todo quepa. */
+  @media (min-width: 1025px) and (max-height: 760px) {
+    .aportes p {
+      display: none;
+    }
+
+    .aportes li {
+      padding-block: 9px;
+    }
+  }
+
+  @media (min-width: 1025px) and (max-height: 620px) {
+    .ia-practica p {
+      display: none;
+    }
+
+    .exp-desc {
+      font-size: var(--t-micro);
+    }
+  }
+
+  .tarjetas li {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+    column-gap: 8px;
+    align-content: start;
+    padding: clamp(8px, 1.4vh, 14px) 12px;
+    background: var(--paper);
+  }
+
+  .tarjetas .ic {
+    margin-top: 2px;
+    font-size: 17px;
     color: var(--teal);
   }
 
-  .aportes p {
-    margin-top: 3px;
+  .tarjetas h4 {
     font-size: var(--t-chico);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .tarjetas p {
+    grid-column: 2;
+    margin-top: 2px;
+    font-size: var(--t-micro);
     line-height: 1.45;
     color: var(--soft);
     text-wrap: pretty;
   }
 
-  .exp-nota {
-    margin-top: 8px;
-    font-family: var(--mono);
-    font-size: var(--t-micro);
-    color: var(--faint);
+  .eh-ia {
+    margin-top: clamp(12px, 2.2vh, 22px);
   }
 
   @media (max-width: 899px) {
     .exp {
       grid-template-columns: minmax(0, 1fr);
-      gap: 28px;
+      gap: 26px;
     }
 
-    .exp-proyecto {
+    .exp-proyectos {
       padding: 22px 0 0;
       border-left: none;
       border-top: 1px solid var(--line);
     }
   }
 
-  @media (max-width: 479px) {
-    .aportes {
+  /* Telefono: tarjetas de icono y titulo en dos columnas, sin texto de apoyo. */
+  @media (max-width: 599px) {
+    .aportes,
+    .ia-practica {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tarjetas li {
       grid-template-columns: minmax(0, 1fr);
+      row-gap: 8px;
+      padding: 14px 12px;
+    }
+
+    .tarjetas .ic {
+      font-size: 22px;
+    }
+
+    .aportes p {
+      display: none;
+    }
+
+    .ia-practica p {
+      grid-column: 1;
     }
   }
 </style>

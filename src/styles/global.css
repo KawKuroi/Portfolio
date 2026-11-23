@@ -15,6 +15,8 @@ html {
   color: var(--ink);
   font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
+  /* Cifras tabulares: fechas y numeros alineados sin fuente monoespaciada. */
+  font-variant-numeric: tabular-nums;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
@@ -217,7 +219,8 @@ html:has(dialog[open]) .reel {
 }
 
 #themeToggle,
-#langToggle {
+#langToggle,
+#menuToggle {
   pointer-events: auto;
   appearance: none;
   background: none;
@@ -235,7 +238,8 @@ html:has(dialog[open]) .reel {
 }
 
 #themeToggle:hover,
-#langToggle:hover {
+#langToggle:hover,
+#menuToggle:hover {
   color: var(--ink);
   border-color: var(--ink);
 }
@@ -247,11 +251,62 @@ html:has(dialog[open]) .reel {
   stroke-width: 1.7;
 }
 
-/* Boton de idioma: gemelo del de tema, con el codigo del idioma destino (EN/ES) en mono. */
+/* Boton de idioma: gemelo del de tema, con el codigo del idioma destino (EN/ES). */
 #langToggle {
-  font-family: var(--mono);
   font-size: var(--t-micro);
+  font-weight: 600;
   color: var(--acento-texto);
+}
+
+#menuToggle {
+  display: none;
+}
+
+#menuToggle .ic {
+  width: 18px;
+  height: 18px;
+}
+
+/* Menu de secciones (movil/tablet): popover nativo bajo el plaque. */
+.menu-secciones {
+  inset: calc(var(--barra-movil) + 8px) var(--pad) auto auto;
+  min-width: 220px;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .18);
+}
+
+.menu-secciones ol {
+  list-style: none;
+}
+
+.menu-secciones a {
+  display: flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 14px;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+}
+
+.menu-secciones a:hover {
+  background: var(--wall);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .menu-secciones:popover-open {
+    animation: abrirMenu .28s var(--ease);
+  }
+}
+
+@keyframes abrirMenu {
+  from {
+    opacity: 0;
+    translate: 0 -8px;
+  }
 }
 
 /* Movil/tablet: plaque sticky (ocupa su espacio en el flujo) y controles de 44px. */
@@ -274,13 +329,18 @@ html:has(dialog[open]) .reel {
   }
 
   .lb-right {
-    gap: 8px;
+    gap: 6px;
   }
 
   #themeToggle,
-  #langToggle {
+  #langToggle,
+  #menuToggle {
     width: 44px;
     height: 44px;
+  }
+
+  #menuToggle {
+    display: inline-flex;
   }
 }
 
@@ -456,6 +516,10 @@ html:has(dialog[open]) .reel {
 }
 
 @media (max-width: 699px) {
+  .sh h2 {
+    font-size: 2.125rem;
+  }
+
   /* Numero y titulo arriba; la meta, en su propia linea. */
   .sh {
     column-gap: 12px;

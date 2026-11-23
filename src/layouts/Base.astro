@@ -36,7 +36,7 @@ const RUTA_EN = '/en/';
 const {
   titulo = t.htmlTitle,
   descripcion = t.metaDescription,
-  imagen = '/og-image-v3.png',
+  imagen = '/og-image-v4.png',
   canonical = idioma === 'en' ? RUTA_EN : RUTA_ES,
 } = Astro.props;
 
@@ -182,7 +182,6 @@ const datosEstructurados = {
     <!-- Tipografia autoalojada: se precarga solo lo que se ve en la portada. -->
     <Font cssVariable="--fuente-titular" preload />
     <Font cssVariable="--fuente-texto" preload />
-    <Font cssVariable="--fuente-etiqueta" />
   </head>
   <body>
     <IconSprite />
