@@ -11,7 +11,24 @@ import { defineConfig, fontProviders } from 'astro/config';
 //
 // Tipografia: Fonts API nativa de Astro. Descarga las fuentes en build, las sirve desde el
 // propio sitio (/_astro/fonts, cache inmutable) y genera respaldos con metricas ajustadas.
+//
+// compressHTML: Astro 7 cambio el valor por defecto a 'jsx', que elimina el espacio entre
+// elementos en linea separados por un salto de linea ("usa↑↓para"). `true` conserva el
+// comportamiento de Astro 6: colapsa el espacio en blanco a uno solo sin quitarlo.
+//
+// cssTarget: Vite 8 minifica el CSS con Lightning CSS y subio el objetivo por defecto a
+// Safari 16.4 / Chrome 111. Con ese objetivo reescribe `max-width` a la sintaxis de rango
+// (`width<=1024px`, que Safari 16.0-16.3 ignora: el movil veria la maqueta de escritorio) y
+// quita el respaldo `100vh` antes de `100dvh`. Se fija el objetivo de Vite 7 para conservar
+// el mismo soporte de navegadores que con Astro 6. `ios16` va aparte porque Lightning CSS
+// trata iOS como otro navegador: sin el, borra `-webkit-text-size-adjust`.
 export default defineConfig({
+  compressHTML: true,
+  vite: {
+    build: {
+      cssTarget: ['chrome107', 'edge107', 'firefox104', 'safari16', 'ios16'],
+    },
+  },
   fonts: [
     {
       provider: fontProviders.google(),

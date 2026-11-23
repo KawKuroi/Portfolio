@@ -9,6 +9,16 @@
 - Ver [por-revisar.md](./por-revisar.md).
 
 ## Historial
+- **2026-11-23** — Dependencias, integradas después de la segunda ronda: Astro 6.4.7 → 7.4.13
+  (Vite 8, Rolldown, compilador en Rust) y `@astrojs/check` 0.9.12. `npm audit` pasa de 17
+  avisos (1 crítico) a 0 sin añadir dependencias. Para que el salto no cambie nada visible:
+  `compressHTML: true` (el nuevo `'jsx'` se comía espacios entre elementos en línea),
+  `vite.build.cssTarget` con los objetivos de Vite 7 más `ios16` (Lightning CSS reescribía las
+  media queries a sintaxis de rango y quitaba `-webkit-text-size-adjust`) y el reset de
+  movimiento reducido de El trabajo partido en dos reglas (Lightning CSS fusionaba `translate`
+  en `transform`). `engines.node` = `24.x` para que Vercel compile con un Node compatible
+  (Astro 7 exige >=22.23.4). Verificado sobre el contenido de la segunda ronda: `astro check`
+  0/0/0, texto visible idéntico al build de Astro 6, regresión 184/184 y gestos.
 - **2026-11-22 (2)** — Ronda de ajustes del usuario: portada mínima (sin rol ni índice), plaque
   «Kevin Herazo 2026», copy sin rayas, guiones, puntos medios ni notas «//», etiquetas sin
   fuente monoespaciada, práctica con el Centro completo y los proyectos con IA (bot de Teams,
