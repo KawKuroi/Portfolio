@@ -199,12 +199,17 @@ Sitio **bilingüe ES/EN** con el i18n **nativo de Astro**, sin librerías ni JS 
 - **Persiana:** no usar `mouseenter` ni un estado "hover". Solo cuenta el movimiento real del
   ratón y toda interacción termina en un reposo que reanuda el autoplay. Todo pasa por
   `programar()`.
+- **Persiana (escritorio):** intención de hover de 110 ms y costuras de 1px sobre fondo oscuro
+  fijo (un borde semitransparente cambiaba de blanco a negro).
+- **Móvil:** El trabajo y Conóceme son carruseles horizontales nativos (scroll snap,
+  `overflow-y: hidden` para no atrapar el scroll vertical). Menú de secciones con `popover`.
 - **Movimiento:** lo espacial es opt-in (`prefers-reduced-motion: no-preference`). El contenido
   nunca arranca oculto a la espera de JS.
 
 ## 12. Tipografía
 
 Fonts API nativa de Astro (`astro.config.mjs` + `<Font>` en `Base.astro`): Newsreader
-(titulares), Hanken Grotesk (lectura) e IBM Plex Mono (etiquetas). Se descargan en build y se
-sirven desde el propio sitio. Newsreader va estática en 400: la variable pesa el doble y
+(titulares) y Hanken Grotesk (lectura y etiquetas). Sin fuente monoespaciada, por preferencia
+del usuario: `--mono` es la misma sans con cifras tabulares, mayúsculas y tracking. Se descargan
+en build y se sirven desde el propio sitio. Newsreader va estática en 400: la variable pesa el doble y
 retrasaba el LCP móvil. Ningún texto baja de 12px; los campos de formulario, de 16px (zoom iOS).

@@ -9,6 +9,13 @@
 - Ver [por-revisar.md](./por-revisar.md).
 
 ## Historial
+- **2026-11-22 (2)** — Ronda de ajustes del usuario: portada mínima (sin rol ni índice), plaque
+  «Kevin Herazo 2026», copy sin rayas, guiones, puntos medios ni notas «//», etiquetas sin
+  fuente monoespaciada, práctica con el Centro completo y los proyectos con IA (bot de Teams,
+  agentes con computer use, agente de soporte, manuales con IA), textos de IA más concretos,
+  capturas nuevas de los proyectos y un único botón a GitHub, persiana sin «pop» ni costuras
+  que cambian de color. Móvil: carruseles en El trabajo y Conóceme, tarjetas de icono y menú
+  de secciones.
 - **2026-11-22** — Auditoría, corrección de scroll y actualización de contenido.
   **Scroll:** la rueda, el trackpad suave y el táctil ancho no avanzaban por el snap; las flechas
   seguidas se perdían; la persiana se detenía con el cursor quieto o tras un toque (ARCHITECTURE
